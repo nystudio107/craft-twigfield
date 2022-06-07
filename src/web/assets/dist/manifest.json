@@ -1,0 +1,12 @@
+{
+  "javascript-editor.js": "js/javascript-editor.js",
+  "runtime.js": "js/runtime.js",
+  "vendors.css": "css/vendors.css",
+  "vendors.js": "js/vendors.js",
+  "styles.css": "css/styles.css",
+  "editor.worker.js": "editor.worker.js",
+  "fonts/codicon.ttf": "fonts/codicon.ttf",
+  "javascript-editor.js.map": "js/javascript-editor.js.map",
+  "runtime.js.map": "js/runtime.js.map",
+  "vendors.js.map": "js/vendors.js.map"
+}

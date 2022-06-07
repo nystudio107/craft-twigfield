@@ -1,0 +1,39 @@
+{
+  "name": "nystudio107/craft-twigfield",
+  "description": "Provides a twig editor field with Twig & Craft API autocomplete",
+  "type": "yii2-extension",
+  "version": "1.0.0",
+  "keywords": [
+    "craft",
+    "cms",
+    "craftcms",
+    "twig",
+    "editor",
+    "autocomplete",
+    "auto",
+    "complete"
+  ],
+  "support": {
+    "docs": "https://github.com/nystudio107/craft-twigfield/blob/v1/README.md",
+    "issues": "https://github.com/nystudio107/craft-twigfield/issues",
+    "source": "https://github.com/nystudio107/craft-twigfield"
+  },
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "nystudio107",
+      "homepage": "https://nystudio107.com"
+    }
+  ],
+  "require": {
+    "craftcms/cms": "^3.0.0 || ^4.0.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "nystudio107\\twigfield\\": "src/"
+    }
+  },
+  "extra": {
+    "bootstrap": "nystudio107\\twigfield\\Twigfield"
+  }
+}
