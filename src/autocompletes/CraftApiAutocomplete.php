@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2022 nystudio107
  */
 
-namespace nystudio107\seomatic\helpers;
+namespace nystudio107\twigfield\autocompletes;
 
 use Craft;
 use craft\base\Element;

@@ -26,6 +26,16 @@ interface AutocompleteInterface
     // =========================================================================
 
     /**
+     * @return string Return the name of the autocomplete
+     */
+    public static function getAutocompleteName(): string;
+
+    /**
+     * @return string Return the type of the autocomplete
+     */
+    public static function getAutocompleteType(): string;
+
+    /**
      * Generate the complete items
      */
     public static function generateCompleteItems(): void;

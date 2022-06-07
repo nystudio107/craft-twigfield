@@ -13,6 +13,7 @@ namespace nystudio107\twigfield\base;
 use Craft;
 use craft\helpers\ArrayHelper;
 use nystudio107\twigfield\models\CompleteItem;
+use nystudio107\twigfield\types\AutocompleteTypes;
 
 /**
  * @author    nystudio107
@@ -26,14 +27,6 @@ abstract class Autocomplete implements AutocompleteInterface
 
     const COMPLETION_KEY = '__completions';
 
-    // Public Static Properties
-    // =========================================================================
-
-    /**
-     * @var string The name of the autocomplete generator
-     */
-    public static $name = '';
-
     // Protected Static Properties
     // =========================================================================
 
@@ -44,6 +37,22 @@ abstract class Autocomplete implements AutocompleteInterface
 
     // Public Static Methods
     // =========================================================================
+
+    /**
+     * @inerhitDoc
+     */
+    public static function getAutocompleteName(): string
+    {
+        return 'BaseAutocomplete';
+    }
+
+    /**
+     * @inerhitDoc
+     */
+    public static function getAutocompleteType(): string
+    {
+        return AutocompleteTypes::TwigExpressionAutocomplete;
+    }
 
     /**
      * @inerhitDoc
@@ -61,7 +70,7 @@ abstract class Autocomplete implements AutocompleteInterface
             Craft::debug(print_r($item->getErrors(), true), __METHOD__);
             return;
         }
-        ArrayHelper::setValue(self::$completeItems, $path, [self::COMPLETION_KEY => $item->toArray()]);
+        ArrayHelper::setValue(static::$completeItems, $path, [self::COMPLETION_KEY => $item->toArray()]);
     }
 
     /**
@@ -69,6 +78,6 @@ abstract class Autocomplete implements AutocompleteInterface
      */
     public static function getCompleteItems(): array
     {
-        return self::$completeItems;
+        return static::$completeItems;
     }
 }

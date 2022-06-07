@@ -29,39 +29,7 @@ class Twigfield extends Module implements BootstrapInterface
 {
     // Constants
     // =========================================================================
-
-    /**
-     * @event RegisterComponentTypesEvent The event that is triggered when registering
-     *        Autocomplete Generator types
-     *
-     * Autocomplete Generator types must implement [[GeneratorInterface]]. [[Generator]]
-     * provides a base implementation.
-     *
-     * ```php
-     * use nystudio107\autocomplete\Autocomplete;
-     * use craft\events\RegisterComponentTypesEvent;
-     * use yii\base\Event;
-     *
-     * Event::on(Autocomplete::class,
-     *     Autocomplete::EVENT_REGISTER_AUTOCOMPLETE_GENERATORS,
-     *     function(RegisterComponentTypesEvent $event) {
-     *         $event->types[] = MyAutocompleteGenerator::class;
-     *     }
-     * );
-     * ```
-     */
-    const EVENT_REGISTER_AUTOCOMPLETE_GENERATORS = 'registerAutocompleteGenerators';
-
-    const DEFAULT_AUTOCOMPLETE_GENERATORS = [
-        AutocompleteVariableGenerator::class,
-        AutocompleteTwigExtensionGenerator::class,
-    ];
-
-    // Public Properties
-    // =========================================================================
-
-    public $id = 'twigfield';
-
+    
     // Public Methods
     // =========================================================================
 
@@ -72,6 +40,8 @@ class Twigfield extends Module implements BootstrapInterface
      */
     public function bootstrap($app)
     {
+        // Set module id
+        $this->id = 'twigfield';
         // Set the currently requested instance of this module class,
         // so we can later access it with `Twigfield::getInstance()`
         static::setInstance($this);
