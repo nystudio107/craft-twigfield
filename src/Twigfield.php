@@ -13,8 +13,10 @@ namespace nystudio107\twigfield;
 use Craft;
 use craft\events\RegisterTemplateRootsEvent;
 use craft\web\Application as CraftWebApp;
+use craft\web\twig\variables\CraftVariable;
 use craft\web\View;
 use nystudio107\twigfield\autocompletes\CraftApiAutocomplete;
+use nystudio107\twigfield\behaviors\TwigfieldBehavior;
 use nystudio107\twigfield\events\RegisterTwigfieldAutocompletesEvent;
 use nystudio107\twigfield\services\AutocompleteService;
 use yii\base\BootstrapInterface;
@@ -118,7 +120,15 @@ class Twigfield extends Module implements BootstrapInterface
                 $e->roots[$this->id] = $baseDir;
             }
         });
-        // Base templates directory
+        // Add in the Craft.twigfieldBaseAssetsUrl variable
+        Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, static function (Event $e) {
+            /** @var CraftVariable $variable */
+            $variable = $e->sender;
+            $variable->attachBehaviors([
+                TwigfieldBehavior::class,
+            ]);
+        });
+        // Register our default twigfield autocompletes
         Event::on(AutocompleteService::class, AutocompleteService::EVENT_REGISTER_TWIGFIELD_AUTOCOMPLETES, static function (RegisterTwigfieldAutocompletesEvent $e) {
             if ($e->fieldType === self::DEFAULT_FIELD_TYPE) {
                 $e->types = array_merge($e->types, self::DEFAULT_TWIGFIELD_AUTOCOMPLETES);

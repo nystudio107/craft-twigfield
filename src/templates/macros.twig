@@ -1,0 +1,17 @@
+{% macro twigfield(config, fieldType = "Twigfield") %}
+    {% do view.registerAssetBundle("nystudio107\\twigfield\\assetbundles\\twigfield\\TwigfieldAsset") %}
+    {% import "_includes/forms" as forms %}
+    {{ forms.textareaField(config) }}
+    {% css %}
+        @font-face {
+        font-family: "codicon-override";
+        src: url("{{ craft.twigfieldBaseAssetsUrl }}/fonts/codicon.ttf") format("truetype");
+        }
+    {% endcss %}
+    {% js at head %}
+    window.twigfieldBaseAssetsUrl = "{{ craft.twigfieldBaseAssetsUrl }}/";
+    {% endjs %}
+    {% js %}
+    makeMonacoEditor("{{ (config.name)|namespaceInputId }}", "{{ fieldType }}");
+    {% endjs %}
+{% endmacro %}

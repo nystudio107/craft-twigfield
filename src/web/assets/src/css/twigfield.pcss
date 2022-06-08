@@ -1,3 +1,10 @@
+/**
+ * This injects all of Tailwind's utility classes, generated based on your
+ * config file.
+ *
+ */
+@import "tailwindcss/utilities";
+
 /* Ensure the right font-family is used */
 .codicon[class*="codicon-"] {
     font-family: "codicon-override" !important;
@@ -7,3 +14,50 @@
 .decorationsOverviewRuler {
     display: none !important;
 }
+
+/* Get rid of the editor background
+.monaco-editor, .monaco-editor-background, .monaco-editor .inputarea.ime-input {
+    background-color: transparent !important;
+}
+*/
+
+/* Make the editor look like a Craft text field */
+.monaco-editor-background-frame {
+    border-radius: 3px;
+    border: 1px solid rgba(96, 125, 159, .25);
+    background-color: #fbfcfe;
+    background-clip: padding-box;
+    margin-right: 24px;
+}
+
+/* Editor a11y focus styles */
+.monaco-editor-background-frame:focus-within {
+    box-shadow: 0 0 0 1px #127fbf, 0 0 0 3px rgb(18 127 191 / 50%);
+}
+
+
+/* CSS for use with dark-themes like Night Owl
+
+.monaco-mouse-cursor-text:focus,
+.monaco-mouse-cursor-text:focus-visible {
+    box-shadow: none!important;
+}
+
+.monaco-scrollable-element {
+    background-color: #011627;
+}
+
+.monaco-editor .suggest-widget, .monaco-editor .suggest-details {
+    background-color: #011627;
+    border-color: #112637!important;
+    border: 1px solid #112637!important;
+}
+
+.monaco-editor-background-frame {
+    background-color: #011627;
+}
+
+.monaco-editor .suggest-details .header {
+    background-color: #112637;
+}
+*/

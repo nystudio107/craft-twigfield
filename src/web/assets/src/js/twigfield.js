@@ -15,11 +15,11 @@
 // Set the __webpack_public_path__ dynamically so we can work inside of cpresources's hashed dir name
 // https://stackoverflow.com/questions/39879680/example-of-setting-webpack-public-path-at-runtime
 if (typeof __webpack_public_path__ !== 'string' || __webpack_public_path__ === '') {
-  __webpack_public_path__ = window.seomaticBaseAssetsUrl;
+  __webpack_public_path__ = window.twigfieldBaseAssetsUrl;
 }
 
+console.log(__webpack_public_path__);
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
-import {getCompletionItemsFromEndpoint} from '@/js/autocomplete.js';
 
 /* For now, use the default theme
 
@@ -30,7 +30,7 @@ monaco.editor.setTheme('night-owl');
 */
 
 // Create the editor
-function makeMonacoEditor(elementId, additionalCompletionsCacheKey) {
+function makeMonacoEditor(elementId, fieldType) {
   const textArea = document.getElementById(elementId);
   let container = document.createElement('div');
   // Make a sibling div for the Monaco editor to live in
@@ -73,13 +73,9 @@ function makeMonacoEditor(elementId, additionalCompletionsCacheKey) {
   Craft.cp.on('beforeSaveShortcut', () => {
     textArea.value = editor.getValue();
   });
-  // The auto-complete items are global, so only grab them once per request
-  if (typeof window.monacoAutocompleteItemsAdded !== 'undefined') {
-    additionalCompletionsCacheKey = null;
-  }
   // Get the autocompletion items
-  if (typeof additionalCompletionsCacheKey !== 'undefined' && additionalCompletionsCacheKey !== null) {
-    getCompletionItemsFromEndpoint(additionalCompletionsCacheKey);
+  if (typeof window.monacoAutocompleteItemsAdded !== 'undefined') {
+    //getCompletionItemsFromEndpoint(fieldType);
     window.monacoAutocompleteItemsAdded = true;
   }
   // Custom resizer to always keep the editor full-height, without needing to scroll

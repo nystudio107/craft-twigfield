@@ -11,7 +11,6 @@
 namespace nystudio107\twigfield\assetbundles\twigfield;
 
 use craft\web\AssetBundle;
-use craft\web\assets\cp\CpAsset;
 
 /**
  * @author    nystudio107
@@ -30,7 +29,15 @@ class TwigfieldAsset extends AssetBundle
     {
         $this->sourcePath = '@nystudio107/twigfield/web/assets/dist';
         $this->depends = [
-            CpAsset::class,
+        ];
+        $this->css = [
+            'css/vendors.css',
+            'css/styles.css',
+        ];
+        $this->js = [
+            'js/runtime.js',
+            'js/vendors.js',
+            'js/javascript-editor.js'
         ];
 
         parent::init();

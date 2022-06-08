@@ -162,10 +162,10 @@ function addHoverHandlerToMonaco(completionItems) {
 /**
  * Fetch the autocompletion items from local storage, or from the endpoint if they aren't cached in local storage
  */
-function getCompletionItemsFromEndpoint(cacheKey) {
+function getCompletionItemsFromEndpoint(fieldType) {
   let urlParams = '';
-  if (typeof cacheKey !== 'undefined' && cacheKey !== null) {
-    urlParams = '?additionalCompletionsCacheKey=' + cacheKey;
+  if (typeof fieldType !== 'undefined' && fieldType !== null) {
+    urlParams = '?fieldType=' + fieldType;
   }
   // Ping the controller endpoint
   let request = new XMLHttpRequest();
