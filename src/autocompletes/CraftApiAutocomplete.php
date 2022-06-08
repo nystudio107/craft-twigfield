@@ -14,6 +14,7 @@ use Craft;
 use craft\base\Element;
 use nystudio107\twigfield\base\Autocomplete;
 use nystudio107\twigfield\models\CompleteItem;
+use nystudio107\twigfield\types\AutocompleteTypes;
 use nystudio107\twigfield\types\CompleteItemKind;
 use phpDocumentor\Reflection\DocBlockFactory;
 use ReflectionClass;
@@ -60,6 +61,22 @@ class CraftApiAutocomplete extends Autocomplete
 
     // Public Static Methods
     // =========================================================================
+
+    /**
+     * @inerhitDoc
+     */
+    public static function getAutocompleteName(): string
+    {
+        return 'CraftApiAutocomplete';
+    }
+
+    /**
+     * @inerhitDoc
+     */
+    public static function getAutocompleteType(): string
+    {
+        return AutocompleteTypes::TwigExpressionAutocomplete;
+    }
 
     /**
      * Core function that generates the autocomplete array

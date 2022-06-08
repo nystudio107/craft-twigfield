@@ -11,11 +11,12 @@
 namespace nystudio107\twigfield;
 
 use Craft;
-use craft\events\RegisterComponentTypesEvent;
 use craft\events\RegisterTemplateRootsEvent;
 use craft\web\Application as CraftWebApp;
 use craft\web\View;
-use yii\base\Application as YiiApp;
+use nystudio107\twigfield\autocompletes\CraftApiAutocomplete;
+use nystudio107\twigfield\events\RegisterTwigfieldAutocompletesEvent;
+use nystudio107\twigfield\services\AutocompleteService;
 use yii\base\BootstrapInterface;
 use yii\base\Event;
 use yii\base\Module;
@@ -24,73 +25,104 @@ use yii\base\Module;
  * @author    nystudio107
  * @package   Twigfield
  * @since     1.0.0
+ *
+ * @property AutocompleteService $autocomplete
  */
 class Twigfield extends Module implements BootstrapInterface
 {
     // Constants
     // =========================================================================
-    
+
+    const ID = 'twigfield';
+
+    const DEFAULT_FIELD_TYPE = 'Twigfield';
+
+    const DEFAULT_TWIGFIELD_AUTOCOMPLETES = [
+        CraftApiAutocomplete::class,
+    ];
+
+    // Public Static Methods
+    // =========================================================================
+
+    /**
+     * @inerhitDoc
+     */
+    public static function setInstance($instance)
+    {
+        // Set module id
+        $instance->id = self::ID;
+        parent::setInstance($instance);
+    }
+
     // Public Methods
     // =========================================================================
 
     /**
-     * Bootstraps the extension
-     *
-     * @param YiiApp $app
+     * @inerhitDoc
      */
     public function bootstrap($app)
     {
-        // Set module id
-        $this->id = 'twigfield';
-        // Set the currently requested instance of this module class,
-        // so we can later access it with `Twigfield::getInstance()`
-        static::setInstance($this);
-        // Make sure it's Craft
+        // Only bootstrap if this is a CraftWebApp
         if (!$app instanceof CraftWebApp) {
             return;
         }
-        // Set up our alias
-        Craft::setAlias('@nystudio107/twigfield', $this->getBasePath());
-        // Register our module
-        Craft::$app->setModule($this->id, $this);
+        // Set the instance of this module class, so we can later access it with `Twigfield::getInstance()`
+        static::setInstance($this);
+        // Configure our module
+        $this->configureModule();
+        // Register our components
+        $this->registerComponents();
         // Register our event handlers
         $this->registerEventHandlers();
-    }
-
-    /**
-     * Registers our event handlers
-     */
-    public function registerEventHandlers()
-    {
-        // Base template directory
-        Event::on(View::class, View::EVENT_REGISTER_CP_TEMPLATE_ROOTS, function (RegisterTemplateRootsEvent $e) {
-            if (is_dir($baseDir = $this->getBasePath() . DIRECTORY_SEPARATOR . 'templates')) {
-                $e->roots[$this->id] = $baseDir;
-            }
-        });
-        Craft::info('Event Handlers installed', __METHOD__);
+        Craft::info('Twigfield module bootstrapped', __METHOD__);
     }
 
     // Protected Methods
     // =========================================================================
 
     /**
-     * Returns all available autocomplete generator classes.
+     * Configure our module
      *
-     * @return string[] The available autocomplete generator classes
+     * @return void
      */
-    public function getAllAutocompleteGenerators(): array
+    protected function configureModule(): void
     {
-        if ($this->allAutocompleteGenerators) {
-            return $this->allAutocompleteGenerators;
-        }
+        // Set up our alias
+        Craft::setAlias('@nystudio107/twigfield', $this->getBasePath());
+        // Register our module
+        Craft::$app->setModule($this->id, $this);
+    }
 
-        $event = new RegisterComponentTypesEvent([
-            'types' => self::DEFAULT_AUTOCOMPLETE_GENERATORS
+    /**
+     * Registers our components
+     *
+     * @return void
+     */
+    public function registerComponents(): void
+    {
+        $this->setComponents([
+            'autocomplete' => AutocompleteService::class,
         ]);
-        $this->trigger(self::EVENT_REGISTER_AUTOCOMPLETE_GENERATORS, $event);
-        $this->allAutocompleteGenerators = $event->types;
+    }
 
-        return $this->allAutocompleteGenerators;
+    /**
+     * Registers our event handlers
+     *
+     * @return void
+     */
+    public function registerEventHandlers(): void
+    {
+        // Base templates directory
+        Event::on(View::class, View::EVENT_REGISTER_CP_TEMPLATE_ROOTS, function (RegisterTemplateRootsEvent $e) {
+            if (is_dir($baseDir = $this->getBasePath() . DIRECTORY_SEPARATOR . 'templates')) {
+                $e->roots[$this->id] = $baseDir;
+            }
+        });
+        // Base templates directory
+        Event::on(AutocompleteService::class, AutocompleteService::EVENT_REGISTER_TWIGFIELD_AUTOCOMPLETES, static function (RegisterTwigfieldAutocompletesEvent $e) {
+            if ($e->fieldType === self::DEFAULT_FIELD_TYPE) {
+                $e->types = array_merge($e->types, self::DEFAULT_TWIGFIELD_AUTOCOMPLETES);
+            }
+        });
     }
 }
