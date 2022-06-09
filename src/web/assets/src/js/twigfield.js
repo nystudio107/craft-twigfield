@@ -74,7 +74,6 @@ function makeMonacoEditor(elementId, fieldType) {
     textArea.value = editor.getValue();
   });
   // Get the autocompletion items
-  console.log("getting items");
   getCompletionItemsFromEndpoint(fieldType);
   // Custom resizer to always keep the editor full-height, without needing to scroll
   let ignoreEvent = false;
