@@ -8,12 +8,19 @@
  * @copyright Copyright (c) 2022 nystudio107
  */
 
+namespace nystudio107\twigfield\events;
+
+use yii\base\Event;
+
 /**
  * @author    nystudio107
  * @package   Twigfield
  * @since     1.0.0
  */
-return [
-    'Error rendering template string -> {error}' => 'Error rendering template string -> {error}',
-    'Is not a string.' => 'Is not a string.',
-];
+class RegisterTwigValidatorVariablesEvent extends Event
+{
+    /**
+     * @var array Variables to be passed down to the Twig context during Twig template validation
+     */
+    public $variables = [];
+}
