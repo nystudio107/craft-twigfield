@@ -65,8 +65,8 @@ function makeMonacoEditor(elementId, fieldType) {
       enabled: false
     },
   });
-  // Before the form is submitted, copy the changes from the editor to the field
-  document.querySelector("#main-form").addEventListener("submit", function (e) {
+  // When the text is changed in the editor, sync it to the underlying TextArea input
+  editor.onDidChangeModelContent((event) => {
     textArea.value = editor.getValue();
   });
   // Handle keyboard shortcuts too via beforeSaveShortcut
