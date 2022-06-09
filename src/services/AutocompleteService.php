@@ -92,7 +92,7 @@ class AutocompleteService extends Component
                 ],
             ]);
             // Get the autocompletes from the cache, or generate them if they aren't cached
-            $autocompleteItems[] = $cache->getOrSet($cacheKey, static function () use ($name, $autocomplete) {
+            $autocompleteItems[$name] = $cache->getOrSet($cacheKey, static function () use ($name, $autocomplete) {
                 $autocomplete::generateCompleteItems();
                 return [
                     'name' => $name,
@@ -103,7 +103,7 @@ class AutocompleteService extends Component
         }
         Craft::info('Twigfield Autocompletes generated', __METHOD__);
 
-        return array_merge([], ...$autocompleteItems);
+        return $autocompleteItems;
     }
 
     /**

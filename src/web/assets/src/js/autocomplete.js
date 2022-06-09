@@ -30,11 +30,12 @@ function getLastItem(arr) {
  *
  * @param completionItems
  */
-function addCompletionItemsToMonaco(completionItems) {
+function addCompletionItemsToMonaco(completionItems, autocompleteType) {
   monaco.languages.registerCompletionItemProvider('twig', {
     triggerCharacters: ['.', '('],
     provideCompletionItems: function (model, position, token) {
       let result = [];
+      let currentItems = completionItems;
       // Get the last word the user has typed
       const currentLine = model.getValueInRange({
         startLineNumber: position.lineNumber,
@@ -42,36 +43,39 @@ function addCompletionItemsToMonaco(completionItems) {
         endLineNumber: position.lineNumber,
         endColumn: position.column
       });
+      let inTwigExpression = true;
       // Ensure we're inside of a Twig expression
       if (currentLine.indexOf('{') !== 0) {
-        return null;
+        inTwigExpression = false;
       }
       const startExpression = currentLine.substring(currentLine.lastIndexOf('{'));
       if (startExpression.indexOf('}') !== -1) {
-        return null;
+        inTwigExpression = false;
       }
-      const currentWords = currentLine.replace("\t", "").split(" ");
-      let currentWord = currentWords[currentWords.length - 1];
-      // If the current word includes ( or >, split on that, too, to allow the autocomplete to work in nested functions and HTML tags
-      if (currentWord.includes('(')) {
-        currentWord = getLastItem(currentWord.split('('));
-      }
-      if (currentWord.includes('>')) {
-        currentWord = getLastItem(currentWord.split('>'));
-      }
-      const isSubProperty = currentWord.charAt(currentWord.length - 1) === ".";
-      let currentItems = completionItems;
-      // If the last character typed is a period, then we need to look up a sub-property of the completionItems
-      if (isSubProperty) {
-        // Is a sub-property, get a list of parent properties
-        const parents = currentWord.substring(0, currentWord.length - 1).split(".");
-        currentItems = completionItems[parents[0]];
-        // Loop through all the parents to traverse the completion items and find the current one
-        for (let i = 1; i < parents.length; i++) {
-          if (currentItems.hasOwnProperty(parents[i])) {
-            currentItems = currentItems[parents[i]];
-          } else {
-            return result;
+      // We are in a Twig expression, handle TwigExpressionAutocomplete by walking through the properties
+      if (inTwigExpression && autocompleteType === 'TwigExpressionAutocomplete') {
+        const currentWords = currentLine.replace("\t", "").split(" ");
+        let currentWord = currentWords[currentWords.length - 1];
+        // If the current word includes ( or >, split on that, too, to allow the autocomplete to work in nested functions and HTML tags
+        if (currentWord.includes('(')) {
+          currentWord = getLastItem(currentWord.split('('));
+        }
+        if (currentWord.includes('>')) {
+          currentWord = getLastItem(currentWord.split('>'));
+        }
+        const isSubProperty = currentWord.charAt(currentWord.length - 1) === ".";
+        // If the last character typed is a period, then we need to look up a sub-property of the completionItems
+        if (isSubProperty) {
+          // Is a sub-property, get a list of parent properties
+          const parents = currentWord.substring(0, currentWord.length - 1).split(".");
+          currentItems = completionItems[parents[0]];
+          // Loop through all the parents to traverse the completion items and find the current one
+          for (let i = 1; i < parents.length; i++) {
+            if (currentItems.hasOwnProperty(parents[i])) {
+              currentItems = currentItems[parents[i]];
+            } else {
+              return result;
+            }
           }
         }
       }
@@ -173,8 +177,16 @@ function getCompletionItemsFromEndpoint(fieldType) {
   request.onload = function () {
     if (request.status >= 200 && request.status < 400) {
       const completionItems = JSON.parse(request.responseText);
-      addCompletionItemsToMonaco(completionItems);
-      addHoverHandlerToMonaco(completionItems);
+      if (typeof window.monacoAutocompleteItems === 'undefined') {
+        window.monacoAutocompleteItems = {};
+      }
+      for (const [name, autocomplete] of Object.entries(completionItems)) {
+        if (!(autocomplete.name in window.monacoAutocompleteItems)) {
+          window.monacoAutocompleteItems[autocomplete.name] = autocomplete.name;
+          addCompletionItemsToMonaco(autocomplete.__completions, autocomplete.type);
+          addHoverHandlerToMonaco(autocomplete.__completions);
+        }
+      }
     } else {
       console.log('Autocomplete endpoint failed with status ' + request.status)
     }

@@ -18,8 +18,8 @@ if (typeof __webpack_public_path__ !== 'string' || __webpack_public_path__ === '
   __webpack_public_path__ = window.twigfieldBaseAssetsUrl;
 }
 
-console.log(__webpack_public_path__);
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import {getCompletionItemsFromEndpoint} from '@/js/autocomplete.js';
 
 /* For now, use the default theme
 
@@ -74,10 +74,8 @@ function makeMonacoEditor(elementId, fieldType) {
     textArea.value = editor.getValue();
   });
   // Get the autocompletion items
-  if (typeof window.monacoAutocompleteItemsAdded !== 'undefined') {
-    //getCompletionItemsFromEndpoint(fieldType);
-    window.monacoAutocompleteItemsAdded = true;
-  }
+  console.log("getting items");
+  getCompletionItemsFromEndpoint(fieldType);
   // Custom resizer to always keep the editor full-height, without needing to scroll
   let ignoreEvent = false;
   const updateHeight = () => {
