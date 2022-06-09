@@ -37,12 +37,12 @@ class AutocompleteService extends Component
      * provides a base implementation.
      *
      * ```php
-     * use nystudio107\twigfield\helpers\Autocomplete;
+     * use nystudio107\twigfield\services\AutocompleteService;
      * use nystudio107\twigfield\events\RegisterTwigfieldAutocompletesEvent;
      * use yii\base\Event;
      *
-     * Event::on(Autocomplete::class,
-     *     Autocomplete::EVENT_REGISTER_TWIGFIELD_AUTOCOMPLETES,
+     * Event::on(AutocompleteService::class,
+     *     AutocompleteService::EVENT_REGISTER_TWIGFIELD_AUTOCOMPLETES,
      *     function(RegisterTwigfieldAutocompletesEvent $event) {
      *         $event->types[] = MyAutocomplete::class;
      *     }
