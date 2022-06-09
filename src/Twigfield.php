@@ -12,6 +12,7 @@ namespace nystudio107\twigfield;
 
 use Craft;
 use craft\events\RegisterTemplateRootsEvent;
+use craft\i18n\PhpMessageSource;
 use craft\web\Application as CraftWebApp;
 use craft\web\twig\variables\CraftVariable;
 use craft\web\View;
@@ -93,6 +94,18 @@ class Twigfield extends Module implements BootstrapInterface
         Craft::setAlias('@nystudio107/twigfield', $this->getBasePath());
         // Register our module
         Craft::$app->setModule($this->id, $this);
+        // Translation category
+        $i18n = Craft::$app->getI18n();
+        /** @noinspection UnSafeIsSetOverArrayInspection */
+        if (!isset($i18n->translations[$this->id]) && !isset($i18n->translations[$this->id . '*'])) {
+            $i18n->translations[$this->id] = [
+                'class' => PhpMessageSource::class,
+                'sourceLanguage' => 'en-US',
+                'basePath' => '@nystudio107/twigfield/translations',
+                'forceTranslation' => true,
+                'allowOverrides' => true,
+            ];
+        }
     }
 
     /**
