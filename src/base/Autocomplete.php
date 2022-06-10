@@ -70,6 +70,9 @@ abstract class Autocomplete implements AutocompleteInterface
             Craft::debug(print_r($item->getErrors(), true), __METHOD__);
             return;
         }
+        if (empty($path)) {
+            $path = $item->label;
+        }
         ArrayHelper::setValue(static::$completeItems, $path, [self::COMPLETION_KEY => $item->toArray()]);
     }
 

@@ -143,11 +143,12 @@ class CompleteItem extends FluentModel
      * Add the completion item to the passed in AutocompleteInterface static class
      *
      * @param $autocompleteClass
+     * @param string $path The . delimited path in the autocomplete array to the item; if omitted, will be set to the $item->label
      * @return void
      */
-    public function add($autocompleteClass): void
+    public function add($autocompleteClass, string $path = ''): void
     {
-        $autocompleteClass::addCompleteItem($this);
+        $autocompleteClass::addCompleteItem($this, $path);
     }
 
     /**

@@ -45,7 +45,7 @@ interface AutocompleteInterface
      * that indicates where in the associative array the item should appear.
      *
      * @param CompleteItem $item
-     * @param string $path
+     * @param string $path The . delimited path in the autocomplete array to the item; if omitted, will be set to the $item->label
      */
     public static function addCompleteItem(CompleteItem $item, string $path = ''): void;
 
