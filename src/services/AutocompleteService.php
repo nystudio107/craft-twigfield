@@ -128,6 +128,7 @@ class AutocompleteService extends Component
     {
         $cache = Craft::$app->getCache();
         TagDependency::invalidate($cache, self::AUTOCOMPLETE_CACHE_TAG . $autocompleteName);
+        Craft::info('Twigfield caches invalidated', __METHOD__);
     }
 
     // Protected Methods
