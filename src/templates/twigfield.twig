@@ -3,14 +3,14 @@
     {% css %}
         @font-face {
         font-family: "codicon-override";
-        src: url("{{ craft.twigfieldBaseAssetsUrl }}/fonts/codicon.ttf") format("truetype");
+        src: url("{{ alias("@twigfieldBaseAssetsUrl") }}/fonts/codicon.ttf") format("truetype");
         }
     {% endcss %}
     {% js at head %}
-    window.twigfieldBaseAssetsUrl = "{{ craft.twigfieldBaseAssetsUrl }}/";
+        window.twigfieldBaseAssetsUrl = "{{ alias("@twigfieldBaseAssetsUrl") }}/";
     {% endjs %}
     {% js %}
-    makeMonacoEditor("{{ (fieldId)|namespaceInputId }}", "{{ fieldType }}", "{{ wrapperClass }}");
+        makeMonacoEditor("{{ (fieldId)|namespaceInputId }}", "{{ fieldType }}", "{{ wrapperClass }}");
     {% endjs %}
 {% endmacro %}
 

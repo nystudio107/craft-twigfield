@@ -14,10 +14,8 @@ use Craft;
 use craft\events\RegisterTemplateRootsEvent;
 use craft\i18n\PhpMessageSource;
 use craft\web\Application as CraftWebApp;
-use craft\web\twig\variables\CraftVariable;
 use craft\web\View;
 use nystudio107\twigfield\autocompletes\CraftApiAutocomplete;
-use nystudio107\twigfield\behaviors\TwigfieldBehavior;
 use nystudio107\twigfield\events\RegisterTwigfieldAutocompletesEvent;
 use nystudio107\twigfield\services\AutocompleteService;
 use yii\base\BootstrapInterface;
@@ -92,6 +90,7 @@ class Twigfield extends Module implements BootstrapInterface
     {
         // Set up our alias
         Craft::setAlias('@nystudio107/twigfield', $this->getBasePath());
+        Craft::setAlias('@twigfieldBaseAssetsUrl', AutocompleteService::getTwigfieldPublishUrl());
         // Register our module
         Craft::$app->setModule($this->id, $this);
         // Translation category
@@ -132,14 +131,6 @@ class Twigfield extends Module implements BootstrapInterface
             if (is_dir($baseDir = $this->getBasePath() . DIRECTORY_SEPARATOR . 'templates')) {
                 $e->roots[$this->id] = $baseDir;
             }
-        });
-        // Add in the Craft.twigfieldBaseAssetsUrl variable
-        Event::on(CraftVariable::class, CraftVariable::EVENT_INIT, static function (Event $e) {
-            /** @var CraftVariable $variable */
-            $variable = $e->sender;
-            $variable->attachBehaviors([
-                TwigfieldBehavior::class,
-            ]);
         });
         // Register our default twigfield autocompletes
         Event::on(AutocompleteService::class, AutocompleteService::EVENT_REGISTER_TWIGFIELD_AUTOCOMPLETES, static function (RegisterTwigfieldAutocompletesEvent $e) {
