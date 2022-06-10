@@ -22,23 +22,13 @@ interface AutocompleteInterface
     // Constants
     // =========================================================================
 
-    // Public Static Methods
+    // Public Methods
     // =========================================================================
-
-    /**
-     * @return string Return the name of the autocomplete
-     */
-    public static function getAutocompleteName(): string;
-
-    /**
-     * @return string Return the type of the autocomplete
-     */
-    public static function getAutocompleteType(): string;
 
     /**
      * Generate the complete items
      */
-    public static function generateCompleteItems(): void;
+    public function generateCompleteItems(): void;
 
     /**
      * Add a complete item to the $path, which is a . separated namespace for the item
@@ -47,12 +37,12 @@ interface AutocompleteInterface
      * @param CompleteItem $item
      * @param string $path The . delimited path in the autocomplete array to the item; if omitted, will be set to the $item->label
      */
-    public static function addCompleteItem(CompleteItem $item, string $path = ''): void;
+    public function addCompleteItem(CompleteItem $item, string $path = ''): void;
 
     /**
      * Get the array of complete items
      *
      * @return array
      */
-    public static function getCompleteItems(): array;
+    public function getCompleteItems(): array;
 }

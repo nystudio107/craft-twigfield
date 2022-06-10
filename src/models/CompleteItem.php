@@ -11,6 +11,7 @@
 namespace nystudio107\twigfield\models;
 
 use craft\validators\ArrayValidator;
+use nystudio107\twigfield\base\AutocompleteInterface;
 use nystudio107\twigfield\base\FluentModel;
 use nystudio107\twigfield\types\CompleteItemKind;
 
@@ -142,13 +143,13 @@ class CompleteItem extends FluentModel
     /**
      * Add the completion item to the passed in AutocompleteInterface static class
      *
-     * @param $autocompleteClass
+     * @param AutocompleteInterface $autocomplete
      * @param string $path The . delimited path in the autocomplete array to the item; if omitted, will be set to the $item->label
      * @return void
      */
-    public function add($autocompleteClass, string $path = ''): void
+    public function add($autocomplete, string $path = ''): void
     {
-        $autocompleteClass::addCompleteItem($this, $path);
+        $autocomplete->addCompleteItem($this, $path);
     }
 
     /**

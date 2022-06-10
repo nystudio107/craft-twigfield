@@ -105,9 +105,10 @@ class AutocompleteService extends Component
     {
         $autocompleteItems = [];
         $autocompletes = $this->getAllAutocompleteGenerators($fieldType);
-        foreach ($autocompletes as $autocomplete) {
+        foreach ($autocompletes as $autocompleteClass) {
             /* @var BaseAutoComplete $autocomplete */
-            $name = $autocomplete::getAutocompleteName();
+            $autocomplete = new $autocompleteClass;
+            $name = $autocomplete->name;
             // Set up the cache parameters
             $cache = Craft::$app->getCache();
             $cacheKey = $this->cacheKeyPrefix . $name;
@@ -119,11 +120,11 @@ class AutocompleteService extends Component
             ]);
             // Get the autocompletes from the cache, or generate them if they aren't cached
             $autocompleteItems[$name] = $cache->getOrSet($cacheKey, static function () use ($name, $autocomplete) {
-                $autocomplete::generateCompleteItems();
+                $autocomplete->generateCompleteItems();
                 return [
                     'name' => $name,
-                    'type' => $autocomplete::getAutocompleteType(),
-                    BaseAutoComplete::COMPLETION_KEY => $autocomplete::getCompleteItems()
+                    'type' => $autocomplete->type,
+                    BaseAutoComplete::COMPLETION_KEY => $autocomplete->getCompleteItems()
                 ];
             }, $this->cacheDuration, $dependency);
         }

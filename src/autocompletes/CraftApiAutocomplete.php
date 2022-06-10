@@ -59,43 +59,40 @@ class CraftApiAutocomplete extends Autocomplete
     ];
     const RECURSION_DEPTH_LIMIT = 10;
 
-    // Public Static Methods
+    // Public Properties
     // =========================================================================
 
     /**
-     * @inerhitDoc
+     * @var string The name of the autocomplete
      */
-    public static function getAutocompleteName(): string
-    {
-        return 'CraftApiAutocomplete';
-    }
+    public $name = 'CraftApiAutocomplete';
 
     /**
-     * @inerhitDoc
+     * @var string The type of the autocomplete
      */
-    public static function getAutocompleteType(): string
-    {
-        return AutocompleteTypes::TwigExpressionAutocomplete;
-    }
+    public $type = AutocompleteTypes::TwigExpressionAutocomplete;
+
+    // Public Methods
+    // =========================================================================
 
     /**
      * Core function that generates the autocomplete array
      */
-    public static function generateCompleteItems(): void
+    public function generateCompleteItems(): void
     {
         // Iterate through the globals in the Twig context
         /* @noinspection PhpInternalEntityUsedInspection */
         $globals = array_merge(
             Craft::$app->view->getTwig()->getGlobals(),
-            self::elementRouteVariables(),
-            self::overrideValues()
+            $this->elementRouteVariables(),
+            $this->overrideValues()
         );
         foreach ($globals as $key => $value) {
             if (!in_array($key, self::EXCLUDED_PROPERTY_NAMES, true)) {
                 $type = gettype($value);
                 switch ($type) {
                     case 'object':
-                        self::parseObject($key, $value, 0);
+                        $this->parseObject($key, $value, 0);
                         break;
 
                     case 'array':
@@ -109,7 +106,7 @@ class CraftApiAutocomplete extends Autocomplete
                         if (ctype_upper($normalizedKey)) {
                             $kind = CompleteItemKind::ConstantKind;
                         }
-                        self::addCompleteItem(new CompleteItem([
+                        $this->addCompleteItem(new CompleteItem([
                             'detail' => $value,
                             'kind' => $kind,
                             'label' => $key,
@@ -121,6 +118,9 @@ class CraftApiAutocomplete extends Autocomplete
         }
     }
 
+    // Protected Methods
+    // =========================================================================
+
     /**
      * Parse the object passed in, including any properties or methods
      *
@@ -129,7 +129,7 @@ class CraftApiAutocomplete extends Autocomplete
      * @param int $recursionDepth
      * @param string $path
      */
-    public static function parseObject(string $name, $object, int $recursionDepth, string $path = ''): void
+    protected function parseObject(string $name, $object, int $recursionDepth, string $path = ''): void
     {
         // Only recurse `RECURSION_DEPTH_LIMIT` deep
         if ($recursionDepth > self::RECURSION_DEPTH_LIMIT) {
@@ -141,19 +141,16 @@ class CraftApiAutocomplete extends Autocomplete
 
         $path = trim(implode('.', [$path, $name]), '.');
         // The class itself
-        self::getClassCompletion($object, $factory, $name, $path);
+        $this->getClassCompletion($object, $factory, $name, $path);
         // ServiceLocator Components
-        self::getComponentCompletion($object, $recursionDepth, $path);
+        $this->getComponentCompletion($object, $recursionDepth, $path);
         // Class properties
-        self::getPropertyCompletion($object, $factory, $recursionDepth, $path);
+        $this->getPropertyCompletion($object, $factory, $recursionDepth, $path);
         // Class methods
-        self::getMethodCompletion($object, $factory, $path);
+        $this->getMethodCompletion($object, $factory, $path);
         // Behavior properties
-        self::getBehaviorCompletion($object, $factory, $recursionDepth, $path);
+        $this->getBehaviorCompletion($object, $factory, $recursionDepth, $path);
     }
-
-    // Protected Static Methods
-    // =========================================================================
 
     /**
      * @param $object
@@ -161,7 +158,7 @@ class CraftApiAutocomplete extends Autocomplete
      * @param string $name
      * @param $path
      */
-    protected static function getClassCompletion($object, DocBlockFactory $factory, string $name, $path): void
+    protected function getClassCompletion($object, DocBlockFactory $factory, string $name, $path): void
     {
         try {
             $reflectionClass = new ReflectionClass($object);
@@ -184,7 +181,7 @@ class CraftApiAutocomplete extends Autocomplete
                 }
             }
         }
-        self::addCompleteItem(new CompleteItem([
+        $this->addCompleteItem(new CompleteItem([
             'detail' => $className,
             'documentation' => $docs,
             'kind' => CompleteItemKind::ClassKind,
@@ -198,7 +195,7 @@ class CraftApiAutocomplete extends Autocomplete
      * @param $recursionDepth
      * @param $path
      */
-    protected static function getComponentCompletion($object, $recursionDepth, $path): void
+    protected function getComponentCompletion($object, $recursionDepth, $path): void
     {
         if ($object instanceof ServiceLocator) {
             foreach ($object->getComponents() as $key => $value) {
@@ -209,7 +206,7 @@ class CraftApiAutocomplete extends Autocomplete
                     // That's okay
                 }
                 if ($componentObject) {
-                    self::parseObject($key, $componentObject, $recursionDepth, $path);
+                    $this->parseObject($key, $componentObject, $recursionDepth, $path);
                 }
             }
         }
@@ -221,7 +218,7 @@ class CraftApiAutocomplete extends Autocomplete
      * @param $recursionDepth
      * @param string $path
      */
-    protected static function getPropertyCompletion($object, DocBlockFactory $factory, $recursionDepth, string $path): void
+    protected function getPropertyCompletion($object, DocBlockFactory $factory, $recursionDepth, string $path): void
     {
         try {
             $reflectionClass = new ReflectionClass($object);
@@ -308,7 +305,7 @@ class CraftApiAutocomplete extends Autocomplete
                 }
                 $thisPath = trim(implode('.', [$path, $propertyName]), '.');
                 $label = $propertyName;
-                self::addCompleteItem(new CompleteItem([
+                $this->addCompleteItem(new CompleteItem([
                     'detail' => $detail,
                     'documentation' => $docs,
                     'kind' => $customField ? CompleteItemKind::FieldKind : CompleteItemKind::PropertyKind,
@@ -319,7 +316,7 @@ class CraftApiAutocomplete extends Autocomplete
                 // Recurse through if this is an object
                 if (isset($object->$propertyName) && is_object($object->$propertyName)) {
                     if (!$customField && !in_array($propertyName, self::EXCLUDED_PROPERTY_NAMES, true)) {
-                        self::parseObject($propertyName, $object->$propertyName, $recursionDepth, $path);
+                        $this->parseObject($propertyName, $object->$propertyName, $recursionDepth, $path);
                     }
                 }
             }
@@ -331,7 +328,7 @@ class CraftApiAutocomplete extends Autocomplete
      * @param DocBlockFactory $factory
      * @param string $path
      */
-    protected static function getMethodCompletion($object, DocBlockFactory $factory, string $path): void
+    protected function getMethodCompletion($object, DocBlockFactory $factory, string $path): void
     {
         try {
             $reflectionClass = new ReflectionClass($object);
@@ -402,7 +399,7 @@ class CraftApiAutocomplete extends Autocomplete
                         $docsPreamble .= "\n";
                     }
                 }
-                self::addCompleteItem(new CompleteItem([
+                $this->addCompleteItem(new CompleteItem([
                     'detail' => $detail,
                     'documentation' => $docsPreamble . $docs,
                     'kind' => CompleteItemKind::MethodKind,
@@ -420,17 +417,17 @@ class CraftApiAutocomplete extends Autocomplete
      * @param $recursionDepth
      * @param string $path
      */
-    protected static function getBehaviorCompletion($object, DocBlockFactory $factory, $recursionDepth, string $path): void
+    protected function getBehaviorCompletion($object, DocBlockFactory $factory, $recursionDepth, string $path): void
     {
         if ($object instanceof Element) {
             $behaviorClass = $object->getBehavior('customFields');
             if ($behaviorClass) {
-                self::getPropertyCompletion($behaviorClass, $factory, $recursionDepth, $path);
+                $this->getPropertyCompletion($behaviorClass, $factory, $recursionDepth, $path);
             }
         }
     }
 
-    // Private Static Methods
+    // Private Methods
     // =========================================================================
 
     /**
@@ -438,14 +435,14 @@ class CraftApiAutocomplete extends Autocomplete
      *
      * @return array
      */
-    private static function elementRouteVariables(): array
+    private function elementRouteVariables(): array
     {
         $routeVariables = [];
         $elementTypes = Craft::$app->elements->getAllElementTypes();
         foreach ($elementTypes as $elementType) {
             /* @var Element $elementType */
             $key = $elementType::refHandle();
-            if (!empty($key) && !in_array($key, static::ELEMENT_ROUTE_EXCLUDES)) {
+            if (!empty($key) && !in_array($key, self::ELEMENT_ROUTE_EXCLUDES)) {
                 $routeVariables[$key] = new $elementType();
             }
         }
@@ -458,7 +455,7 @@ class CraftApiAutocomplete extends Autocomplete
      *
      * @return array
      */
-    private static function overrideValues(): array
+    private function overrideValues(): array
     {
         return [
             // Set the nonce to a blank string, as it changes on every request

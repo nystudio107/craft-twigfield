@@ -27,13 +27,26 @@ abstract class Autocomplete implements AutocompleteInterface
 
     const COMPLETION_KEY = '__completions';
 
-    // Protected Static Properties
+    // Public Properties
+    // =========================================================================
+
+    /**
+     * @var string The name of the autocomplete
+     */
+    public $name = 'BaseAutocomplete';
+
+    /**
+     * @var string The type of the autocomplete
+     */
+    public $type = AutocompleteTypes::TwigExpressionAutocomplete;
+
+    // Protected Properties
     // =========================================================================
 
     /**
      * @var array The accumulated complete items
      */
-    protected static $completeItems = [];
+    protected $completeItems = [];
 
     // Public Static Methods
     // =========================================================================
@@ -41,30 +54,14 @@ abstract class Autocomplete implements AutocompleteInterface
     /**
      * @inerhitDoc
      */
-    public static function getAutocompleteName(): string
-    {
-        return 'BaseAutocomplete';
-    }
-
-    /**
-     * @inerhitDoc
-     */
-    public static function getAutocompleteType(): string
-    {
-        return AutocompleteTypes::TwigExpressionAutocomplete;
-    }
-
-    /**
-     * @inerhitDoc
-     */
-    public static function generateCompleteItems(): void
+    public function generateCompleteItems(): void
     {
     }
 
     /**
      * @inerhitDoc
      */
-    public static function addCompleteItem(CompleteItem $item, string $path = ''): void
+    public function addCompleteItem(CompleteItem $item, string $path = ''): void
     {
         if (!$item->validate()) {
             Craft::debug(print_r($item->getErrors(), true), __METHOD__);
@@ -73,14 +70,14 @@ abstract class Autocomplete implements AutocompleteInterface
         if (empty($path)) {
             $path = $item->label;
         }
-        ArrayHelper::setValue(static::$completeItems, $path, [self::COMPLETION_KEY => $item->toArray()]);
+        ArrayHelper::setValue($this->completeItems, $path, [self::COMPLETION_KEY => $item->toArray()]);
     }
 
     /**
      * @inerhitDoc
      */
-    public static function getCompleteItems(): array
+    public function getCompleteItems(): array
     {
-        return static::$completeItems;
+        return $this->completeItems;
     }
 }
