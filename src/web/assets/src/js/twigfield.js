@@ -28,18 +28,14 @@ import editorTheme from 'monaco-themes/themes/Night Owl.json';
 monaco.editor.defineTheme('night-owl', editorTheme);
 monaco.editor.setTheme('night-owl');
 */
-import editorTheme from 'monaco-themes/themes/Xcode_default.json';
-
-monaco.editor.defineTheme('twigfield', editorTheme);
-monaco.editor.setTheme('twigfield');
 
 // Create the editor
-function makeMonacoEditor(elementId, fieldType) {
+function makeMonacoEditor(elementId, fieldType, wrapperClass) {
   const textArea = document.getElementById(elementId);
   let container = document.createElement('div');
   // Make a sibling div for the Monaco editor to live in
   container.id = elementId + '-monaco-editor';
-  container.classList.add('p-2', 'box-content', 'monaco-editor-background-frame', 'w-full', 'h-full');
+  container.classList.add('p-2', 'box-content', 'monaco-editor-twigfield-icon', 'w-full', 'h-full', wrapperClass);
   container.tabIndex = 0;
   textArea.parentNode.insertBefore(container, textArea);
   textArea.style.display = 'none';
@@ -47,7 +43,7 @@ function makeMonacoEditor(elementId, fieldType) {
   let editor = monaco.editor.create(container, {
     value: textArea.value,
     language: 'twig',
-    theme: 'twigfield',
+    theme: 'vs',
     automaticLayout: true,
     // Disable sidebar line numbers
     lineNumbers: 'off',

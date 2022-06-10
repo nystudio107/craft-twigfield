@@ -1,4 +1,4 @@
-{% macro includeJs(fieldId, fieldType) %}
+{% macro includeJs(fieldId, fieldType, wrapperClass) %}
     {% do view.registerAssetBundle("nystudio107\\twigfield\\assetbundles\\twigfield\\TwigfieldAsset") %}
     {% css %}
         @font-face {
@@ -10,17 +10,17 @@
     window.twigfieldBaseAssetsUrl = "{{ craft.twigfieldBaseAssetsUrl }}/";
     {% endjs %}
     {% js %}
-    makeMonacoEditor("{{ (fieldId)|namespaceInputId }}", "{{ fieldType }}");
+    makeMonacoEditor("{{ (fieldId)|namespaceInputId }}", "{{ fieldType }}", "{{ wrapperClass }}");
     {% endjs %}
 {% endmacro %}
 
-{% macro textareaField(config, fieldType = "Twigfield") %}
+{% macro textareaField(config, fieldType = "Twigfield", wrapperClass = "") %}
     {% import "_includes/forms" as forms %}
     {{ forms.textareaField(config) }}
     {{ _self.includeJs(config.id, fieldType) }}
 {% endmacro %}
 
-{% macro textarea(config, fieldType = "Twigfield") %}
+{% macro textarea(config, fieldType = "Twigfield", wrapperClass = "") %}
     {% import "_includes/forms" as forms %}
     {{ forms.textarea(config) }}
     {{ _self.includeJs(config.id, fieldType) }}
