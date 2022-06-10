@@ -10,8 +10,8 @@
 
 namespace nystudio107\twigfield\models;
 
-use craft\base\Model;
 use craft\validators\ArrayValidator;
+use nystudio107\twigfield\base\FluentModel;
 use nystudio107\twigfield\types\CompleteItemKind;
 
 /**
@@ -20,8 +20,23 @@ use nystudio107\twigfield\types\CompleteItemKind;
  * @author    nystudio107
  * @package   Twigfield
  * @since     1.0.0
+ *
+ * @method CompleteItem additionalTextEdits(string $additionalTextEdits) An optional array of additional text edits that are applied when selecting this completion.
+ * @method CompleteItem command(array $command)
+ * @method CompleteItem commitCharacters(array $commitCharacters)
+ * @method CompleteItem detail(string $detail)
+ * @method CompleteItem documentation(string $documentation)
+ * @method CompleteItem filterText(string $filterText)
+ * @method CompleteItem insertText(string $insertText)
+ * @method CompleteItem insertTextRules(int $insertTextRules)
+ * @method CompleteItem kind(int $kind)
+ * @method CompleteItem label(string $label)
+ * @method CompleteItem preselect(bool $preselect)
+ * @method CompleteItem range(array $range)
+ * @method CompleteItem sortText(string $sortText)
+ * @method CompleteItem tags(array $tags)
  */
-class CompleteItem extends Model
+class CompleteItem extends FluentModel
 {
     // Public Properties
     // =========================================================================
@@ -107,8 +122,32 @@ class CompleteItem extends Model
      */
     public $tags;
 
+    // Public Static Methods
+    // =========================================================================
+
+    /**
+     * Factory method for complete item objects
+     *
+     * @return CompleteItem
+     */
+    public static function create(): CompleteItem
+    {
+        return new CompleteItem();
+    }
+
     // Public Methods
     // =========================================================================
+
+    /**
+     * Add the completion item to the passed in AutocompleteInterface static class
+     *
+     * @param $autocompleteClass
+     * @return void
+     */
+    public function add($autocompleteClass): void
+    {
+        $autocompleteClass::addCompleteItem($this);
+    }
 
     /**
      * @inheritdoc
