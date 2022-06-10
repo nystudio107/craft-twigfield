@@ -28,6 +28,10 @@ import editorTheme from 'monaco-themes/themes/Night Owl.json';
 monaco.editor.defineTheme('night-owl', editorTheme);
 monaco.editor.setTheme('night-owl');
 */
+import editorTheme from 'monaco-themes/themes/Xcode_default.json';
+
+monaco.editor.defineTheme('twigfield', editorTheme);
+monaco.editor.setTheme('twigfield');
 
 // Create the editor
 function makeMonacoEditor(elementId, fieldType) {
@@ -43,6 +47,7 @@ function makeMonacoEditor(elementId, fieldType) {
   let editor = monaco.editor.create(container, {
     value: textArea.value,
     language: 'twig',
+    theme: 'twigfield',
     automaticLayout: true,
     // Disable sidebar line numbers
     lineNumbers: 'off',
@@ -65,6 +70,8 @@ function makeMonacoEditor(elementId, fieldType) {
       enabled: false
     },
   });
+  monaco.editor.setTheme('twigfield');
+
   // When the text is changed in the editor, sync it to the underlying TextArea input
   editor.onDidChangeModelContent((event) => {
     textArea.value = editor.getValue();
