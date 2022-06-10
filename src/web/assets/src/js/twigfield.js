@@ -35,7 +35,10 @@ function makeMonacoEditor(elementId, fieldType, wrapperClass) {
   let container = document.createElement('div');
   // Make a sibling div for the Monaco editor to live in
   container.id = elementId + '-monaco-editor';
-  container.classList.add('p-2', 'box-content', 'monaco-editor-twigfield-icon', 'w-full', 'h-full', wrapperClass);
+  container.classList.add('p-2', 'box-content', 'monaco-editor-twigfield-icon', 'w-full', 'h-full');
+  if (wrapperClass !== '') {
+    container.classList.add(wrapperClass);
+  }
   container.tabIndex = 0;
   textArea.parentNode.insertBefore(container, textArea);
   textArea.style.display = 'none';
