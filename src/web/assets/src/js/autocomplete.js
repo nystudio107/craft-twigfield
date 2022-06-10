@@ -52,6 +52,10 @@ function addCompletionItemsToMonaco(completionItems, autocompleteType) {
       if (startExpression.indexOf('}') !== -1) {
         inTwigExpression = false;
       }
+      // We are not in a Twig expression, and this is a TwigExpressionAutocomplete, return nothing
+      if (!inTwigExpression && autocompleteType === 'TwigExpressionAutocomplete') {
+        return null;
+      }
       // We are in a Twig expression, handle TwigExpressionAutocomplete by walking through the properties
       if (inTwigExpression && autocompleteType === 'TwigExpressionAutocomplete') {
         const currentWords = currentLine.replace("\t", "").split(" ");
