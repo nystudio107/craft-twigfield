@@ -73,6 +73,18 @@ class AutocompleteService extends Component
     // =========================================================================
 
     /**
+     * @inerhitDoc
+     */
+    public function init(): void
+    {
+        // Short cacheDuration if we're in devMode
+        if (Craft::$app->getConfig()->getGeneral()->devMode) {
+            $this->cacheDuration = 1;
+        }
+        parent::init();
+    }
+
+    /**
      * Call each of the autocompletes to generate their complete items
      */
     public function generateAutocompletes(string $fieldType = Twigfield::DEFAULT_FIELD_TYPE): array
