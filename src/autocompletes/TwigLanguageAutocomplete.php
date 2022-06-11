@@ -8,9 +8,13 @@
  * @copyright Copyright (c) 2022 nystudio107
  */
 
-namespace nystudio107\seomatic\helpers;
+namespace nystudio107\twigfield\autocompletes;
 
+use Craft;
 use nystudio107\twigfield\base\Autocomplete;
+use nystudio107\twigfield\models\CompleteItem;
+use nystudio107\twigfield\types\AutocompleteTypes;
+use nystudio107\twigfield\types\CompleteItemKind;
 
 /**
  * @author    nystudio107
@@ -22,13 +26,53 @@ class TwigLanguageAutocomplete extends Autocomplete
     // Constants
     // =========================================================================
 
-    // Public Static Methods
+    const FILTER_DOCS = [
+    ];
+
+    const FUNCTION_DOCS = [
+    ];
+
+    // Public Properties
+    // =========================================================================
+
+    /**
+     * @var string The name of the autocomplete
+     */
+    public $name = 'TwigLanguageAutocomplete';
+
+    /**
+     * @var string The type of the autocomplete
+     */
+    public $type = AutocompleteTypes::TwigExpressionAutocomplete;
+
+    // Public Methods
     // =========================================================================
 
     /**
      * Core function that generates the autocomplete array
      */
-    public static function generateCompleteItems(): void
+    public function generateCompleteItems(): void
     {
+        $twig = Craft::$app->getView()->getTwig();
+        $filters = array_keys($twig->getFilters());
+        foreach ($filters as $filter) {
+            CompleteItem::create()
+                ->label($filter)
+                ->insertText($filter)
+                ->detail(Craft::t('twigfield', 'Twig Filter'))
+                ->documentation(self::FILTER_DOCS[$filter] ?? '')
+                ->kind(CompleteItemKind::FieldKind)
+                ->add($this);
+        }
+        $functions = array_keys($twig->getFunctions());
+        foreach ($functions as $function) {
+            CompleteItem::create()
+                ->label($function)
+                ->insertText($function)
+                ->detail(Craft::t('twigfield', 'Twig Function'))
+                ->documentation(self::FUNCTION_DOCS[$function] ?? '')
+                ->kind(CompleteItemKind::FieldKind)
+                ->add($this);
+        }
     }
 }

@@ -8,9 +8,13 @@
  * @copyright Copyright (c) 2022 nystudio107
  */
 
-namespace nystudio107\seomatic\helpers;
+namespace nystudio107\twigfield\autocompletes;
 
+use craft\web\twig\variables\Cp;
 use nystudio107\twigfield\base\Autocomplete;
+use nystudio107\twigfield\models\CompleteItem;
+use nystudio107\twigfield\types\AutocompleteTypes;
+use nystudio107\twigfield\types\CompleteItemKind;
 
 /**
  * @author    nystudio107
@@ -19,16 +23,42 @@ use nystudio107\twigfield\base\Autocomplete;
  */
 class EnvironmentVariableAutocomplete extends Autocomplete
 {
-    // Constants
+    // Public Properties
     // =========================================================================
 
-    // Public Static Methods
+    /**
+     * @var string The name of the autocomplete
+     */
+    public $name = 'EnvironmentVariableAutocomplete';
+
+    /**
+     * @var string The type of the autocomplete
+     */
+    public $type = AutocompleteTypes::GeneralAutocomplete;
+
+    // Public Methods
     // =========================================================================
 
     /**
      * Core function that generates the autocomplete array
      */
-    public static function generateCompleteItems(): void
+    public function generateCompleteItems(): void
     {
+        $cp = new Cp();
+        $suggestions = $cp->getEnvSuggestions(true);
+        foreach ($suggestions as $suggestion) {
+            foreach ($suggestion['data'] as $item) {
+                $name = $item['name'];
+                $prefix = $name[0];
+                $trimmedName = ltrim($name, $prefix);
+                CompleteItem::create()
+                    ->label($name)
+                    ->insertText($trimmedName)
+                    ->filterText($trimmedName)
+                    ->detail($item['hint'])
+                    ->kind(CompleteItemKind::ConstantKind)
+                    ->add($this);
+            }
+        }
     }
 }
