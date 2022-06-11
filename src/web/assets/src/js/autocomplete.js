@@ -92,7 +92,7 @@ function addCompletionItemsToMonaco(completionItems, autocompleteType) {
               // Monaco adds a 'range' to the object, to denote where the autocomplete is triggered from,
               // which needs to be removed each time the autocomplete objects are re-used
               delete completionItem.range;
-              if ('documentation' in completionItem) {
+              if ('documentation' in completionItem && typeof completionItem.documentation !== 'object') {
                 let docs = completionItem.documentation;
                 completionItem.documentation = {
                   value: docs,
@@ -160,11 +160,15 @@ function addHoverHandlerToMonaco(completionItems) {
       if (typeof currentItems !== 'undefined' && typeof currentItems[currentWord.word] !== 'undefined') {
         const completionItem = currentItems[currentWord.word][COMPLETION_KEY];
         if (typeof completionItem !== 'undefined') {
+          let docs = completionItem.documentation;
+          if (typeof completionItem.documentation === 'object') {
+            docs = completionItem.documentation.value;
+          }
           return {
             range: new monaco.Range(position.lineNumber, currentWord.startColumn, position.lineNumber, currentWord.endColum),
             contents: [
               {value: '**' + completionItem.detail + '**'},
-              {value: completionItem.documentation.value},
+              {value: docs},
             ]
           }
         }
