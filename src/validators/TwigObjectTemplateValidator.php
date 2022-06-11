@@ -22,7 +22,7 @@ use function is_string;
  * @package   Twigfield
  * @since     1.0.0
  */
-class TwigExpressionValidator extends Validator
+class TwigObjectTemplateValidator extends Validator
 {
     // Constants
     // =========================================================================
@@ -33,19 +33,29 @@ class TwigExpressionValidator extends Validator
      *        Twig template validation
      *
      * ```php
-     * use nystudio107\twigfield\validators\TwigExpressionValidator;
+     * use nystudio107\twigfield\validators\TwigTemplateValidator;
      * use nystudio107\twigfield\events\RegisterTwigValidatorVariablesEvent;
      * use yii\base\Event;
      *
-     * Event::on(TwigExpressionValidator::class,
-     *     TwigExpressionValidator::EVENT_REGISTER_TWIG_VALIDATOR_VARIABLES,
+     * Event::on(TwigTemplateValidator::class,
+     *     TwigTemplateValidator::EVENT_REGISTER_TWIG_VALIDATOR_VARIABLES,
      *     function(RegisterTwigValidatorVariablesEvent $event) {
      *         $event->variables['variableName'] = $variableValue;
      *     }
      * );
      * ```
      */
-    const EVENT_REGISTER_TWIG_VALIDATOR_VARIABLES = 'registerTwigfieldAutocompletes';
+    const EVENT_REGISTER_TWIG_VALIDATOR_VARIABLES = 'registerTwigValidatorVariables';
+
+    /**
+     * @var mixed The object that should be passed into `renderObjectTemplate()` during the template rendering
+     */
+    public $object = null;
+
+    /**
+     * @var array Variables in key => value format that should be available during the template rendering
+     */
+    public $variables = [];
 
     // Public Methods
     // =========================================================================
@@ -61,10 +71,11 @@ class TwigExpressionValidator extends Validator
         if (!empty($value) && is_string($value)) {
             try {
                 $event = new RegisterTwigValidatorVariablesEvent([
-                    'variables' => [],
+                    'object' => $this->object,
+                    'variables' => $this->variables,
                 ]);
                 $this->trigger(self::EVENT_REGISTER_TWIG_VALIDATOR_VARIABLES, $event);
-                Craft::$app->getView()->renderString($value, $event->variables);
+                Craft::$app->getView()->renderObjectTemplate($value, $event->object, $event->variables);
             } catch (Exception $e) {
                 $error = Craft::t(
                     'twigfield',

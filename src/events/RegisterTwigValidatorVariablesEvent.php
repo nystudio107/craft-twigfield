@@ -20,7 +20,12 @@ use yii\base\Event;
 class RegisterTwigValidatorVariablesEvent extends Event
 {
     /**
-     * @var array Variables to be passed down to the Twig context during Twig template validation
+     * @var mixed The object that should be passed into `renderObjectTemplate()` during the template rendering
+     */
+    public $object = null;
+
+    /**
+     * @var array Variables in key => value format that should be available during the template rendering
      */
     public $variables = [];
 }
