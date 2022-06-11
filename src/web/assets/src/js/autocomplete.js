@@ -92,6 +92,12 @@ function addCompletionItemsToMonaco(completionItems, autocompleteType) {
               // Monaco adds a 'range' to the object, to denote where the autocomplete is triggered from,
               // which needs to be removed each time the autocomplete objects are re-used
               delete completionItem.range;
+              if ('documentation' in completionItem) {
+                let docs = completionItem.documentation;
+                completionItem.documentation = {
+                  value: docs,
+                }
+              }
               // Add to final results
               result.push(completionItem);
             }
