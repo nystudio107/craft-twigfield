@@ -40,6 +40,7 @@ class TwigObjectTemplateValidator extends Validator
      * Event::on(TwigTemplateValidator::class,
      *     TwigTemplateValidator::EVENT_REGISTER_TWIG_VALIDATOR_VARIABLES,
      *     function(RegisterTwigValidatorVariablesEvent $event) {
+     *         $event->object = $myObject;
      *         $event->variables['variableName'] = $variableValue;
      *     }
      * );
