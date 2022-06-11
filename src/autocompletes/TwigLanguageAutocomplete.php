@@ -27,14 +27,14 @@ class TwigLanguageAutocomplete extends Autocomplete
     // =========================================================================
 
     const FILTER_DOCS = [
-        'abs' => '',
-        'address' => '',
-        'append' => '',
-        'ascii' => '',
-        'atom' => '',
-        'attr' => '',
-        'batch' => '',
-        'camel' => '',
+        'abs' => 'Returns the absolute value of a number.',
+        'address' => 'Formats an address.',
+        'append' => 'Appends HTML to the end of another element.',
+        'ascii' => 'Converts a string to ASCII characters.',
+        'atom' => 'Converts a date to an ISO-8601 timestamp.',
+        'attr' => 'Modifies an HTML tag’s attributes.',
+        'batch' => 'Batches items in an array.',
+        'camel' => 'Formats a string into camelCase.',
         'capitalize' => '',
         'column' => '',
         'contains' => '',
@@ -180,6 +180,46 @@ class TwigLanguageAutocomplete extends Autocomplete
         'url' => '',
     ];
 
+    const TAG_DOCS = [
+        'apply' => '',
+        'autoescape' => '',
+        'block' => '',
+        'cache' => '',
+        'css' => '',
+        'dd' => '',
+        'deprecated' => '',
+        'do' => '',
+        'embed' => '',
+        'exit' => '',
+        'extends' => '',
+        'flush' => '',
+        'for' => '',
+        'from' => '',
+        'header' => '',
+        'hook' => '',
+        'html' => '',
+        'if' => '',
+        'import' => '',
+        'include' => '',
+        'js' => '',
+        'macro' => '',
+        'namespace' => '',
+        'nav' => '',
+        'paginate' => '',
+        'redirect' => '',
+        'requireAdmin' => '',
+        'requireEdition' => '',
+        'requireGuest' => '',
+        'requireLogin' => '',
+        'requirePermission' => '',
+        'script' => '',
+        'set' => '',
+        'switch' => '',
+        'tag' => '',
+        'use' => '',
+        'with' => '',
+    ];
+
     // Public Properties
     // =========================================================================
 
@@ -202,6 +242,7 @@ class TwigLanguageAutocomplete extends Autocomplete
     public function generateCompleteItems(): void
     {
         $twig = Craft::$app->getView()->getTwig();
+        // Twig Filters
         $filters = array_keys($twig->getFilters());
         foreach ($filters as $filter) {
             CompleteItem::create()
@@ -209,12 +250,11 @@ class TwigLanguageAutocomplete extends Autocomplete
                 ->insertText($filter)
                 ->detail(Craft::t('twigfield', 'Twig Filter'))
                 ->documentation(self::FILTER_DOCS[$filter] ?? '')
-                ->kind(CompleteItemKind::FieldKind)
+                ->kind(CompleteItemKind::MethodKind)
                 ->add($this);
         }
+        // Twig Functions
         $functions = array_keys($twig->getFunctions());
-        sort($functions);
-        Craft::dd(json_encode($functions, JSON_PRETTY_PRINT));
         foreach ($functions as $function) {
             $functionLabel = $function . '()';
             CompleteItem::create()
@@ -223,6 +263,17 @@ class TwigLanguageAutocomplete extends Autocomplete
                 ->detail(Craft::t('twigfield', 'Twig Function'))
                 ->documentation(self::FUNCTION_DOCS[$function] ?? '')
                 ->kind(CompleteItemKind::FunctionKind)
+                ->add($this);
+        }
+        // Twig Tags
+        $tags = array_keys($twig->getTokenParsers());
+        foreach ($tags as $tag) {
+            CompleteItem::create()
+                ->label($tag)
+                ->insertText($tag)
+                ->detail(Craft::t('twigfield', 'Twig Tag'))
+                ->documentation(self::TAG_DOCS[$function] ?? '')
+                ->kind(CompleteItemKind::FieldKind)
                 ->add($this);
         }
     }
