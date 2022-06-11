@@ -96,6 +96,8 @@ function addCompletionItemsToMonaco(completionItems, autocompleteType) {
                 let docs = completionItem.documentation;
                 completionItem.documentation = {
                   value: docs,
+                  isTrusted: true,
+                  supportsHtml: true
                 }
               }
               // Add to final results
@@ -162,7 +164,7 @@ function addHoverHandlerToMonaco(completionItems) {
             range: new monaco.Range(position.lineNumber, currentWord.startColumn, position.lineNumber, currentWord.endColum),
             contents: [
               {value: '**' + completionItem.detail + '**'},
-              {value: completionItem.documentation},
+              {value: completionItem.documentation.value},
             ]
           }
         }
