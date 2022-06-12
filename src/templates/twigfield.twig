@@ -14,14 +14,14 @@
     {% endjs %}
 {% endmacro %}
 
-{% macro textareaField(config, fieldType = "Twigfield", wrapperClass = "") %}
+{% macro textareaField(config, fieldType = "Twigfield", wrapperClass = "", options = {}) %}
     {% import "_includes/forms" as forms %}
     {{ forms.textareaField(config) }}
-    {{ _self.includeJs(config.id, fieldType) }}
+    {{ _self.includeJs(config.id, fieldType, wrapperClass, options) }}
 {% endmacro %}
 
-{% macro textarea(config, fieldType = "Twigfield", wrapperClass = "") %}
+{% macro textarea(config, fieldType = "Twigfield", wrapperClass = "", options = {}) %}
     {% import "_includes/forms" as forms %}
     {{ forms.textarea(config) }}
-    {{ _self.includeJs(config.id, fieldType) }}
+    {{ _self.includeJs(config.id, fieldType, wrapperClass, options) }}
 {% endmacro %}
