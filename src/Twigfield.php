@@ -12,10 +12,12 @@ namespace nystudio107\twigfield;
 
 use Craft;
 use craft\events\RegisterTemplateRootsEvent;
+use craft\helpers\UrlHelper;
 use craft\i18n\PhpMessageSource;
 use craft\web\Application as CraftWebApp;
 use craft\web\View;
 use nystudio107\twigfield\autocompletes\CraftApiAutocomplete;
+use nystudio107\twigfield\autocompletes\TwigLanguageAutocomplete;
 use nystudio107\twigfield\events\RegisterTwigfieldAutocompletesEvent;
 use nystudio107\twigfield\services\AutocompleteService;
 use yii\base\BootstrapInterface;
@@ -40,6 +42,7 @@ class Twigfield extends Module implements BootstrapInterface
 
     const DEFAULT_TWIGFIELD_AUTOCOMPLETES = [
         CraftApiAutocomplete::class,
+        TwigLanguageAutocomplete::class,
     ];
 
     // Public Static Methods
@@ -91,6 +94,7 @@ class Twigfield extends Module implements BootstrapInterface
         // Set up our alias
         Craft::setAlias('@nystudio107/twigfield', $this->getBasePath());
         Craft::setAlias('@twigfieldBaseAssetsUrl', AutocompleteService::getTwigfieldPublishUrl());
+        Craft::setAlias('@twigfieldEndpointUrl', UrlHelper::actionUrl('twigfield/autocomplete/index'));
         // Register our module
         Craft::$app->setModule($this->id, $this);
         // Translation category
@@ -126,8 +130,14 @@ class Twigfield extends Module implements BootstrapInterface
      */
     public function registerEventHandlers(): void
     {
-        // Base templates directory
+        // Base CP templates directory
         Event::on(View::class, View::EVENT_REGISTER_CP_TEMPLATE_ROOTS, function (RegisterTemplateRootsEvent $e) {
+            if (is_dir($baseDir = $this->getBasePath() . DIRECTORY_SEPARATOR . 'templates')) {
+                $e->roots[$this->id] = $baseDir;
+            }
+        });
+        // Base Site templates directory
+        Event::on(View::class, View::EVENT_REGISTER_SITE_TEMPLATE_ROOTS, function (RegisterTemplateRootsEvent $e) {
             if (is_dir($baseDir = $this->getBasePath() . DIRECTORY_SEPARATOR . 'templates')) {
                 $e->roots[$this->id] = $baseDir;
             }
