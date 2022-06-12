@@ -70,7 +70,11 @@ abstract class Autocomplete implements AutocompleteInterface
         if (empty($path)) {
             $path = $item->label;
         }
-        ArrayHelper::setValue($this->completeItems, $path, [self::COMPLETION_KEY => array_filter($item->toArray())]);
+        ArrayHelper::setValue($this->completeItems, $path, [
+            self::COMPLETION_KEY => array_filter($item->toArray(), static function ($v) {
+                return !is_null($v);
+            })
+        ]);
     }
 
     /**
