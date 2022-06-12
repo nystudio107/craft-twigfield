@@ -22,6 +22,18 @@ use yii\web\Response;
 class AutocompleteController extends Controller
 {
     /**
+     * @inheritDoc
+     */
+    public function beforeAction($action): bool
+    {
+        if (Twigfield::$settings->allowFrontendAccess) {
+            $this->allowAnonymous = 1;
+        }
+
+        return parent::beforeAction($action);
+    }
+
+    /**
      * Return all of the autocomplete items in JSON format
      *
      * @param string $fieldType
