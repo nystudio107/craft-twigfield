@@ -13,7 +13,6 @@
  * @since     1.0.0
  */
 const COMPLETION_KEY = '__completions';
-const AUTOCOMPLETE_CONTROLLER_ENDPOINT = 'twigfield/autocomplete/index';
 
 /**
  * Get the last item from the array
@@ -182,14 +181,14 @@ function addHoverHandlerToMonaco(completionItems) {
 /**
  * Fetch the autocompletion items from local storage, or from the endpoint if they aren't cached in local storage
  */
-function getCompletionItemsFromEndpoint(fieldType) {
+function getCompletionItemsFromEndpoint(fieldType, endpointUrl) {
   let urlParams = '';
   if (typeof fieldType !== 'undefined' && fieldType !== null) {
     urlParams = '?fieldType=' + fieldType;
   }
   // Ping the controller endpoint
   let request = new XMLHttpRequest();
-  request.open('GET', Craft.getActionUrl(AUTOCOMPLETE_CONTROLLER_ENDPOINT + urlParams), true);
+  request.open('GET', endpointUrl + urlParams, true);
   request.onload = function () {
     if (request.status >= 200 && request.status < 400) {
       const completionItems = JSON.parse(request.responseText);
