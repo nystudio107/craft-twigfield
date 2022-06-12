@@ -157,7 +157,7 @@ class AutocompleteService extends Component
     public function getAllAutocompleteGenerators(string $fieldType = Twigfield::DEFAULT_FIELD_TYPE): array
     {
         $event = new RegisterTwigfieldAutocompletesEvent([
-            'types' => [],
+            'types' => Twigfield::$settings->defaultTwigfieldAutocompletes,
             'fieldType' => $fieldType,
         ]);
         $this->trigger(self::EVENT_REGISTER_TWIGFIELD_AUTOCOMPLETES, $event);
