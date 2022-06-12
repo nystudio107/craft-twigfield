@@ -19,7 +19,6 @@
  */
 
 use nystudio107\twigfield\autocompletes\CraftApiAutocomplete;
-use nystudio107\twigfield\autocompletes\EnvironmentVariableAutocomplete;
 use nystudio107\twigfield\autocompletes\TwigLanguageAutocomplete;
 
 return [
@@ -29,6 +28,5 @@ return [
     'defaultTwigfieldAutocompletes' => [
         CraftApiAutocomplete::class,
         TwigLanguageAutocomplete::class,
-        EnvironmentVariableAutocomplete::class,
     ]
 ];
