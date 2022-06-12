@@ -21,16 +21,36 @@ if (typeof __webpack_public_path__ !== 'string' || __webpack_public_path__ === '
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import {getCompletionItemsFromEndpoint} from '@/js/autocomplete.js';
 
-/* For now, use the default theme
-
-import editorTheme from 'monaco-themes/themes/Night Owl.json';
-
-monaco.editor.defineTheme('night-owl', editorTheme);
-monaco.editor.setTheme('night-owl');
-*/
+// The default EditorOptions for the Monaco editor instance
+// ref: https://microsoft.github.io/monaco-editor/api/enums/monaco.editor.EditorOption.html
+const defaultOptions = {
+  language: 'twig',
+  theme: 'vs',
+  automaticLayout: true,
+  // Disable sidebar line numbers
+  lineNumbers: 'off',
+  glyphMargin: false,
+  folding: false,
+  // Undocumented see https://github.com/Microsoft/vscode/issues/30795#issuecomment-410998882
+  lineDecorationsWidth: 0,
+  lineNumbersMinChars: 0,
+  // Disable the current line highlight
+  renderLineHighlight: false,
+  wordWrap: true,
+  scrollBeyondLastLine: false,
+  scrollbar: {
+    vertical: 'hidden',
+    horizontal: 'auto',
+  },
+  fontSize: 14,
+  fontFamily: 'SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace',
+  minimap: {
+    enabled: false
+  },
+};
 
 // Create the editor
-function makeMonacoEditor(elementId, fieldType, wrapperClass) {
+function makeMonacoEditor(elementId, fieldType, wrapperClass, options, endpointUrl) {
   const textArea = document.getElementById(elementId);
   let container = document.createElement('div');
   // Make a sibling div for the Monaco editor to live in
@@ -43,44 +63,14 @@ function makeMonacoEditor(elementId, fieldType, wrapperClass) {
   textArea.parentNode.insertBefore(container, textArea);
   textArea.style.display = 'none';
   // Create the Monaco editor
-  let editor = monaco.editor.create(container, {
-    value: textArea.value,
-    language: 'twig',
-    theme: 'vs',
-    automaticLayout: true,
-    // Disable sidebar line numbers
-    lineNumbers: 'off',
-    glyphMargin: false,
-    folding: false,
-    // Undocumented see https://github.com/Microsoft/vscode/issues/30795#issuecomment-410998882
-    lineDecorationsWidth: 0,
-    lineNumbersMinChars: 0,
-    // Disable the current line highlight
-    renderLineHighlight: false,
-    wordWrap: true,
-    scrollBeyondLastLine: false,
-    scrollbar: {
-      vertical: 'hidden',
-      horizontal: 'auto',
-    },
-    fontSize: 14,
-    fontFamily: 'SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace',
-    minimap: {
-      enabled: false
-    },
-  });
-  monaco.editor.setTheme('twigfield');
-
+  let editorOptions = {...defaultOptions, ...JSON.parse(options), ...{value: textArea.value}}
+  let editor = monaco.editor.create(container, editorOptions);
   // When the text is changed in the editor, sync it to the underlying TextArea input
   editor.onDidChangeModelContent((event) => {
     textArea.value = editor.getValue();
   });
-  // Handle keyboard shortcuts too via beforeSaveShortcut
-  Craft.cp.on('beforeSaveShortcut', () => {
-    textArea.value = editor.getValue();
-  });
   // Get the autocompletion items
-  getCompletionItemsFromEndpoint(fieldType);
+  getCompletionItemsFromEndpoint(fieldType, endpointUrl);
   // Custom resizer to always keep the editor full-height, without needing to scroll
   let ignoreEvent = false;
   const updateHeight = () => {
