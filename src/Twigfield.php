@@ -16,9 +16,8 @@ use craft\helpers\UrlHelper;
 use craft\i18n\PhpMessageSource;
 use craft\web\Application as CraftWebApp;
 use craft\web\View;
-use nystudio107\twigfield\autocompletes\CraftApiAutocomplete;
-use nystudio107\twigfield\autocompletes\TwigLanguageAutocomplete;
-use nystudio107\twigfield\events\RegisterTwigfieldAutocompletesEvent;
+use nystudio107\twigfield\helpers\Config;
+use nystudio107\twigfield\models\Settings;
 use nystudio107\twigfield\services\AutocompleteService;
 use yii\base\BootstrapInterface;
 use yii\base\Event;
@@ -40,10 +39,13 @@ class Twigfield extends Module implements BootstrapInterface
 
     const DEFAULT_FIELD_TYPE = 'Twigfield';
 
-    const DEFAULT_TWIGFIELD_AUTOCOMPLETES = [
-        CraftApiAutocomplete::class,
-        TwigLanguageAutocomplete::class,
-    ];
+    // Public Static Properties
+    // =========================================================================
+
+    /**
+     * @var Settings The Twigfield config settings
+     */
+    public static $settings = null;
 
     // Public Static Methods
     // =========================================================================
@@ -109,6 +111,9 @@ class Twigfield extends Module implements BootstrapInterface
                 'allowOverrides' => true,
             ];
         }
+        // Set our settings
+        $config = Config::getConfigFromFile($this->id);
+        self::$settings = new Settings($config);
     }
 
     /**
@@ -137,16 +142,12 @@ class Twigfield extends Module implements BootstrapInterface
             }
         });
         // Base Site templates directory
-        Event::on(View::class, View::EVENT_REGISTER_SITE_TEMPLATE_ROOTS, function (RegisterTemplateRootsEvent $e) {
-            if (is_dir($baseDir = $this->getBasePath() . DIRECTORY_SEPARATOR . 'templates')) {
-                $e->roots[$this->id] = $baseDir;
-            }
-        });
-        // Register our default twigfield autocompletes
-        Event::on(AutocompleteService::class, AutocompleteService::EVENT_REGISTER_TWIGFIELD_AUTOCOMPLETES, static function (RegisterTwigfieldAutocompletesEvent $e) {
-            if ($e->fieldType === self::DEFAULT_FIELD_TYPE) {
-                $e->types = array_merge($e->types, self::DEFAULT_TWIGFIELD_AUTOCOMPLETES);
-            }
-        });
+        if (self::$settings->allowFrontendAccess) {
+            Event::on(View::class, View::EVENT_REGISTER_SITE_TEMPLATE_ROOTS, function (RegisterTemplateRootsEvent $e) {
+                if (is_dir($baseDir = $this->getBasePath() . DIRECTORY_SEPARATOR . 'templates')) {
+                    $e->roots[$this->id] = $baseDir;
+                }
+            });
+        }
     }
 }
