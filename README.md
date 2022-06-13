@@ -4,6 +4,8 @@
 
 Provides a twig editor field with Twig & Craft API autocomplete
 
+![Demo](./resources/twigfield-demo.gif)
+
 ## Requirements
 
 Twigfield requires Craft CMS 3.0 or 4.0.
