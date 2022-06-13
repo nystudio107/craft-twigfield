@@ -50,13 +50,17 @@ It can be very easy to add to an existing project, as you can see from the [Prep
 
 Twigfield works just like the Craft CMS `forms` macros that should be familiar to plugin and module developers.
 
+#### Import Macros
+
 Simply import the macros:
 
 ```twig
 {% import "twigfield/twigfield" as twigfield %}
 ```
 
-Then to create a `textarea` do the following:
+#### Multi-line Editor
+
+Then to create a `textarea` multi-line editor, do the following:
 
 ```twig
 {{ twigfield.textarea( {
@@ -68,7 +72,7 @@ Then to create a `textarea` do the following:
 
 ...where `textAreaText` is a variable containing the initial text that should be in the editor field. This will create the Twig editor.
 
-To create a `textareaField` do the following:
+To create a `textareaField` multi-line editor, do the following:
 
 ```twig
 {{ twigfield.textareaField( {
@@ -82,7 +86,35 @@ To create a `textareaField` do the following:
 
 ...where `textAreaText` is a variable containing the initial text that should be in the editor field. This will create the `label` and `instructions`, along with the Twig editor.
 
-In either case, an Asset Bundle containing the necessary CSS & JavaScript for the editor to function will be included, and the editor initialized.
+#### Single-line Editor
+
+Then to create a `text` single-line editor, do the following:
+
+```twig
+{{ twigfield.text( {
+    id: 'myTwigfield',
+    name: 'myTwigfield',
+    value: text,
+} }}
+```
+
+...where `text` is a variable containing the initial text that should be in the editor field. This will create the Twig editor that is restricted to a single line, for simple Twig expressions.
+
+To create a `textField` single-line editor, do the following:
+
+```twig
+{{ twigfield.textField( {
+    label: "Twig Editor"|t,
+    instructions: "Enter any Twig code below, with full API autocompletion."|t,
+    id: 'myTwigfield',
+    name: 'myTwigfield',
+    value: text,
+} }}
+```
+
+...where `text` is a variable containing the initial text that should be in the editor field. This will create the `label` and `instructions`, along with the Twig editor that is restricted to a single line, for simple Twig expressions.
+
+Regardless of the macro used, an Asset Bundle containing the necessary CSS & JavaScript for the editor to function will be included, and the editor initialized.
 
 ### In Frontend Templates
 
