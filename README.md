@@ -328,6 +328,8 @@ public function defineRules()
 
 Some things to do, and ideas for potential features:
 
+* Smarter Twig expression detection
+* Hovers for `TwigExpressionAutocomplete`s should only be added if they are inside of a Twig expression
 * Perhaps a general code editor as an offshoot?
 
 Brought to you by [nystudio107](https://nystudio107.com/)
