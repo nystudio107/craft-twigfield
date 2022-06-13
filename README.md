@@ -123,11 +123,11 @@ Enabling the `allowFrontendAccess` setting allows access to the `twigfield/autoc
 The `textarea`, `textareaField`, and `includeJs` macros all take three additional optional parameters:
 
 ```twig
-{{ textarea(config, fieldType, wrapperClass, options) }}
+{{ textarea(config, fieldType, wrapperClass, editorOptions) }}
 
-{{ textareaField(config, fieldType, wrapperClass, options }}
+{{ textareaField(config, fieldType, wrapperClass, editorOptions }}
 
-{{ includeJs(fieldId, fieldType, wrapperClass, options }}
+{{ includeJs(fieldId, fieldType, wrapperClass, editorOptions }}
 ```
 
 #### `fieldType`
@@ -162,9 +162,9 @@ e.g.:
 
 The `monaco-editor-background-frame` class is bundled, and will cause the field to look like a Craft CMS editor field, but you can use your own class as well.
 
-#### `options`
+#### `editorOptions`
 
-**`options`** - an optional [EditorOption](https://microsoft.github.io/monaco-editor/api/enums/monaco.editor.EditorOption.html) passed in to configure the Monaco editor. By default, this is an empty object.
+**`editorOptions`** - an optional [EditorOption](https://microsoft.github.io/monaco-editor/api/enums/monaco.editor.EditorOption.html) passed in to configure the Monaco editor. By default, this is an empty object.
 
 e.g.:
 

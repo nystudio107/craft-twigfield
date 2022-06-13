@@ -50,7 +50,7 @@ const defaultOptions = {
 };
 
 // Create the editor
-function makeMonacoEditor(elementId, fieldType, wrapperClass, options, endpointUrl) {
+function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, endpointUrl) {
   const textArea = document.getElementById(elementId);
   let container = document.createElement('div');
   // Make a sibling div for the Monaco editor to live in
@@ -63,8 +63,8 @@ function makeMonacoEditor(elementId, fieldType, wrapperClass, options, endpointU
   textArea.parentNode.insertBefore(container, textArea);
   textArea.style.display = 'none';
   // Create the Monaco editor
-  let editorOptions = {...defaultOptions, ...JSON.parse(options), ...{value: textArea.value}}
-  let editor = monaco.editor.create(container, editorOptions);
+  let options = {...defaultOptions, ...JSON.parse(editorOptions), ...{value: textArea.value}}
+  let editor = monaco.editor.create(container, options);
   // When the text is changed in the editor, sync it to the underlying TextArea input
   editor.onDidChangeModelContent((event) => {
     textArea.value = editor.getValue();
