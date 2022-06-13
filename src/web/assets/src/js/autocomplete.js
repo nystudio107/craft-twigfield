@@ -44,7 +44,7 @@ function addCompletionItemsToMonaco(completionItems, autocompleteType) {
       });
       let inTwigExpression = true;
       // Ensure we're inside of a Twig expression
-      if (currentLine.indexOf('{') !== 0) {
+      if (currentLine.lastIndexOf('{') === -1) {
         inTwigExpression = false;
       }
       const startExpression = currentLine.substring(currentLine.lastIndexOf('{'));
