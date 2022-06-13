@@ -2,7 +2,7 @@
  * @project        twigfield
  * @name           vendors.js
  * @author         Andrew Welch
- * @build          Sun Jun 12 2022 07:02:57 GMT+0000 (Coordinated Universal Time)
+ * @build          Mon Jun 13 2022 05:35:27 GMT+0000 (Coordinated Universal Time)
  * @copyright      Copyright (c) 2022 ©2022 nystudio107.com
  *
  */
