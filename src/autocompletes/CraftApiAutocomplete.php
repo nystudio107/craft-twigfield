@@ -72,6 +72,11 @@ class CraftApiAutocomplete extends Autocomplete
      */
     public $type = AutocompleteTypes::TwigExpressionAutocomplete;
 
+    /**
+     * @var array A key-value array of additional global variables to parse for completions
+     */
+    public $additionalGlobals = [];
+
     // Public Methods
     // =========================================================================
 
@@ -85,7 +90,8 @@ class CraftApiAutocomplete extends Autocomplete
         $globals = array_merge(
             Craft::$app->view->getTwig()->getGlobals(),
             $this->elementRouteVariables(),
-            $this->overrideValues()
+            $this->additionalGlobals,
+            $this->overrideValues(),
         );
         foreach ($globals as $key => $value) {
             if (!in_array($key, self::EXCLUDED_PROPERTY_NAMES, true)) {
