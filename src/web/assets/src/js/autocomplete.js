@@ -59,6 +59,8 @@ function addCompletionItemsToMonaco(completionItems, autocompleteType) {
       if (inTwigExpression && autocompleteType === 'TwigExpressionAutocomplete') {
         const currentWords = currentLine.replace("\t", "").split(" ");
         let currentWord = currentWords[currentWords.length - 1];
+        // Remove any leading { characters from the current word
+        currentWord = currentWord.replace(/^{/, '');
         // If the current word includes ( or >, split on that, too, to allow the autocomplete to work in nested functions and HTML tags
         if (currentWord.includes('(')) {
           currentWord = getLastItem(currentWord.split('('));
