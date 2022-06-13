@@ -50,9 +50,10 @@ const defaultOptions = {
 };
 
 // Create the editor
-function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, endpointUrl) {
+function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twigfieldOptions, endpointUrl) {
   const textArea = document.getElementById(elementId);
   let container = document.createElement('div');
+  let fieldOptions = JSON.parse(twigfieldOptions);
   // Make a sibling div for the Monaco editor to live in
   container.id = elementId + '-monaco-editor';
   container.classList.add('p-2', 'box-content', 'monaco-editor-twigfield-icon', 'w-full', 'h-full');
@@ -69,6 +70,33 @@ function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, end
   editor.onDidChangeModelContent((event) => {
     textArea.value = editor.getValue();
   });
+  // ref: https://github.com/vikyd/vue-monaco-singleline/blob/master/src/monaco-singleline.vue#L150
+  if ('singleLineEditor' in fieldOptions && fieldOptions.singleLineEditor) {
+    const textModel = editor.getModel();
+    // Remove multiple spaces & tabs
+    const text = textModel.getValue();
+    textModel.setValue(text.replace(/\s\s+/g, ' '));
+    // Handle the Find command
+    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyF, () => {
+    });
+    // Handle typing the Enter key
+    editor.addCommand(monaco.KeyCode.Enter, () => {
+    }, '!suggestWidgetVisible');
+    // Handle Paste
+    editor.onDidPaste((e) => {
+      // multiple rows will be merged to single row
+      let newContent = '';
+      const lineCount = textModel.getLineCount();
+      // remove all line breaks
+      for (let i = 0; i < lineCount; i += 1) {
+        newContent += textModel.getLineContent(i + 1);
+      }
+      // Remove multiple spaces & tabs
+      newContent = newContent.replace(/\s\s+/g, ' ');
+      textModel.setValue(newContent);
+      editor.setPosition({column: newContent.length + 1, lineNumber: 1});
+    })
+  }
   // Get the autocompletion items
   getCompletionItemsFromEndpoint(fieldType, endpointUrl);
   // Custom resizer to always keep the editor full-height, without needing to scroll
