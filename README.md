@@ -24,9 +24,15 @@ To install Twigfield, follow these steps:
 
 Twigfield provides a full-featured Twig editor with syntax highlighting via the powerful [Monaco Editor](https://microsoft.github.io/monaco-editor/) (the same editor that is the basis for VS Code).
 
-Twigfield provides full autocompletion for [Twig](https://twig.symfony.com/doc/3.x/) filters/functions/tags, and the full [Craft CMS](https://craftcms.com/docs/4.x/) API, including installed plugins.
+Twigfield provides full autocompletion for [Twig](https://twig.symfony.com/doc/3.x/) filters/functions/tags, and the full [Craft CMS](https://craftcms.com/docs/4.x/) API, including installed plugins:
 
-You can also add your own custom Autocompletes, and customize the look and operation of the editor.
+![Autocomplete](./resources/twigfield-autocomplete.png)
+
+And it adds hover documentation when you hover the cursor over an expression:
+
+![Hovers](./resources/twigfield-hovers.png)
+
+You can also add your own custom Autocompletes, and customize the behavior of the editor.
 
 Twigfield also provides a [Yii2 Validator](https://www.yiiframework.com/doc/guide/2.0/en/tutorial-core-validators) for Twig templates and object templates.
 
