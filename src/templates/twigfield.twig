@@ -1,4 +1,4 @@
-{% macro includeJs(fieldId, fieldType = "Twigfield", wrapperClass = "", editorOptions = {}) %}
+{% macro includeJs(fieldId, fieldType = "Twigfield", wrapperClass = "", editorOptions = {}, twigfieldOptions = {}) %}
     {% do view.registerAssetBundle("nystudio107\\twigfield\\assetbundles\\twigfield\\TwigfieldAsset") %}
     {% css %}
         @font-face {
@@ -10,7 +10,7 @@
     window.twigfieldBaseAssetsUrl = "{{ alias("@twigfieldBaseAssetsUrl") }}/";
     {% endjs %}
     {% js %}
-    makeMonacoEditor("{{ (fieldId)|namespaceInputId }}", "{{ fieldType }}", "{{ wrapperClass }}", '{{ editorOptions | json_encode | raw }}', "{{ alias('@twigfieldEndpointUrl') }}");
+    makeMonacoEditor("{{ (fieldId)|namespaceInputId }}", "{{ fieldType }}", "{{ wrapperClass }}", '{{ editorOptions | json_encode | raw }}', '{{ twigfieldOptions | json_encode | raw }}', "{{ alias('@twigfieldEndpointUrl') }}");
     {% endjs %}
 {% endmacro %}
 
@@ -24,4 +24,22 @@
     {% import "_includes/forms" as forms %}
     {{ forms.textarea(config) }}
     {{ _self.includeJs(config.id, fieldType, wrapperClass, editorOptions) }}
+{% endmacro %}
+
+{% macro textField(config, fieldType = "Twigfield", wrapperClass = "", editorOptions = {}) %}
+    {% import "_includes/forms" as forms %}
+    {{ forms.textField(config) }}
+    {% set twigfieldOptions = {
+        singleLineEditor: true,
+    } %}
+    {{ _self.includeJs(config.id, fieldType, wrapperClass, editorOptions, twigfieldOptions) }}
+{% endmacro %}
+
+{% macro text(config, fieldType = "Twigfield", wrapperClass = "", editorOptions = {}) %}
+    {% import "_includes/forms" as forms %}
+    {{ forms.text(config) }}
+    {% set twigfieldOptions = {
+        singleLineEditor: true,
+    } %}
+    {{ _self.includeJs(config.id, fieldType, wrapperClass, editorOptions, twigfieldOptions) }}
 {% endmacro %}
