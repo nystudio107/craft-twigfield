@@ -1,4 +1,4 @@
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nystudio107/craft-twigfield/badges/quality-score.png?b=develop)](https://scrutinizer-ci.com/g/nystudio107/craft-twigfield/?branch=develop) [![Code Coverage](https://scrutinizer-ci.com/g/nystudio107/craft-twigfield/badges/coverage.png?b=develop)](https://scrutinizer-ci.com/g/nystudio107/craft-twigfield/?branch=develop) [![Build Status](https://scrutinizer-ci.com/g/nystudio107/craft-twigfield/badges/build.png?b=develop)](https://scrutinizer-ci.com/g/nystudio107/craft-twigfield/build-status/develop) [![Code Intelligence Status](https://scrutinizer-ci.com/g/nystudio107/craft-twigfield/badges/code-intelligence.svg?b=develop)](https://scrutinizer-ci.com/code-intelligence)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nystudio107/craft-twigfield/badges/quality-score.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-twigfield/?branch=develop) [![Code Coverage](https://scrutinizer-ci.com/g/nystudio107/craft-twigfield/badges/coverage.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-twigfield/?branch=develop) [![Build Status](https://scrutinizer-ci.com/g/nystudio107/craft-twigfield/badges/build.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-twigfield/build-status/develop) [![Code Intelligence Status](https://scrutinizer-ci.com/g/nystudio107/craft-twigfield/badges/code-intelligence.svg?b=v1)](https://scrutinizer-ci.com/code-intelligence)
 
 # Twigfield for Craft CMS 3.x & 4.x
 
@@ -35,6 +35,8 @@ Twigfield also provides a [Yii2 Validator](https://www.yiiframework.com/doc/guid
 Once you've added the `nystudio107/craft-twigfield` package to your plugin, module, or project, no further setup is needed. This is because it operates as an auto-bootstrapping Yii2 Module.
 
 Twigfield is not a Craft CMS plugin, rather a package to be utilized by a plugin, module, or project.
+
+It can be very easy to add to an existing project, as you can see from the [Preparse field pull request](https://github.com/besteadfast/craft-preparse-field/pull/81/files) that adds it the [Preparse plugin](https://github.com/besteadfast/craft-preparse-field).
 
 ### In the Craft CP
 
@@ -214,13 +216,112 @@ This ensures that the `SprigApiAutocomplete` Autocomplete will only be added whe
 
 ## Writing a Custom Autocomplete
 
+Autocompletes extend from the base [Autocomplete](https://github.com/nystudio107/craft-twigfield/blob/develop/src/base/Autocomplete.php) class, and implement the [AutocompleteInterface](https://github.com/nystudio107/craft-twigfield/blob/develop/src/base/AutocompleteInterface.php)
+
+A simple Autocomplete would look like this:
+
+```php
+<?php
+namespace myvendor\myname\autocompletes;
+
+use nystudio107\twigfield\base\Autocomplete;
+use nystudio107\twigfield\models\CompleteItem;
+use nystudio107\twigfield\types\AutocompleteTypes;
+use nystudio107\twigfield\types\CompleteItemKind;
+
+class MyCustomAutocomplete extends Autocomplete
+{
+    public $name = 'EnvironmentVariableAutocomplete';
+
+    public $type = AutocompleteTypes::GeneralAutocomplete;
+
+    public function generateCompleteItems(): void
+    {
+    CompleteItem::create()
+        ->label('MyAutocomplete')
+        ->insertText('MyAutocomplete')
+        ->detail('This is my autocomplete')
+        ->documentation('This detailed documentation of my autocomplete')
+        ->kind(CompleteItemKind::ConstantKind)
+        ->add($this);
+    }
+}
+```
+
+The `$name` is the name of your Autocomplete, and it is used for the autocomplete cache.
+
+The `$type` is either `AutocompleteTypes::TwigExpressionAutocomplete` (which only autocompletes inside of a Twig expression) or `AutocompleteTypes::GeneralAutocomplete` (which autocompletes everywhere).
+
+`CompleteItem::create()` is a factory method that creates a `CompleteItem` object. You can use the Fluent Model setters as shown above, or you can set properties directly on the model as well. The `CompleteItem::add()` method adds it to the list of generated Autocompletes.
+
+See the following examples for custom Autocompletes that you can use as a guide when creating your own:
+
+* [SprigApiAutocomplete](https://github.com/putyourlightson/craft-sprig/blob/develop/src/autocompletes/SprigApiAutocomplete.php)
+* [CraftApiAutocomplete](https://github.com/nystudio107/craft-twigfield/blob/develop/src/autocompletes/CraftApiAutocomplete.php)
+* [EnvironmentVariableAutocomplete](https://github.com/nystudio107/craft-twigfield/blob/develop/src/autocompletes/EnvironmentVariableAutocomplete.php)
+* [TwigLanguageAutocomplete](https://github.com/nystudio107/craft-twigfield/blob/develop/src/autocompletes/TwigLanguageAutocomplete.php)
 
 ## Twig Template Validators
+
+Twigfield also includes two Twig template [Validators](https://www.yiiframework.com/doc/guide/2.0/en/tutorial-core-validators) that you can use to validate Twig templates that are saved as part of a model:
+
+* [TwigTemplateValidator](https://github.com/nystudio107/craft-twigfield/blob/develop/src/validators/TwigTemplateValidator.php) - validates the template via `renderString()`
+* [TwigObjectTemplateValidator](https://github.com/nystudio107/craft-twigfield/blob/develop/src/validators/TwigObjectTemplateValidator.php) - validates the template via `renderObjectTemplate()`
+
+You just add them as a rule on your model, and it will propagate the model with any errors that were encountered when rendering the template:
+
+```php
+use nystudio107\twigfield\validators\TwigTemplateValidator;
+
+public function defineRules()
+{
+    return [
+        ['myTwigCode', TwigTemplateValidator::class],
+    ];
+}
+```
+
+You can also add in any `variables` that should be presents in the Twig environment:
+
+```php
+use nystudio107\twigfield\validators\TwigTemplateValidator;
+
+public function defineRules()
+{
+    return [
+        [
+            'myTwigCode', TwigTemplateValidator::class,
+            'variables' => [
+               'foo' => 'bar',
+           ]
+        ],
+    ];
+}
+```
+
+For the `TwigObjectTemplateValidator`, you can also pass in the `object` that should be used when rendering the object template:
+
+```php
+use nystudio107\twigfield\validators\TwigObjectTemplateValidator;
+
+public function defineRules()
+{
+    return [
+        [
+            'myTwigCode', TwigObjectTemplateValidator::class, 
+            'object' => $object,
+            'variables' => [
+               'foo' => 'bar',
+           ]
+        ],
+    ];
+}
+```
 
 ## Twigfield Roadmap
 
 Some things to do, and ideas for potential features:
 
-* 
+* Perhaps a general code editor as an offshoot?
 
 Brought to you by [nystudio107](https://nystudio107.com/)
