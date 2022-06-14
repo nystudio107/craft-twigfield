@@ -22,7 +22,7 @@ use nystudio107\twigfield\autocompletes\CraftApiAutocomplete;
 use nystudio107\twigfield\autocompletes\TwigLanguageAutocomplete;
 
 return [
-    // Whether to allow anonymous access be allowed to the twigfield/autocompelte/index endpoint
+    // Whether to allow anonymous access be allowed to the twigfield/autocomplete/index endpoint
     'allowFrontendAccess' => false,
     // The default autcompletes to use for the default `Twigfield` field type
     'defaultTwigfieldAutocompletes' => [
