@@ -26,7 +26,7 @@ class Settings extends Model
     // =========================================================================
 
     /**
-     * @var bool Whether to allow anonymous access be allowed to the twigfield/autocompelte/index endpoint
+     * @var bool Whether to allow anonymous access be allowed to the twigfield/autocomplete/index endpoint
      */
     public $allowFrontendAccess = false;
 

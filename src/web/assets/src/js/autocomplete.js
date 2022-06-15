@@ -27,7 +27,8 @@ function getLastItem(arr) {
 /**
  * Register completion items with the Monaco editor, for the Twig language
  *
- * @param completionItems
+ * @param completionItems array of completion items, with sub-properties in `COMPLETION_KEY`
+ * @param autocompleteType the type of autocomplete, either `TwigExpressionAutocomplete` or `GeneralAutocomplete`
  */
 function addCompletionItemsToMonaco(completionItems, autocompleteType) {
   monaco.languages.registerCompletionItemProvider('twig', {
@@ -55,31 +56,37 @@ function addCompletionItemsToMonaco(completionItems, autocompleteType) {
       if (!inTwigExpression && autocompleteType === 'TwigExpressionAutocomplete') {
         return null;
       }
+      // Get the current word we're typing
+      const currentWords = currentLine.replace("\t", "").split(" ");
+      let currentWord = currentWords[currentWords.length - 1];
+      // If the current word includes ( or >, split on that, too, to allow the autocomplete to work in nested functions and HTML tags
+      if (currentWord.includes('(')) {
+        currentWord = getLastItem(currentWord.split('('));
+      }
+      if (currentWord.includes('>')) {
+        currentWord = getLastItem(currentWord.split('>'));
+      }
+      const isSubProperty = currentWord.charAt(currentWord.length - 1) === ".";
+      // If we're in a sub-property (following a .) don't present non-TwigExpressionAutocomplete items
+      if (isSubProperty && autocompleteType !== 'TwigExpressionAutocomplete') {
+        console.log(autocompleteType);
+        return null;
+      }
       // We are in a Twig expression, handle TwigExpressionAutocomplete by walking through the properties
       if (inTwigExpression && autocompleteType === 'TwigExpressionAutocomplete') {
-        const currentWords = currentLine.replace("\t", "").split(" ");
-        let currentWord = currentWords[currentWords.length - 1];
-        // Remove any leading { characters from the current word
-        currentWord = currentWord.replace(/^{/, '');
-        // If the current word includes ( or >, split on that, too, to allow the autocomplete to work in nested functions and HTML tags
-        if (currentWord.includes('(')) {
-          currentWord = getLastItem(currentWord.split('('));
-        }
-        if (currentWord.includes('>')) {
-          currentWord = getLastItem(currentWord.split('>'));
-        }
-        const isSubProperty = currentWord.charAt(currentWord.length - 1) === ".";
         // If the last character typed is a period, then we need to look up a sub-property of the completionItems
         if (isSubProperty) {
           // Is a sub-property, get a list of parent properties
           const parents = currentWord.substring(0, currentWord.length - 1).split(".");
-          currentItems = completionItems[parents[0]];
-          // Loop through all the parents to traverse the completion items and find the current one
-          for (let i = 1; i < parents.length; i++) {
-            if (currentItems.hasOwnProperty(parents[i])) {
-              currentItems = currentItems[parents[i]];
-            } else {
-              return result;
+          if (typeof completionItems[parents[0]] !== 'undefined') {
+            currentItems = completionItems[parents[0]];
+            // Loop through all the parents to traverse the completion items and find the current one
+            for (let i = 1; i < parents.length; i++) {
+              if (currentItems.hasOwnProperty(parents[i])) {
+                currentItems = currentItems[parents[i]];
+              } else {
+                return result;
+              }
             }
           }
         }
@@ -118,9 +125,10 @@ function addCompletionItemsToMonaco(completionItems, autocompleteType) {
 /**
  * Register hover items with the Monaco editor, for the Twig language
  *
- * @param completionItems
+ * @param completionItems array of completion items, with sub-properties in `COMPLETION_KEY`
+ * @param autocompleteType the type of autocomplete, either `TwigExpressionAutocomplete` or `GeneralAutocomplete`
  */
-function addHoverHandlerToMonaco(completionItems) {
+function addHoverHandlerToMonaco(completionItems, autocompleteType) {
   monaco.languages.registerHoverProvider('twig', {
     provideHover: function (model, position) {
       let result = {};
@@ -197,11 +205,13 @@ function getCompletionItemsFromEndpoint(fieldType, endpointUrl) {
       if (typeof window.monacoAutocompleteItems === 'undefined') {
         window.monacoAutocompleteItems = {};
       }
+      // Don't add a completion more than once, as might happen with multiple Twigfield instances
+      // on the same page, because the completions are global in Monaco
       for (const [name, autocomplete] of Object.entries(completionItems)) {
         if (!(autocomplete.name in window.monacoAutocompleteItems)) {
           window.monacoAutocompleteItems[autocomplete.name] = autocomplete.name;
           addCompletionItemsToMonaco(autocomplete.__completions, autocomplete.type);
-          addHoverHandlerToMonaco(autocomplete.__completions);
+          addHoverHandlerToMonaco(autocomplete.__completions, autocomplete.type);
         }
       }
     } else {

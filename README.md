@@ -124,7 +124,7 @@ Do so by copying the `config.php` file to the Craft CMS `config/` directory, ren
 
 ```php
 return [
-    // Whether to allow anonymous access be allowed to the twigfield/autocompelte/index endpoint
+    // Whether to allow anonymous access be allowed to the twigfield/autocomplete/index endpoint
     'allowFrontendAccess' => true,
     // The default autcompletes to use for the default `Twigfield` field type
     'defaultTwigfieldAutocompletes' => [
@@ -152,12 +152,16 @@ Enabling the `allowFrontendAccess` setting allows access to the `twigfield/autoc
 
 ### Additional Options
 
-The `textarea`, `textareaField`, and `includeJs` macros all take three additional optional parameters:
+The `textarea`, `textareaField`, `text`, `textField`, and `includeJs` macros all take three additional optional parameters:
 
 ```twig
 {{ textarea(config, fieldType, wrapperClass, editorOptions) }}
 
 {{ textareaField(config, fieldType, wrapperClass, editorOptions }}
+
+{{ text(config, fieldType, wrapperClass, editorOptions) }}
+
+{{ textField(config, fieldType, wrapperClass, editorOptions }}
 
 {{ includeJs(fieldId, fieldType, wrapperClass, editorOptions }}
 ```
