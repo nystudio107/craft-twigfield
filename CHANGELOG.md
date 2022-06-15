@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.2 - UNRELEASED
+### Fixed
+* Fixed an issue where autocomplete of nested properties wouldn't work if there was no space after a `{` in Twig
+
 ## 1.0.1 - 2022.06.13
 ### Added
 * Added `text()` and `textField()` macros that create a single-line Twig editor for simple Twig expressions
