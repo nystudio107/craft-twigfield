@@ -2,9 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
-## 1.0.2 - UNRELEASED
+## 1.0.2 - 2022.06.15
 ### Fixed
 * Fixed an issue where autocomplete of nested properties wouldn't work if there was no space after a `{` in Twig
+* Fixed an issue where `GeneralAutocompletes` were applied when we were in a sub-property, which resulted in JS errors
 
 ## 1.0.1 - 2022.06.13
 ### Added
