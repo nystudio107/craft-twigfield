@@ -27,7 +27,8 @@ function getLastItem(arr) {
 /**
  * Register completion items with the Monaco editor, for the Twig language
  *
- * @param completionItems
+ * @param completionItems array of completion items, with sub-properties in `COMPLETION_KEY`
+ * @param autocompleteType the type of autocomplete, either `TwigExpressionAutocomplete` or `GeneralAutocomplete`
  */
 function addCompletionItemsToMonaco(completionItems, autocompleteType) {
   monaco.languages.registerCompletionItemProvider('twig', {
@@ -116,9 +117,10 @@ function addCompletionItemsToMonaco(completionItems, autocompleteType) {
 /**
  * Register hover items with the Monaco editor, for the Twig language
  *
- * @param completionItems
+ * @param completionItems array of completion items, with sub-properties in `COMPLETION_KEY`
+ * @param autocompleteType the type of autocomplete, either `TwigExpressionAutocomplete` or `GeneralAutocomplete`
  */
-function addHoverHandlerToMonaco(completionItems) {
+function addHoverHandlerToMonaco(completionItems, autocompleteType) {
   monaco.languages.registerHoverProvider('twig', {
     provideHover: function (model, position) {
       let result = {};
@@ -195,11 +197,13 @@ function getCompletionItemsFromEndpoint(fieldType, endpointUrl) {
       if (typeof window.monacoAutocompleteItems === 'undefined') {
         window.monacoAutocompleteItems = {};
       }
+      // Don't add a completion more than once, as might happen with multiple Twigfield instances
+      // on the same page, because the completions are global in Monaco
       for (const [name, autocomplete] of Object.entries(completionItems)) {
         if (!(autocomplete.name in window.monacoAutocompleteItems)) {
           window.monacoAutocompleteItems[autocomplete.name] = autocomplete.name;
           addCompletionItemsToMonaco(autocomplete.__completions, autocomplete.type);
-          addHoverHandlerToMonaco(autocomplete.__completions);
+          addHoverHandlerToMonaco(autocomplete.__completions, autocomplete.type);
         }
       }
     } else {
