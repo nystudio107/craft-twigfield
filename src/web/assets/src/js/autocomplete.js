@@ -69,7 +69,6 @@ function addCompletionItemsToMonaco(completionItems, autocompleteType) {
       const isSubProperty = currentWord.charAt(currentWord.length - 1) === ".";
       // If we're in a sub-property (following a .) don't present non-TwigExpressionAutocomplete items
       if (isSubProperty && autocompleteType !== 'TwigExpressionAutocomplete') {
-        console.log(autocompleteType);
         return null;
       }
       // We are in a Twig expression, handle TwigExpressionAutocomplete by walking through the properties
