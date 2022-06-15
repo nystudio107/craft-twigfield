@@ -152,12 +152,16 @@ Enabling the `allowFrontendAccess` setting allows access to the `twigfield/autoc
 
 ### Additional Options
 
-The `textarea`, `textareaField`, and `includeJs` macros all take three additional optional parameters:
+The `textarea`, `textareaField`, `text`, `textField`, and `includeJs` macros all take three additional optional parameters:
 
 ```twig
 {{ textarea(config, fieldType, wrapperClass, editorOptions) }}
 
 {{ textareaField(config, fieldType, wrapperClass, editorOptions }}
+
+{{ text(config, fieldType, wrapperClass, editorOptions) }}
+
+{{ textField(config, fieldType, wrapperClass, editorOptions }}
 
 {{ includeJs(fieldId, fieldType, wrapperClass, editorOptions }}
 ```
