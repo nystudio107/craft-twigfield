@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.3 - 2022.06.17
+### Added
+* Added the ability to pass in a config array to autocomplete classes via the `AutocompleteService::EVENT_REGISTER_TWIGFIELD_AUTOCOMPLETES` event
+
+### Changed
+* Removed errant logging
+
 ## 1.0.2 - 2022.06.15
 ### Fixed
 * Fixed an issue where autocomplete of nested properties wouldn't work if there was no space after a `{` in Twig

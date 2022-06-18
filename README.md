@@ -258,6 +258,32 @@ Event::on(
 
 This ensures that the `SprigApiAutocomplete` Autocomplete will only be added when the `fieldType` passed into the Twigfield macros is set to `SprigField`.
 
+Additionally, you may have an Autocomplete that you want to pass config information down to when it is instantiated. You can accomplish that by adding the Autocomplete as an array:
+
+```php
+use nystudio107\twigfield\autocompletes\CraftApiAutocomplete;
+use nystudio107\twigfield\events\RegisterTwigfieldAutocompletesEvent;
+use nystudio107\twigfield\services\AutocompleteService;
+
+Event::on(
+    AutocompleteService::class,
+    AutocompleteService::EVENT_REGISTER_TWIGFIELD_AUTOCOMPLETES,
+    function (RegisterTwigfieldAutocompletesEvent $event) {
+         $config = [
+             'additionalGlobals' => $arrayOfVariables,
+         ];
+        $event->types[] = [CraftApiAutocomplete::class => $config];
+    }
+);
+```
+
+Note that all of the above examples _add_ Autocompletes to the Autocompletes that Twigfield provides by default (`CraftApiAutocomplete` and `TwigLanguageAutocomplete`). If you want to _replace_ them entirely, just empty the `types[]` array first:
+
+```php
+        $event->types[] = [];
+        $event->types[] = [CraftApiAutocomplete::class => $config];
+```
+
 ## Writing a Custom Autocomplete
 
 Autocompletes extend from the base [Autocomplete](https://github.com/nystudio107/craft-twigfield/blob/develop/src/base/Autocomplete.php) class, and implement the [AutocompleteInterface](https://github.com/nystudio107/craft-twigfield/blob/develop/src/base/AutocompleteInterface.php)
@@ -366,6 +392,7 @@ public function defineRules()
 
 Some things to do, and ideas for potential features:
 
+* Figure out why the suggestions details sub-window doesn't appear to size itself properly to fit the `documentation`. It's there, but you have to resize the window to see it, and it appears to be calculated incorrectly somehow
 * Smarter Twig expression detection
 * Hovers for `TwigExpressionAutocomplete`s should only be added if they are inside of a Twig expression
 * Perhaps a general code editor as an offshoot?
