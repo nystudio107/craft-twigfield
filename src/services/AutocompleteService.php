@@ -47,6 +47,19 @@ class AutocompleteService extends Component
      *         $event->types[] = MyAutocomplete::class;
      *     }
      * );
+     *
+     * or to pass in a config array for the Autocomplete object:
+     *
+     * Event::on(AutocompleteService::class,
+     *     AutocompleteService::EVENT_REGISTER_TWIGFIELD_AUTOCOMPLETES,
+     *     function(RegisterTwigfieldAutocompletesEvent $event) {
+     *         $config = [
+     *             'property' => value,
+     *         ];
+     *         $event->types[] = [MyAutocomplete::class => $config];
+     *     }
+     * );
+     *
      * ```
      */
     const EVENT_REGISTER_TWIGFIELD_AUTOCOMPLETES = 'registerTwigfieldAutocompletes';
@@ -105,9 +118,18 @@ class AutocompleteService extends Component
     {
         $autocompleteItems = [];
         $autocompletes = $this->getAllAutocompleteGenerators($fieldType);
-        foreach ($autocompletes as $autocompleteClass) {
+        foreach ($autocompletes as $autocompleteGenerator) {
             /* @var BaseAutoComplete $autocomplete */
-            $autocomplete = new $autocompleteClass;
+            // Assume the generator is a class name string
+            $config = [];
+            $autocompleteClass = $autocompleteGenerator;
+            // If we're passed in an array instead, extract the class name and config from the key/value pair
+            // in the form of [className => configArray]
+            if (is_array($autocompleteGenerator)) {
+                $autocompleteClass = array_key_first($autocompleteGenerator);
+                $config = $autocompleteGenerator[$autocompleteClass];
+            }
+            $autocomplete = new $autocompleteClass($config);
             $name = $autocomplete->name;
             // Set up the cache parameters
             $cache = Craft::$app->getCache();
@@ -124,7 +146,8 @@ class AutocompleteService extends Component
                 return [
                     'name' => $name,
                     'type' => $autocomplete->type,
-                    BaseAutoComplete::COMPLETION_KEY => $autocomplete->getCompleteItems()
+                    'hasSubProperties' => $autocomplete->hasSubProperties,
+                    BaseAutoComplete::COMPLETION_KEY => $autocomplete->getCompleteItems(),
                 ];
             }, $this->cacheDuration, $dependency);
         }

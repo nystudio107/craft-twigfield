@@ -258,6 +258,32 @@ Event::on(
 
 This ensures that the `SprigApiAutocomplete` Autocomplete will only be added when the `fieldType` passed into the Twigfield macros is set to `SprigField`.
 
+Additionally, you may have an Autocomplete that you want to pass config information down to when it is instantiated. You can accomplish that by adding the Autocomplete as an array:
+
+```php
+use nystudio107\twigfield\autocompletes\CraftApiAutocomplete;
+use nystudio107\twigfield\events\RegisterTwigfieldAutocompletesEvent;
+use nystudio107\twigfield\services\AutocompleteService;
+
+Event::on(
+    AutocompleteService::class,
+    AutocompleteService::EVENT_REGISTER_TWIGFIELD_AUTOCOMPLETES,
+    function (RegisterTwigfieldAutocompletesEvent $event) {
+         $config = [
+             'additionalGlobals' => $arrayOfVariables,
+         ];
+        $event->types[] = [CraftApiAutocomplete::class => $config];
+    }
+);
+```
+
+Note that all of the above examples _add_ Autocompletes to the Autocompletes that Twigfield provides by default (`CraftApiAutocomplete` and `TwigLanguageAutocomplete`). If you want to _replace_ them entirely, just empty the `types[]` array first:
+
+```php
+        $event->types[] = [];
+        $event->types[] = [CraftApiAutocomplete::class => $config];
+```
+
 ## Writing a Custom Autocomplete
 
 Autocompletes extend from the base [Autocomplete](https://github.com/nystudio107/craft-twigfield/blob/develop/src/base/Autocomplete.php) class, and implement the [AutocompleteInterface](https://github.com/nystudio107/craft-twigfield/blob/develop/src/base/AutocompleteInterface.php)
@@ -278,6 +304,8 @@ class MyCustomAutocomplete extends Autocomplete
     public $name = 'EnvironmentVariableAutocomplete';
 
     public $type = AutocompleteTypes::GeneralAutocomplete;
+    
+    public $hasSubProperties = false;
 
     public function generateCompleteItems(): void
     {
@@ -292,9 +320,11 @@ class MyCustomAutocomplete extends Autocomplete
 }
 ```
 
-The `$name` is the name of your Autocomplete, and it is used for the autocomplete cache.
+The `$name` property is the name of your Autocomplete, and it is used for the autocomplete cache.
 
-The `$type` is either `AutocompleteTypes::TwigExpressionAutocomplete` (which only autocompletes inside of a Twig expression) or `AutocompleteTypes::GeneralAutocomplete` (which autocompletes everywhere).
+The `$type` property is either `AutocompleteTypes::TwigExpressionAutocomplete` (which only autocompletes inside of a Twig expression) or `AutocompleteTypes::GeneralAutocomplete` (which autocompletes everywhere).
+
+The `$hasSubProperties` property indicates whether your Autocomplete returns nested sub-properties such as `foo.bar.baz`. This hint helps Twigfield present a better autocomplete experience.
 
 `CompleteItem::create()` is a factory method that creates a `CompleteItem` object. You can use the Fluent Model setters as shown above, or you can set properties directly on the model as well. The `CompleteItem::add()` method adds it to the list of generated Autocompletes.
 
@@ -366,6 +396,7 @@ public function defineRules()
 
 Some things to do, and ideas for potential features:
 
+* Figure out why the suggestions details sub-window doesn't appear to size itself properly to fit the `documentation`. It's there, but you have to resize the window to see it, and it appears to be calculated incorrectly somehow
 * Smarter Twig expression detection
 * Hovers for `TwigExpressionAutocomplete`s should only be added if they are inside of a Twig expression
 * Perhaps a general code editor as an offshoot?

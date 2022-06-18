@@ -73,6 +73,23 @@ class CraftApiAutocomplete extends Autocomplete
     public $type = AutocompleteTypes::TwigExpressionAutocomplete;
 
     /**
+     * @var string Whether the autocomplete should be parsed with . -delimited nested sub-properties
+     */
+    public $hasSubProperties = true;
+
+    /**
+     * @var array A key-value array of the Twig global variables to parse. If left empty, it will
+     * default to the current Twig context global variables
+     */
+    public $twigGlobals = [];
+
+    /**
+     * @var array A key-value array of the Element Route variables (the injected `entry`, etc.
+     * variable). If left empty, it will default to the current Element Route variables
+     */
+    public $elementRouteGlobals = [];
+
+    /**
      * @var array A key-value array of additional global variables to parse for completions
      */
     public $additionalGlobals = [];
@@ -81,15 +98,27 @@ class CraftApiAutocomplete extends Autocomplete
     // =========================================================================
 
     /**
+     * @inerhitDoc
+     */
+    public function init(): void
+    {
+        if (empty($this->twigGlobals)) {
+            $this->twigGlobals = Craft::$app->view->getTwig()->getGlobals();
+        }
+        if (empty($this->elementRouteGlobals)) {
+            $this->elementRouteGlobals = $this->getElementRouteGlobals();
+        }
+    }
+
+    /**
      * Core function that generates the autocomplete array
      */
     public function generateCompleteItems(): void
     {
-        // Iterate through the globals in the Twig context
-        /* @noinspection PhpInternalEntityUsedInspection */
+        // Gather up all of the globals to parse
         $globals = array_merge(
-            Craft::$app->view->getTwig()->getGlobals(),
-            $this->elementRouteVariables(),
+            $this->twigGlobals,
+            $this->elementRouteGlobals,
             $this->additionalGlobals,
             $this->overrideValues(),
         );
@@ -441,7 +470,7 @@ class CraftApiAutocomplete extends Autocomplete
      *
      * @return array
      */
-    private function elementRouteVariables(): array
+    private function getElementRouteGlobals(): array
     {
         $routeVariables = [];
         $elementTypes = Craft::$app->elements->getAllElementTypes();
