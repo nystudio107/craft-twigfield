@@ -2,9 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-## 1.0.3 - 2022.06.17
+## 1.0.3 - 2022.06.18
 ### Added
 * Added the ability to pass in a config array to autocomplete classes via the `AutocompleteService::EVENT_REGISTER_TWIGFIELD_AUTOCOMPLETES` event
+* Added the `$hasSubProperties` property to the Autocomplete model, to indicate whether the autocomplete returns nested sub-properties such as `foo.bar.baz`
+* Added the ability to pass in the `twigGlobals` & `elementRouteGlobals` properties via dependency injection to the `CraftApiAutocomplete` autocomplete
 
 ### Changed
 * Removed errant logging
