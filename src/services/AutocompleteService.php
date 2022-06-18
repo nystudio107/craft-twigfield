@@ -146,7 +146,8 @@ class AutocompleteService extends Component
                 return [
                     'name' => $name,
                     'type' => $autocomplete->type,
-                    BaseAutoComplete::COMPLETION_KEY => $autocomplete->getCompleteItems()
+                    'hasSubProperties' => $autocomplete->hasSubProperties,
+                    BaseAutoComplete::COMPLETION_KEY => $autocomplete->getCompleteItems(),
                 ];
             }, $this->cacheDuration, $dependency);
         }

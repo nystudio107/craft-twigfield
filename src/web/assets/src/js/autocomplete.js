@@ -29,8 +29,9 @@ function getLastItem(arr) {
  *
  * @param completionItems array of completion items, with sub-properties in `COMPLETION_KEY`
  * @param autocompleteType the type of autocomplete, either `TwigExpressionAutocomplete` or `GeneralAutocomplete`
+ * @param hasSubProperties where the autocomplete has sub-properties, and should be parsed as such
  */
-function addCompletionItemsToMonaco(completionItems, autocompleteType) {
+function addCompletionItemsToMonaco(completionItems, autocompleteType, hasSubProperties) {
   monaco.languages.registerCompletionItemProvider('twig', {
     triggerCharacters: ['.', '('],
     provideCompletionItems: function (model, position, token) {
@@ -75,6 +76,10 @@ function addCompletionItemsToMonaco(completionItems, autocompleteType) {
       if (inTwigExpression && autocompleteType === 'TwigExpressionAutocomplete') {
         // If the last character typed is a period, then we need to look up a sub-property of the completionItems
         if (isSubProperty) {
+          // If we're in a sub-property, and this autocomplete doesn't have sub-properties, don't return its items
+          if (!hasSubProperties) {
+            return null;
+          }
           // Is a sub-property, get a list of parent properties
           const parents = currentWord.substring(0, currentWord.length - 1).split(".");
           if (typeof completionItems[parents[0]] !== 'undefined') {
@@ -126,8 +131,9 @@ function addCompletionItemsToMonaco(completionItems, autocompleteType) {
  *
  * @param completionItems array of completion items, with sub-properties in `COMPLETION_KEY`
  * @param autocompleteType the type of autocomplete, either `TwigExpressionAutocomplete` or `GeneralAutocomplete`
+ * @param hasSubProperties where the autocomplete has sub-properties, and should be parsed as such
  */
-function addHoverHandlerToMonaco(completionItems, autocompleteType) {
+function addHoverHandlerToMonaco(completionItems, autocompleteType, hasSubProperties) {
   monaco.languages.registerHoverProvider('twig', {
     provideHover: function (model, position) {
       let result = {};
@@ -209,7 +215,7 @@ function getCompletionItemsFromEndpoint(fieldType, endpointUrl) {
       for (const [name, autocomplete] of Object.entries(completionItems)) {
         if (!(autocomplete.name in window.monacoAutocompleteItems)) {
           window.monacoAutocompleteItems[autocomplete.name] = autocomplete.name;
-          addCompletionItemsToMonaco(autocomplete.__completions, autocomplete.type);
+          addCompletionItemsToMonaco(autocomplete.__completions, autocomplete.type, autocomplete.hasSubProperties);
           addHoverHandlerToMonaco(autocomplete.__completions, autocomplete.type);
         }
       }
