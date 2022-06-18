@@ -304,6 +304,8 @@ class MyCustomAutocomplete extends Autocomplete
     public $name = 'EnvironmentVariableAutocomplete';
 
     public $type = AutocompleteTypes::GeneralAutocomplete;
+    
+    public $hasSubProperties = false;
 
     public function generateCompleteItems(): void
     {
@@ -318,9 +320,11 @@ class MyCustomAutocomplete extends Autocomplete
 }
 ```
 
-The `$name` is the name of your Autocomplete, and it is used for the autocomplete cache.
+The `$name` property is the name of your Autocomplete, and it is used for the autocomplete cache.
 
-The `$type` is either `AutocompleteTypes::TwigExpressionAutocomplete` (which only autocompletes inside of a Twig expression) or `AutocompleteTypes::GeneralAutocomplete` (which autocompletes everywhere).
+The `$type` property is either `AutocompleteTypes::TwigExpressionAutocomplete` (which only autocompletes inside of a Twig expression) or `AutocompleteTypes::GeneralAutocomplete` (which autocompletes everywhere).
+
+The `$hasSubProperties` property indicates whether your Autocomplete returns nested sub-properties such as `foo.bar.baz`. This hint helps Twigfield present a better autocomplete experience.
 
 `CompleteItem::create()` is a factory method that creates a `CompleteItem` object. You can use the Fluent Model setters as shown above, or you can set properties directly on the model as well. The `CompleteItem::add()` method adds it to the list of generated Autocompletes.
 
