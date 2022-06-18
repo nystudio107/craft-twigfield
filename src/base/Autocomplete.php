@@ -11,6 +11,7 @@
 namespace nystudio107\twigfield\base;
 
 use Craft;
+use craft\base\Model;
 use craft\helpers\ArrayHelper;
 use nystudio107\twigfield\models\CompleteItem;
 use nystudio107\twigfield\types\AutocompleteTypes;
@@ -20,7 +21,7 @@ use nystudio107\twigfield\types\AutocompleteTypes;
  * @package   twigfield
  * @since     1.0.0
  */
-abstract class Autocomplete implements AutocompleteInterface
+abstract class Autocomplete extends Model implements AutocompleteInterface
 {
     // Constants
     // =========================================================================
@@ -39,6 +40,11 @@ abstract class Autocomplete implements AutocompleteInterface
      * @var string The type of the autocomplete
      */
     public $type = AutocompleteTypes::TwigExpressionAutocomplete;
+
+    /**
+     * @var string Whether the autocomplete should be parsed with . -delimited nested sub-properties
+     */
+    public $hasSubProperties = false;
 
     // Protected Properties
     // =========================================================================
