@@ -120,7 +120,7 @@ class CraftApiAutocomplete extends Autocomplete
             $this->twigGlobals,
             $this->elementRouteGlobals,
             $this->additionalGlobals,
-            $this->overrideValues(),
+            $this->overrideValues()
         );
         foreach ($globals as $key => $value) {
             if (!in_array($key, self::EXCLUDED_PROPERTY_NAMES, true)) {
@@ -142,10 +142,10 @@ class CraftApiAutocomplete extends Autocomplete
                             $kind = CompleteItemKind::ConstantKind;
                         }
                         $this->addCompleteItem(new CompleteItem([
-                            'detail' => $value,
+                            'detail' => (string)$value,
                             'kind' => $kind,
-                            'label' => $key,
-                            'insertText' => $key,
+                            'label' => (string)$key,
+                            'insertText' => (string)$key,
                         ]), $path);
                         break;
                 }
@@ -217,11 +217,11 @@ class CraftApiAutocomplete extends Autocomplete
             }
         }
         $this->addCompleteItem(new CompleteItem([
-            'detail' => $className,
-            'documentation' => $docs,
+            'detail' => (string)$className,
+            'documentation' => (string)$docs,
             'kind' => CompleteItemKind::ClassKind,
-            'label' => $name,
-            'insertText' => $name,
+            'label' => (string)$name,
+            'insertText' => (string)$name,
         ]), $path);
     }
 
@@ -305,7 +305,7 @@ class CraftApiAutocomplete extends Autocomplete
                 if ($docblock) {
                     $tag = $docblock->getTagsByName('var');
                     if ($tag && isset($tag[0])) {
-                        $detail = $tag[0];
+                        $docs = $tag[0];
                     }
                 }
                 if ($detail === "Property") {
@@ -341,12 +341,12 @@ class CraftApiAutocomplete extends Autocomplete
                 $thisPath = trim(implode('.', [$path, $propertyName]), '.');
                 $label = $propertyName;
                 $this->addCompleteItem(new CompleteItem([
-                    'detail' => $detail,
-                    'documentation' => $docs,
+                    'detail' => (string)$detail,
+                    'documentation' => (string)$docs,
                     'kind' => $customField ? CompleteItemKind::FieldKind : CompleteItemKind::PropertyKind,
-                    'label' => $label,
-                    'insertText' => $label,
-                    'sortText' => $sortPrefix . $label,
+                    'label' => (string)$label,
+                    'insertText' => (string)$label,
+                    'sortText' => (string)$sortPrefix . (string)$label,
                 ]), $thisPath);
                 // Recurse through if this is an object
                 if (isset($object->$propertyName) && is_object($object->$propertyName)) {
@@ -435,12 +435,12 @@ class CraftApiAutocomplete extends Autocomplete
                     }
                 }
                 $this->addCompleteItem(new CompleteItem([
-                    'detail' => $detail,
-                    'documentation' => $docsPreamble . $docs,
+                    'detail' => (string)$detail,
+                    'documentation' => (string)$docsPreamble . (string)$docs,
                     'kind' => CompleteItemKind::MethodKind,
-                    'label' => $label,
-                    'insertText' => $label,
-                    'sortText' => '~~~' . $label,
+                    'label' => (string)$label,
+                    'insertText' => (string)$label,
+                    'sortText' => '~~~' . (string)$label,
                 ]), $thisPath);
             }
         }
