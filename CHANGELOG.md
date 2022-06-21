@@ -4,7 +4,8 @@ All notable changes to this project will be documented in this file.
 
 ## 1.0.6 - 2022.06.21
 ### Changed
-* Better handling of object property docblocks
+* Better handling of object property docblocks in the `CraftApiAutocomplete`
+* The `CraftApiAutocomplete` now typecasts properties to `string` to ensure they validate
 
 ## 1.0.5 - 2022.06.21
 ### Changed
