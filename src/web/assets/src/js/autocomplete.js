@@ -200,11 +200,19 @@ function addHoverHandlerToMonaco(completionItems, autocompleteType, hasSubProper
 /**
  * Fetch the autocompletion items from local storage, or from the endpoint if they aren't cached in local storage
  */
-function getCompletionItemsFromEndpoint(fieldType, endpointUrl) {
+function getCompletionItemsFromEndpoint(fieldType = 'Twigfield', endpointUrl) {
   let urlParams = '';
   if (typeof fieldType !== 'undefined' && fieldType !== null) {
     urlParams = '?fieldType=' + fieldType;
   }
+  // Only issue the XHR if we haven't loaded the autocompletes for this fieldType already
+  if (typeof window.twigfieldFieldTypes === 'undefined') {
+    window.twigfieldFieldTypes = {};
+  }
+  if (fieldType in window.twigfieldFieldTypes) {
+    return;
+  }
+  window.twigfieldFieldTypes[fieldType] = fieldType;
   // Ping the controller endpoint
   let request = new XMLHttpRequest();
   request.open('GET', endpointUrl + urlParams, true);
