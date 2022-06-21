@@ -62,6 +62,7 @@ class EnvironmentVariableAutocomplete extends Autocomplete
                     ->filterText($trimmedName)
                     ->detail($item['hint'])
                     ->kind(CompleteItemKind::ConstantKind)
+                    ->sortText('~' . $name)
                     ->add($this);
             }
         }
