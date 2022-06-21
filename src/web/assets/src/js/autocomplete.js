@@ -60,7 +60,10 @@ function addCompletionItemsToMonaco(completionItems, autocompleteType, hasSubPro
       // Get the current word we're typing
       const currentWords = currentLine.replace("\t", "").split(" ");
       let currentWord = currentWords[currentWords.length - 1];
-      // If the current word includes ( or >, split on that, too, to allow the autocomplete to work in nested functions and HTML tags
+      // If the current word includes { or ( or >, split on that, too, to allow the autocomplete to work in nested functions and HTML tags
+      if (currentWord.includes('{')) {
+        currentWord = getLastItem(currentWord.split('{'));
+      }
       if (currentWord.includes('(')) {
         currentWord = getLastItem(currentWord.split('('));
       }
@@ -164,8 +167,9 @@ function addHoverHandlerToMonaco(completionItems, autocompleteType, hasSubProper
         const parents = searchLine.substring(0, searchLine.length).split(".");
         // Loop through all the parents to traverse the completion items and find the current one
         for (let i = 0; i < parents.length - 1; i++) {
-          if (currentItems.hasOwnProperty(parents[i])) {
-            currentItems = currentItems[parents[i]];
+          const thisParent = parents[i].replace(/[{(<]/, '');
+          if (currentItems.hasOwnProperty(thisParent)) {
+            currentItems = currentItems[thisParent];
           } else {
             return result;
           }
