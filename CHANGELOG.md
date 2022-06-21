@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ### Changed
 * Handle cases where there is no space between the `{{` opening brackets of a Twig expression so nested properties autocomplete there, too
 * Sort environment variables below other autocompletes
+* Tweak the CSS to allow it to fit into the encompassing `<div>` better
 
 ## 1.0.3 - 2022.06.18
 ### Added

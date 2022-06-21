@@ -56,7 +56,7 @@ function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twi
   let fieldOptions = JSON.parse(twigfieldOptions);
   // Make a sibling div for the Monaco editor to live in
   container.id = elementId + '-monaco-editor';
-  container.classList.add('p-2', 'box-content', 'monaco-editor-twigfield-icon', 'w-full', 'h-full');
+  container.classList.add('p-2', 'box-content', 'monaco-editor-twigfield-icon', 'h-full');
   if (wrapperClass !== '') {
     container.classList.add(wrapperClass);
   }
