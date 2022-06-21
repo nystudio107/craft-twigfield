@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.4 - 2022.06.20
+### Changed
+* Handle cases where there is no space between the `{{` opening brackets of a Twig expression so nested properties autocomplete there, too
+
 ## 1.0.3 - 2022.06.18
 ### Added
 * Added the ability to pass in a config array to autocomplete classes via the `AutocompleteService::EVENT_REGISTER_TWIGFIELD_AUTOCOMPLETES` event
