@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.6 - 2022.06.21
+### Changed
+* Better handling of object property docblocks
+
 ## 1.0.5 - 2022.06.21
 ### Changed
 * Only issue an XHR for autocomplete items of the specified `fieldType` if they haven't been added already, for better performance with multiple Twigfield instances on a single page
