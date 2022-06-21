@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.5 - 2022.06.21
+### Changed
+* Only issue an XHR for autocomplete items of the specified `fieldType` if they haven't been added already, for better performance with multiple Twigfield instances on a single page
+
 ## 1.0.4 - 2022.06.20
 ### Changed
 * Handle cases where there is no space between the `{{` opening brackets of a Twig expression so nested properties autocomplete there, too
