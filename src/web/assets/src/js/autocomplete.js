@@ -203,7 +203,7 @@ function addHoverHandlerToMonaco(completionItems, autocompleteType, hasSubProper
 function getCompletionItemsFromEndpoint(fieldType = 'Twigfield', endpointUrl) {
   let urlParams = '';
   if (typeof fieldType !== 'undefined' && fieldType !== null) {
-    urlParams = '?fieldType=' + fieldType;
+    urlParams = (endpointUrl.includes('?') ? '&' : '?') + 'fieldType=' + fieldType;
   }
   // Only issue the XHR if we haven't loaded the autocompletes for this fieldType already
   if (typeof window.twigfieldFieldTypes === 'undefined') {
