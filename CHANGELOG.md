@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.7 - 2022.06.22
+### Fixed
+* Fixed an issue that could cause the autocomplete endpoint to 404 if the `actionUrl` already contains URL parameters ([#1](https://github.com/nystudio107/craft-twigfield/pull/1))
+
 ## 1.0.6 - 2022.06.21
 ### Changed
 * Better handling of object property docblocks in the `CraftApiAutocomplete`
