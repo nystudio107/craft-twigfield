@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.8 - 2022.06.23
+### Fixed
+* Fixed an issue that could cause an exception to be thrown after first install/update to a plugin that uses Twigfield, which prevented the module from loading ([#2](https://github.com/nystudio107/craft-twigfield/issues/2)) ([#1161](https://github.com/nystudio107/craft-seomatic/issues/1161))
+
 ## 1.0.7 - 2022.06.22
 ### Fixed
 * Fixed an issue that could cause the autocomplete endpoint to 404 if the `actionUrl` already contains URL parameters ([#1](https://github.com/nystudio107/craft-twigfield/pull/1))

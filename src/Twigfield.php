@@ -95,7 +95,6 @@ class Twigfield extends Module implements BootstrapInterface
     {
         // Set up our alias
         Craft::setAlias('@nystudio107/twigfield', $this->getBasePath());
-        Craft::setAlias('@twigfieldBaseAssetsUrl', AutocompleteService::getTwigfieldPublishUrl());
         Craft::setAlias('@twigfieldEndpointUrl', UrlHelper::actionUrl('twigfield/autocomplete/index'));
         // Register our module
         Craft::$app->setModule($this->id, $this);

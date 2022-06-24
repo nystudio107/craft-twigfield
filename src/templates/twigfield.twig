@@ -1,13 +1,14 @@
 {% macro includeJs(fieldId, fieldType = "Twigfield", wrapperClass = "", editorOptions = {}, twigfieldOptions = {}) %}
-    {% do view.registerAssetBundle("nystudio107\\twigfield\\assetbundles\\twigfield\\TwigfieldAsset") %}
+    {# @var \craft\web\AssetBundle bundle #}
+    {% set bundle = view.registerAssetBundle("nystudio107\\twigfield\\assetbundles\\twigfield\\TwigfieldAsset") %}
     {% css %}
         @font-face {
         font-family: "codicon-override";
-        src: url("{{ alias("@twigfieldBaseAssetsUrl") }}/fonts/codicon.ttf") format("truetype");
+        src: url("{{ bundle.baseUrl }}/fonts/codicon.ttf") format("truetype");
         }
     {% endcss %}
     {% js at head %}
-    window.twigfieldBaseAssetsUrl = "{{ alias("@twigfieldBaseAssetsUrl") }}/";
+    window.twigfieldBaseAssetsUrl = "{{ bundle.baseUrl }}/";
     {% endjs %}
     {% js %}
     makeMonacoEditor("{{ (fieldId)|namespaceInputId }}", "{{ fieldType }}", "{{ wrapperClass }}", '{{ editorOptions | json_encode | raw }}', '{{ twigfieldOptions | json_encode | raw }}', "{{ alias('@twigfieldEndpointUrl') }}");

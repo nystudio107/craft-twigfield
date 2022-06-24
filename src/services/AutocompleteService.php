@@ -79,23 +79,6 @@ class AutocompleteService extends Component
      */
     public $cacheDuration = 3600;
 
-    // Public Static Methods
-    // =========================================================================
-
-    /**
-     * Get the published URL for the Twigfield cpresources directory
-     *
-     * @return false|string
-     */
-    public static function getTwigfieldPublishUrl()
-    {
-        return Craft::$app->assetManager->getPublishedUrl(
-            '@nystudio107/twigfield/web/assets/dist',
-            true
-        );
-    }
-
-
     // Public Methods
     // =========================================================================
 
