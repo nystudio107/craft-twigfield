@@ -141,6 +141,11 @@ class CraftApiAutocomplete extends Autocomplete
                         if (ctype_upper($normalizedKey)) {
                             $kind = CompleteItemKind::ConstantKind;
                         }
+                        // If this is an array, JSON-encode the keys. In the future, we could recursively parse the array
+                        // To allow for nested values
+                        if (is_array($value)) {
+                            $value = json_encode(array_keys($value));
+                        }
                         $this->addCompleteItem(new CompleteItem([
                             'detail' => (string)$value,
                             'kind' => $kind,
