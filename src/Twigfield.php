@@ -60,6 +60,14 @@ class Twigfield extends Module implements BootstrapInterface
         parent::setInstance($instance);
     }
 
+    // Public Properties
+    // =========================================================================
+
+    /**
+     * @inerhitdoc
+     */
+    public $id = self::ID;
+
     // Public Methods
     // =========================================================================
 
