@@ -47,21 +47,21 @@ class Twigfield extends Module implements BootstrapInterface
      */
     public static $settings = null;
 
-    // Public Static Methods
+    // Public Methods
     // =========================================================================
 
     /**
-     * @inerhitDoc
+     * @inerhitdoc
      */
-    public static function setInstance($instance)
+    public function __construct($id = self::ID, $parent = null, $config = [])
     {
-        // Set module id
-        $instance->id = self::ID;
-        parent::setInstance($instance);
+        /**
+         * Explicitly set the $id parameter, as earlier versions of Yii2 look for a
+         * default parameter, and depend on $id being explicitly set:
+         * https://github.com/yiisoft/yii2/blob/f3d1534125c9c3dfe8fa65c28a4be5baa822e721/framework/di/Container.php#L436-L448
+         */
+        parent::__construct($id, $parent, $config);
     }
-
-    // Public Methods
-    // =========================================================================
 
     /**
      * @inerhitDoc
