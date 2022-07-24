@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.11 - 2022.08.24
+### Changed
+* Remove `FluentModel` class and replace the magic method setter with fluent setter methods in `CompleteItem`
+
 ## 1.0.10 - 2022.08.23
 ### Changed
 * Add `allow-plugins` to `composer.json` so CI can work
