@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.12 - UNRELEASED
+### Added
+* Add `ObjectAutocomplete` class to allow for easily adding all of the properties of an object as autocomplete items
+
+### Changed
+* Refactor to `ObjectParserAutocomplete` & `ObjectParserInterface`
+
 ## 1.0.11 - 2022.08.24
 ### Changed
 * Remove `FluentModel` class and replace the magic method setter with fluent setter methods in `CompleteItem`
