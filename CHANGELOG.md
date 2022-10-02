@@ -5,6 +5,7 @@ All notable changes to this project will be documented in this file.
 ## 1.0.12 - UNRELEASED
 ### Added
 * Add `ObjectAutocomplete` class to allow for easily adding all of the properties of an object as autocomplete items
+* Add missing Twig tags `else`, `elseif`, `endblock` & `endif`
 
 ### Changed
 * Refactor to `ObjectParserAutocomplete` & `ObjectParserInterface`
