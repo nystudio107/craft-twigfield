@@ -191,7 +191,11 @@ class TwigLanguageAutocomplete extends Autocomplete
         'dd' => '[dd](#dd) | Dump and die.',
         'deprecated' => '[deprecated](https://twig.symfony.com/doc/3.x/tags/deprecated.html) | Triggers a PHP deprecation error.',
         'do' => '[do](https://twig.symfony.com/doc/3.x/tags/do.html) | Does.',
+        'else' => '[else](https://twig.symfony.com/doc/3.x/tags/if.html) | Else conditional.',
+        'elseif' => '[else](https://twig.symfony.com/doc/3.x/tags/if.html) | Else if conditional.',
         'embed' => '[embed](https://twig.symfony.com/doc/3.x/tags/embed.html) | Embeds another template.',
+        'endblock' => '[endblock](https://twig.symfony.com/doc/3.x/tags/block.html) | End a template block.',
+        'endif' => '[endif](https://twig.symfony.com/doc/3.x/tags/if.html) | End a conditional if block.',
         'exit' => '[exit](#exit) | Ends the request.',
         'extends' => '[extends](https://twig.symfony.com/doc/3.x/tags/extends.html) | Extends another template.',
         'flush' => '',
@@ -220,6 +224,13 @@ class TwigLanguageAutocomplete extends Autocomplete
         'tag' => '[tag](#tag) | Renders an HTML tag on the page.',
         'use' => '[use](https://twig.symfony.com/doc/3.x/tags/use.html) | Inherits from another template horizontally.',
         'with' => '[with](https://twig.symfony.com/doc/3.x/tags/with.html) | Creates a nested template scope.',
+    ];
+
+    const ADDITIONAL_TAGS = [
+        'else',
+        'elseif',
+        'endblock',
+        'endif',
     ];
 
     // Public Properties
@@ -277,7 +288,7 @@ class TwigLanguageAutocomplete extends Autocomplete
                 ->add($this);
         }
         // Twig Tags
-        $tags = array_keys($twig->getTokenParsers());
+        $tags = array_merge(self::ADDITIONAL_TAGS, array_keys($twig->getTokenParsers()));
         foreach ($tags as $tag) {
             $docs = self::TAG_DOCS[$tag] ?? '';
             $docs = str_replace('(#', '(' . self::CRAFT_TAG_DOCS_URL . '#', $docs);
