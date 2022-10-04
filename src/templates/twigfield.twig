@@ -15,32 +15,38 @@
     {% endjs %}
 {% endmacro %}
 
-{% macro textareaField(config, fieldType = "Twigfield", wrapperClass = "", editorOptions = {}) %}
+{% macro textareaField(config, fieldType = "Twigfield", wrapperClass = "", editorOptions = {}, twigfieldOptions = {}) %}
     {% import "_includes/forms" as forms %}
     {{ forms.textareaField(config) }}
-    {{ _self.includeJs(config.id, fieldType, wrapperClass, editorOptions) }}
-{% endmacro %}
-
-{% macro textarea(config, fieldType = "Twigfield", wrapperClass = "", editorOptions = {}) %}
-    {% import "_includes/forms" as forms %}
-    {{ forms.textarea(config) }}
-    {{ _self.includeJs(config.id, fieldType, wrapperClass, editorOptions) }}
-{% endmacro %}
-
-{% macro textField(config, fieldType = "Twigfield", wrapperClass = "", editorOptions = {}) %}
-    {% import "_includes/forms" as forms %}
-    {{ forms.textField(config) }}
-    {% set twigfieldOptions = {
-        singleLineEditor: true,
-    } %}
+    {% set twigfieldOptions =  {
+        singleLineEditor: false,
+    } | merge(twigfieldOptions) %}
     {{ _self.includeJs(config.id, fieldType, wrapperClass, editorOptions, twigfieldOptions) }}
 {% endmacro %}
 
-{% macro text(config, fieldType = "Twigfield", wrapperClass = "", editorOptions = {}) %}
+{% macro textarea(config, fieldType = "Twigfield", wrapperClass = "", editorOptions = {}, twigfieldOptions = {}) %}
+    {% import "_includes/forms" as forms %}
+    {{ forms.textarea(config) }}
+    {% set twigfieldOptions =  {
+        singleLineEditor: false,
+    } | merge(twigfieldOptions) %}
+    {{ _self.includeJs(config.id, fieldType, wrapperClass, editorOptions, twigfieldOptions) }}
+{% endmacro %}
+
+{% macro textField(config, fieldType = "Twigfield", wrapperClass = "", editorOptions = {}, twigfieldOptions = {}) %}
+    {% import "_includes/forms" as forms %}
+    {{ forms.textField(config) }}
+    {% set twigfieldOptions =  {
+        singleLineEditor: true,
+    } | merge(twigfieldOptions) %}
+    {{ _self.includeJs(config.id, fieldType, wrapperClass, editorOptions, twigfieldOptions) }}
+{% endmacro %}
+
+{% macro text(config, fieldType = "Twigfield", wrapperClass = "", editorOptions = {}, twigfieldOptions = {}) %}
     {% import "_includes/forms" as forms %}
     {{ forms.text(config) }}
-    {% set twigfieldOptions = {
+    {% set twigfieldOptions =  {
         singleLineEditor: true,
-    } %}
+    } | merge(twigfieldOptions) %}
     {{ _self.includeJs(config.id, fieldType, wrapperClass, editorOptions, twigfieldOptions) }}
 {% endmacro %}
