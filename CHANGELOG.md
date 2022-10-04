@@ -9,6 +9,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 * Refactor to `ObjectParserAutocomplete` & `ObjectParserInterface`
+* Allow the `twigfieldOptions` config object to be passed into the Twig macros
 
 ## 1.0.11 - 2022.08.24
 ### Changed
