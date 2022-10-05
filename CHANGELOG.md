@@ -6,10 +6,11 @@ All notable changes to this project will be documented in this file.
 ### Added
 * Add `ObjectAutocomplete` class to allow for easily adding all of the properties of an object as autocomplete items
 * Add missing Twig tags `else`, `elseif`, `endblock` & `endif`
+* Allow the `twigfieldOptions` config object to be passed into the Twig macros
+* Include a hash of the `twigfieldOptions` in the cache key used for the autocomplete
 
 ### Changed
 * Refactor to `ObjectParserAutocomplete` & `ObjectParserInterface`
-* Allow the `twigfieldOptions` config object to be passed into the Twig macros
 
 ## 1.0.11 - 2022.08.24
 ### Changed
