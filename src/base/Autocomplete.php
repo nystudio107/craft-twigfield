@@ -14,12 +14,13 @@ use Craft;
 use craft\base\Model;
 use craft\helpers\ArrayHelper;
 use nystudio107\twigfield\models\CompleteItem;
+use nystudio107\twigfield\Twigfield;
 use nystudio107\twigfield\types\AutocompleteTypes;
 
 /**
  * @author    nystudio107
  * @package   twigfield
- * @since     1.0.0
+ * @since     1.0.12
  */
 abstract class Autocomplete extends Model implements AutocompleteInterface
 {
@@ -45,6 +46,16 @@ abstract class Autocomplete extends Model implements AutocompleteInterface
      * @var string Whether the autocomplete should be parsed with . -delimited nested sub-properties
      */
     public $hasSubProperties = false;
+
+    /**
+     * @var string The field type passed down from the template to the autocomplete
+     */
+    public $fieldType = TwigField::DEFAULT_FIELD_TYPE;
+
+    /**
+     * @var array The twigfield options object passed down from the template to the autocomplete
+     */
+    public $twigfieldOptions = [];
 
     // Protected Properties
     // =========================================================================

@@ -10,6 +10,7 @@
 
 namespace nystudio107\twigfield\controllers;
 
+use craft\helpers\Json;
 use craft\web\Controller;
 use nystudio107\twigfield\Twigfield;
 use yii\web\Response;
@@ -39,8 +40,15 @@ class AutocompleteController extends Controller
      * @param string $fieldType
      * @return Response
      */
-    public function actionIndex(string $fieldType = Twigfield::DEFAULT_FIELD_TYPE): Response
+    public function actionIndex(string $fieldType = Twigfield::DEFAULT_FIELD_TYPE, string $twigfieldOptions = ''): Response
     {
+        $options = [];
+        if ($twigfieldOptions) {
+            $decodedJson = Json::decodeIfJson($twigfieldOptions);
+            if (!is_string($decodedJson)) {
+                $options = $decodedJson;
+            }
+        }
         $result = Twigfield::getInstance()->autocomplete->generateAutocompletes($fieldType);
 
         return $this->asJson($result);
