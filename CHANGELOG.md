@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## 1.0.12 - UNRELEASED
+## 1.0.12 - 2022.10.04
 ### Added
 * Add `ObjectAutocomplete` class to allow for easily adding all of the properties of an object as autocomplete items
 * Add missing Twig tags `else`, `elseif`, `endblock` & `endif`
