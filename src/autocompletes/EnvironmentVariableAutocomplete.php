@@ -45,7 +45,7 @@ class EnvironmentVariableAutocomplete extends Autocomplete
     // =========================================================================
 
     /**
-     * Core function that generates the autocomplete array
+     * @inerhitDoc
      */
     public function generateCompleteItems(): void
     {

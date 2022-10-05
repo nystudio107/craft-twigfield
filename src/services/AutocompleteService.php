@@ -96,27 +96,34 @@ class AutocompleteService extends Component
 
     /**
      * Call each of the autocompletes to generate their complete items
+     * @param string $fieldType
+     * @param array $twigfieldOptions
+     * @return array
      */
-    public function generateAutocompletes(string $fieldType = Twigfield::DEFAULT_FIELD_TYPE): array
+    public function generateAutocompletes(string $fieldType = Twigfield::DEFAULT_FIELD_TYPE, array $twigfieldOptions = []): array
     {
         $autocompleteItems = [];
         $autocompletes = $this->getAllAutocompleteGenerators($fieldType);
         foreach ($autocompletes as $autocompleteGenerator) {
             /* @var BaseAutoComplete $autocomplete */
             // Assume the generator is a class name string
-            $config = [];
+            $config = [
+                'fieldType' => $fieldType,
+                'twigfieldOptions' => $twigfieldOptions,
+            ];
             $autocompleteClass = $autocompleteGenerator;
             // If we're passed in an array instead, extract the class name and config from the key/value pair
             // in the form of [className => configArray]
             if (is_array($autocompleteGenerator)) {
                 $autocompleteClass = array_key_first($autocompleteGenerator);
-                $config = $autocompleteGenerator[$autocompleteClass];
+                /** @noinspection SlowArrayOperationsInLoopInspection */
+                $config = array_merge($config, $autocompleteGenerator[$autocompleteClass]);
             }
             $autocomplete = new $autocompleteClass($config);
             $name = $autocomplete->name;
             // Set up the cache parameters
             $cache = Craft::$app->getCache();
-            $cacheKey = $this->cacheKeyPrefix . $name;
+            $cacheKey = $this->cacheKeyPrefix . $name . md5(serialize($config));
             $dependency = new TagDependency([
                 'tags' => [
                     self::AUTOCOMPLETE_CACHE_TAG,

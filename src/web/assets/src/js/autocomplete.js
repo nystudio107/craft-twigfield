@@ -200,11 +200,15 @@ function addHoverHandlerToMonaco(completionItems, autocompleteType, hasSubProper
 /**
  * Fetch the autocompletion items from local storage, or from the endpoint if they aren't cached in local storage
  */
-function getCompletionItemsFromEndpoint(fieldType = 'Twigfield', endpointUrl) {
-  let urlParams = '';
-  if (typeof fieldType !== 'undefined' && fieldType !== null) {
-    urlParams = (endpointUrl.includes('?') ? '&' : '?') + 'fieldType=' + fieldType;
+function getCompletionItemsFromEndpoint(fieldType = 'Twigfield', twigfieldOptions = '', endpointUrl) {
+  const searchParams = new URLSearchParams();
+  if (typeof fieldType !== 'undefined') {
+    searchParams.set('fieldType', fieldType);
   }
+  if (typeof twigfieldOptions !== 'undefined') {
+    searchParams.set('twigfieldOptions', twigfieldOptions);
+  }
+  const glueChar = endpointUrl.includes('?') ? '&' : '?';
   // Only issue the XHR if we haven't loaded the autocompletes for this fieldType already
   if (typeof window.twigfieldFieldTypes === 'undefined') {
     window.twigfieldFieldTypes = {};
@@ -215,7 +219,7 @@ function getCompletionItemsFromEndpoint(fieldType = 'Twigfield', endpointUrl) {
   window.twigfieldFieldTypes[fieldType] = fieldType;
   // Ping the controller endpoint
   let request = new XMLHttpRequest();
-  request.open('GET', endpointUrl + urlParams, true);
+  request.open('GET', endpointUrl + glueChar + searchParams.toString(), true);
   request.onload = function () {
     if (request.status >= 200 && request.status < 400) {
       const completionItems = JSON.parse(request.responseText);
