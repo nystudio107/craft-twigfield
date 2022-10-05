@@ -168,7 +168,7 @@ The `textarea`, `textareaField`, `text`, `textField`, and `includeJs` macros all
 
 #### `fieldType`
 
-**`fieldType`** - by default this is set to `Twigfield`. You only need to change it to something else if you're using a custom Autocomplete (see below)
+**`fieldType`** - an optional 2nd parameter. By default this is set to `Twigfield`. You only need to change it to something else if you're using a custom Autocomplete (see below)
 
 e.g.:
 
@@ -182,7 +182,7 @@ e.g.:
 
 #### `wrapperClass`
 
-**`wrapperClass`** - an additional class that is added to the Twigfield editor wrapper `div`. By default, this is an empty string.
+**`wrapperClass`** - an optional 3rd parameter. An additional class that is added to the Twigfield editor wrapper `div`. By default, this is an empty string.
 
 e.g.:
 
@@ -200,7 +200,7 @@ The `monaco-editor-background-frame` class is bundled, and will cause the field 
 
 #### `editorOptions`
 
-**`editorOptions`** - an optional [EditorOption](https://microsoft.github.io/monaco-editor/api/enums/monaco.editor.EditorOption.html) passed in to configure the Monaco editor. By default, this is an empty object.
+**`editorOptions`** - an optional 4th parameter. This is an [EditorOption](https://microsoft.github.io/monaco-editor/api/enums/monaco.editor.EditorOption.html) passed in to configure the Monaco editor. By default, this is an empty object.
 
 e.g.:
 
@@ -210,6 +210,25 @@ e.g.:
 {{ twigfield.includeJs("myTwigfield", "Twigfield", "monaco-editor-background-frame", {
     lineNumbers: 'on',
 }) }}
+```
+
+#### `twigfieldOptions`
+
+**`twigfieldOptions`** - an optional 5th parameter.  This object that can contain any data you want to pass from your Twig template down to the Autocomplete. This can be leveraged in custom Autocompletes to pass contextual for a particular field to the Autocomplete (see below)
+
+e.g.:
+
+```twig
+{{ twigfield.textareaField({
+    label: "Twig Editor"|t,
+    instructions: "Enter any Twig code below, with full API autocompletion."|t,
+    id: 'myTwigfield',
+    name: 'myTwigfield',
+    value: textAreaText,
+}, "Twigfield", "monaco-editor-background-frame", { lineNumbers: 'on' }, {
+   'key': value,
+   'key2': value2,
+} }}
 ```
 
 ## Using Additional Autocompletes
@@ -328,8 +347,11 @@ The `$hasSubProperties` property indicates whether your Autocomplete returns nes
 
 `CompleteItem::create()` is a factory method that creates a `CompleteItem` object. You can use the Fluent Model setters as shown above, or you can set properties directly on the model as well. The `CompleteItem::add()` method adds it to the list of generated Autocompletes.
 
+Your Autocomplete also has a `$twigfieldOptions` property which will contain any data passed down via the optional 5th `twigfieldOptions` parameter from your Twig template. This allows you to have contextual information this a particular field.
+
 See the following examples for custom Autocompletes that you can use as a guide when creating your own:
 
+* [TrackingVarsAutocomplete](https://github.com/nystudio107/craft-seomatic/blob/develop/src/autocompletes/TrackingVarsAutocomplete.php)
 * [SprigApiAutocomplete](https://github.com/putyourlightson/craft-sprig/blob/develop/src/autocompletes/SprigApiAutocomplete.php)
 * [CraftApiAutocomplete](https://github.com/nystudio107/craft-twigfield/blob/develop/src/autocompletes/CraftApiAutocomplete.php)
 * [EnvironmentVariableAutocomplete](https://github.com/nystudio107/craft-twigfield/blob/develop/src/autocompletes/EnvironmentVariableAutocomplete.php)
