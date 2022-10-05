@@ -123,7 +123,7 @@ class AutocompleteService extends Component
             $name = $autocomplete->name;
             // Set up the cache parameters
             $cache = Craft::$app->getCache();
-            $cacheKey = $this->cacheKeyPrefix . $name;
+            $cacheKey = $this->cacheKeyPrefix . $name . md5(serialize($config));
             $dependency = new TagDependency([
                 'tags' => [
                     self::AUTOCOMPLETE_CACHE_TAG,
