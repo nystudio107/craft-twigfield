@@ -98,7 +98,7 @@ function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twi
     })
   }
   // Get the autocompletion items
-  getCompletionItemsFromEndpoint(fieldType, endpointUrl);
+  getCompletionItemsFromEndpoint(fieldType, twigfieldOptions, endpointUrl);
   // Custom resizer to always keep the editor full-height, without needing to scroll
   let ignoreEvent = false;
   const updateHeight = () => {
