@@ -96,8 +96,11 @@ class AutocompleteService extends Component
 
     /**
      * Call each of the autocompletes to generate their complete items
+     * @param string $fieldType
+     * @param array $twigfieldOptions
+     * @return array
      */
-    public function generateAutocompletes(string $fieldType = Twigfield::DEFAULT_FIELD_TYPE, string $twigfieldOptions = ''): array
+    public function generateAutocompletes(string $fieldType = Twigfield::DEFAULT_FIELD_TYPE, array $twigfieldOptions = []): array
     {
         $autocompleteItems = [];
         $autocompletes = $this->getAllAutocompleteGenerators($fieldType);

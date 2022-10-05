@@ -38,18 +38,17 @@ class AutocompleteController extends Controller
      * Return all of the autocomplete items in JSON format
      *
      * @param string $fieldType
+     * @param string $twigfieldOptions
      * @return Response
      */
     public function actionIndex(string $fieldType = Twigfield::DEFAULT_FIELD_TYPE, string $twigfieldOptions = ''): Response
     {
         $options = [];
-        if ($twigfieldOptions) {
-            $decodedJson = Json::decodeIfJson($twigfieldOptions);
-            if (!is_string($decodedJson)) {
-                $options = $decodedJson;
-            }
+        $parsedJson = Json::decodeIfJson($twigfieldOptions);
+        if (is_array($parsedJson)) {
+            $options = $parsedJson;
         }
-        $result = Twigfield::getInstance()->autocomplete->generateAutocompletes($fieldType);
+        $result = Twigfield::getInstance()->autocomplete->generateAutocompletes($fieldType, $options);
 
         return $this->asJson($result);
     }
