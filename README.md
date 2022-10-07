@@ -418,6 +418,8 @@ public function defineRules()
 
 Some things to do, and ideas for potential features:
 
+* Rewrite the JavaScript in TypeScript
+* Add a handler for parsing method return parameters, so we can get autocomplete on things like `craft.app.getSecurity().`
 * Figure out why the suggestions details sub-window doesn't appear to size itself properly to fit the `documentation`. It's there, but you have to resize the window to see it, and it appears to be calculated incorrectly somehow
 * Smarter Twig expression detection
 * Hovers for `TwigExpressionAutocomplete`s should only be added if they are inside of a Twig expression
