@@ -198,6 +198,10 @@ e.g.:
 
 The `monaco-editor-background-frame` class is bundled, and will cause the field to look like a Craft CMS editor field, but you can use your own class as well.
 
+There also a `monaco-editor-inline-frame` bundled style for an inline editor in a table cell (or elsewhere that no chrome is desired).
+
+Both of these bundled styles use an accessibility focus ring when the editor is active, which mirrors the Craft CP style.
+
 #### `editorOptions`
 
 **`editorOptions`** - an optional 4th parameter. This is an [EditorOption](https://microsoft.github.io/monaco-editor/api/enums/monaco.editor.EditorOption.html) passed in to configure the Monaco editor. By default, this is an empty object.
