@@ -83,7 +83,7 @@ class SectionShorthandFieldsAutocomplete extends Autocomplete
                             CompleteItem::create()
                                 ->insertText($key)
                                 ->label($key)
-                                ->detail(Craft::t('twigfield', 'Field'))
+                                ->detail(Craft::t('twigfield', 'Field Shorthand'))
                                 ->documentation($element::displayName() . ' ' . $value)
                                 ->kind(CompleteItemKind::PropertyKind)
                                 ->add($this);
@@ -98,7 +98,7 @@ class SectionShorthandFieldsAutocomplete extends Autocomplete
                             CompleteItem::create()
                                 ->insertText($name)
                                 ->label($name)
-                                ->detail(Craft::t('twigfield', 'Custom Field'))
+                                ->detail(Craft::t('twigfield', 'Custom Field Shorthand'))
                                 ->documentation($docs)
                                 ->kind(CompleteItemKind::FieldKind)
                                 ->add($this);

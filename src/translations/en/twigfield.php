@@ -19,6 +19,6 @@ return [
     'Twig Function' => 'Twig Function',
     'Twig Filter' => 'Twig Filter',
     'Twig Tag' => 'Twig Tag',
-    'Custom Field' => 'Custom Field',
-    'Field' => 'Field'
+    'Custom Field Shorthand' => 'Custom Field Shorthand',
+    'Field Shorthand' => 'Field Shorthand'
 ];
