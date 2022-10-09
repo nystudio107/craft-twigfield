@@ -12,10 +12,14 @@ namespace nystudio107\twigfield\autocompletes;
 
 use Craft;
 use craft\base\ElementInterface;
+use craft\events\SectionEvent;
+use craft\services\Sections;
 use nystudio107\twigfield\base\Autocomplete;
 use nystudio107\twigfield\models\CompleteItem;
+use nystudio107\twigfield\Twigfield;
 use nystudio107\twigfield\types\AutocompleteTypes;
 use nystudio107\twigfield\types\CompleteItemKind;
+use yii\base\Event;
 
 /**
  * @author    nystudio107
@@ -61,6 +65,19 @@ class SectionShorthandFieldsAutocomplete extends Autocomplete
     public function init(): void
     {
         $this->sectionId = $this->twigfieldOptions[self::OPTIONS_DATA_KEY] ?? null;
+        // Base CP templates directory
+        Event::on(Sections::class, Sections::EVENT_AFTER_SAVE_SECTION, function (SectionEvent $e) {
+            $config = [
+                'fieldType' => $this->fieldType,
+                'twigfieldOptions' => [
+                    'singleLineEditor' => true,
+                    self::OPTIONS_DATA_KEY => $e->section->id,
+                ],
+            ];
+            $cache = Craft::$app->getCache();
+            $cacheKey = Twigfield::getInstance()->autocomplete->getAutocompleteCacheKey($this, $config);
+            $cache->delete($cacheKey);
+        });
     }
 
     /**
