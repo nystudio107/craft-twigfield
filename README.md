@@ -63,11 +63,11 @@ Simply import the macros:
 Then to create a `textarea` multi-line editor, do the following:
 
 ```twig
-{{ twigfield.textarea( {
+{{ twigfield.textarea({
     id: 'myTwigfield',
     name: 'myTwigfield',
     value: textAreaText,
-} }}
+}) }}
 ```
 
 ...where `textAreaText` is a variable containing the initial text that should be in the editor field. This will create the Twig editor.
@@ -75,13 +75,13 @@ Then to create a `textarea` multi-line editor, do the following:
 To create a `textareaField` multi-line editor, do the following:
 
 ```twig
-{{ twigfield.textareaField( {
+{{ twigfield.textareaField({
     label: "Twig Editor"|t,
     instructions: "Enter any Twig code below, with full API autocompletion."|t,
     id: 'myTwigfield',
     name: 'myTwigfield',
     value: textAreaText,
-} }}
+}) }}
 ```
 
 ...where `textAreaText` is a variable containing the initial text that should be in the editor field. This will create the `label` and `instructions`, along with the Twig editor.
@@ -91,11 +91,11 @@ To create a `textareaField` multi-line editor, do the following:
 Then to create a `text` single-line editor, do the following:
 
 ```twig
-{{ twigfield.text( {
+{{ twigfield.text({
     id: 'myTwigfield',
     name: 'myTwigfield',
     value: text,
-} }}
+}) }}
 ```
 
 ...where `text` is a variable containing the initial text that should be in the editor field. This will create the Twig editor that is restricted to a single line, for simple Twig expressions.
@@ -103,13 +103,13 @@ Then to create a `text` single-line editor, do the following:
 To create a `textField` single-line editor, do the following:
 
 ```twig
-{{ twigfield.textField( {
+{{ twigfield.textField({
     label: "Twig Editor"|t,
     instructions: "Enter any Twig code below, with full API autocompletion."|t,
     id: 'myTwigfield',
     name: 'myTwigfield',
     value: text,
-} }}
+}) }}
 ```
 
 ...where `text` is a variable containing the initial text that should be in the editor field. This will create the `label` and `instructions`, along with the Twig editor that is restricted to a single line, for simple Twig expressions.
@@ -152,18 +152,18 @@ Enabling the `allowFrontendAccess` setting allows access to the `twigfield/autoc
 
 ### Additional Options
 
-The `textarea`, `textareaField`, `text`, `textField`, and `includeJs` macros all take three additional optional parameters:
+The `textarea`, `textareaField`, `text`, `textField`, and `includeJs` macros all take four additional optional parameters:
 
 ```twig
-{{ textarea(config, fieldType, wrapperClass, editorOptions) }}
+{{ textarea(config, fieldType, wrapperClass, editorOptions, twigfieldOptions) }}
 
-{{ textareaField(config, fieldType, wrapperClass, editorOptions }}
+{{ textareaField(config, fieldType, wrapperClass, editorOptions, twigfieldOptions }}
 
-{{ text(config, fieldType, wrapperClass, editorOptions) }}
+{{ text(config, fieldType, wrapperClass, editorOptions, twigfieldOptions) }}
 
-{{ textField(config, fieldType, wrapperClass, editorOptions }}
+{{ textField(config, fieldType, wrapperClass, editorOptions, twigfieldOptions }}
 
-{{ includeJs(fieldId, fieldType, wrapperClass, editorOptions }}
+{{ includeJs(fieldId, fieldType, wrapperClass, editorOptions, twigfieldOptions }}
 ```
 
 #### `fieldType`
@@ -177,7 +177,7 @@ e.g.:
     id: 'myTwigfield',
     name: 'myTwigfield',
     value: textAreaText,
-}, "MyCustomFieldType" }}
+}), "MyCustomFieldType" }}
 ```
 
 #### `wrapperClass`
@@ -193,7 +193,7 @@ e.g.:
     id: 'myTwigfield',
     name: 'myTwigfield',
     value: textAreaText,
-}, "Twigfield", "monaco-editor-background-frame" }}
+}), "Twigfield", "monaco-editor-background-frame" }}
 ```
 
 The `monaco-editor-background-frame` class is bundled, and will cause the field to look like a Craft CMS editor field, but you can use your own class as well.
@@ -225,7 +225,7 @@ e.g.:
     id: 'myTwigfield',
     name: 'myTwigfield',
     value: textAreaText,
-}, "Twigfield", "monaco-editor-background-frame", { lineNumbers: 'on' }, {
+}), "Twigfield", "monaco-editor-background-frame", { lineNumbers: 'on' }, {
    'key': value,
    'key2': value2,
 } }}
