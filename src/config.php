@@ -18,6 +18,7 @@
  * settings groups for each environment, just as you do for `general.php`
  */
 
+use nystudio107\seomatic\autocompletes\SectionShorthandFieldsAutocomplete;
 use nystudio107\twigfield\autocompletes\CraftApiAutocomplete;
 use nystudio107\twigfield\autocompletes\TwigLanguageAutocomplete;
 
@@ -28,5 +29,6 @@ return [
     'defaultTwigfieldAutocompletes' => [
         CraftApiAutocomplete::class,
         TwigLanguageAutocomplete::class,
+        SectionShorthandFieldsAutocomplete::class,
     ]
 ];
