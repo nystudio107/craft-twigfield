@@ -45,7 +45,7 @@ class SectionShorthandFieldsAutocomplete extends ObjectParserAutocomplete
     /**
      * @var string Whether the autocomplete should be parsed with . -delimited nested sub-properties
      */
-    public $hasSubProperties = false;
+    public $hasSubProperties = true;
 
     /**
      * @inheritdoc
