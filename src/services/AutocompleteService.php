@@ -12,10 +12,14 @@ namespace nystudio107\twigfield\services;
 
 use Craft;
 use craft\base\Component;
+use craft\events\SectionEvent;
+use craft\services\Sections;
+use nystudio107\twigfield\autocompletes\SectionShorthandFieldsAutocomplete;
 use nystudio107\twigfield\base\Autocomplete as BaseAutoComplete;
 use nystudio107\twigfield\base\AutocompleteInterface;
 use nystudio107\twigfield\events\RegisterTwigfieldAutocompletesEvent;
 use nystudio107\twigfield\Twigfield;
+use yii\base\Event;
 use yii\caching\TagDependency;
 
 /**
@@ -88,11 +92,15 @@ class AutocompleteService extends Component
      */
     public function init(): void
     {
+        parent::init();
         // Short cacheDuration if we're in devMode
         if (Craft::$app->getConfig()->getGeneral()->devMode) {
             $this->cacheDuration = 1;
         }
-        parent::init();
+        // Invalidate any SectionShorthandFieldsAutocomplete caches whenever any section is edited
+        Event::on(Sections::class, Sections::EVENT_AFTER_SAVE_SECTION, function (SectionEvent $e) {
+            $this->clearAutocompleteCache(SectionShorthandFieldsAutocomplete::class);
+        });
     }
 
     /**
@@ -129,6 +137,7 @@ class AutocompleteService extends Component
                 'tags' => [
                     self::AUTOCOMPLETE_CACHE_TAG,
                     self::AUTOCOMPLETE_CACHE_TAG . $name,
+                    self::AUTOCOMPLETE_CACHE_TAG . $autocomplete::class,
                 ],
             ]);
             // Get the autocompletes from the cache, or generate them if they aren't cached
