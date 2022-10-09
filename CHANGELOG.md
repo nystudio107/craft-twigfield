@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 ### Added 
 * Added `monaco-editor-inline-frame` built-in style for an inline editor in a table cell (or elsewhere that no chrome is desired)
 * Added `SectionShorthandFieldsAutocomplete` to provide shorthand autocomplete items for Craft sections
+* Added conditionals to the `ObjectParserAutocomplete` abstract class so that child classes can determine exactly what gets parsed by overriding properties
 
 ## 1.0.12 - 2022.10.04
 ### Added
