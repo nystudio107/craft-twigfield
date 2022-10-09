@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2022 nystudio107
  */
 
-namespace nystudio107\seomatic\autocompletes;
+namespace nystudio107\twigfield\autocompletes;
 
 use Craft;
 use craft\base\ElementInterface;
@@ -27,7 +27,7 @@ class SectionShorthandFieldsAutocomplete extends Autocomplete
     // Constants
     // =========================================================================
 
-    public const OPTIONS_DATA_KEY = 'SectionShorthandFieldsAutocomplete';
+    public const OPTIONS_DATA_KEY = 'SectionShorthandFields';
 
     // Public Properties
     // =========================================================================
