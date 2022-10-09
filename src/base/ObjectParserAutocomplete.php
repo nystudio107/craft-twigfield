@@ -56,6 +56,34 @@ abstract class ObjectParserAutocomplete extends Autocomplete implements ObjectPa
     const PROPERTY_SORT_PREFIX = '~~';
     const METHOD_SORT_PREFIX = '~~~';
 
+    // Public Properties
+    // =========================================================================
+
+    /**
+     * @var bool If the class itself should be parsed for complete items
+     */
+    public $parseClass = true;
+
+    /**
+     * @var bool If any ServiceLocator components should be parsed for complete items
+     */
+    public $parseComponents = true;
+
+    /**
+     * @var bool If the class properties should be parsed for complete items
+     */
+    public $parseProperties = true;
+
+    /**
+     * @var bool If the class methods should be parsed for complete items
+     */
+    public $parseMethods = true;
+
+    /**
+     * @var bool If the class behaviors should be parsed for complete items
+     */
+    public $parseBeaviors = true;
+
     // Public Methods
     // =========================================================================
 
@@ -74,15 +102,25 @@ abstract class ObjectParserAutocomplete extends Autocomplete implements ObjectPa
 
         $path = trim(implode('.', [$path, $name]), '.');
         // The class itself
-        $this->getClassCompletion($object, $factory, $name, $path);
+        if ($this->parseClass) {
+            $this->getClassCompletion($object, $factory, $name, $path);
+        }
         // ServiceLocator Components
-        $this->getComponentCompletion($object, $recursionDepth, $path);
+        if ($this->parseComponents) {
+            $this->getComponentCompletion($object, $recursionDepth, $path);
+        }
         // Class properties
-        $this->getPropertyCompletion($object, $factory, $recursionDepth, $path);
+        if ($this->parseProperties) {
+            $this->getPropertyCompletion($object, $factory, $recursionDepth, $path);
+        }
         // Class methods
-        $this->getMethodCompletion($object, $factory, $path);
+        if ($this->parseMethods) {
+            $this->getMethodCompletion($object, $factory, $path);
+        }
         // Behavior properties
-        $this->getBehaviorCompletion($object, $factory, $recursionDepth, $path);
+        if ($this->parseBeaviors) {
+            $this->getBehaviorCompletion($object, $factory, $recursionDepth, $path);
+        }
     }
 
     // Protected Methods
