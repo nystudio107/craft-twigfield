@@ -82,7 +82,7 @@ abstract class ObjectParserAutocomplete extends Autocomplete implements ObjectPa
     /**
      * @var bool If the class behaviors should be parsed for complete items
      */
-    public $parseBeaviors = true;
+    public $parseBehaviors = true;
 
     // Public Methods
     // =========================================================================
