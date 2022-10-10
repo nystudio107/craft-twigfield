@@ -118,7 +118,7 @@ abstract class ObjectParserAutocomplete extends Autocomplete implements ObjectPa
             $this->getMethodCompletion($object, $factory, $path);
         }
         // Behavior properties
-        if ($this->parseBeaviors) {
+        if ($this->parseBehaviors) {
             $this->getBehaviorCompletion($object, $factory, $recursionDepth, $path);
         }
     }
