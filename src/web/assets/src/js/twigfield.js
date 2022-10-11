@@ -52,23 +52,25 @@ const defaultOptions = {
 };
 
 // Create the editor
-function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twigfieldOptions, endpointUrl) {
+function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twigfieldOptions, endpointUrl, placeholderText = '') {
   const textArea = document.getElementById(elementId);
   let container = document.createElement('div');
-  let placeholder = document.createElement('div');
   let fieldOptions = JSON.parse(twigfieldOptions);
   // Make a sibling div for the Monaco editor to live in
   container.id = elementId + '-monaco-editor';
-  container.classList.add('p-2', 'box-content', 'monaco-editor-twigfield-icon', 'h-full');
+  container.classList.add('p-2', 'relative', 'box-content', 'monaco-editor-twigfield-icon', 'h-full');
   if (wrapperClass !== '') {
     const cl = container.classList;
     const classArray = wrapperClass.trim().split(/\s+/);
     cl.add.apply(cl, classArray);
   }
   container.tabIndex = 0;
-  placeholder.innerHTML = 'Placeholder';
-  placeholder.classList.add('monaco-placeholder');
-  container.appendChild(placeholder);
+  if (placeholderText !== '') {
+    let placeholder = document.createElement('div');
+    placeholder.innerHTML = placeholderText;
+    placeholder.classList.add('monaco-placeholder', 'p-2');
+    container.appendChild(placeholder);
+  }
   textArea.parentNode.insertBefore(container, textArea);
   textArea.style.display = 'none';
   // Create the Monaco editor
@@ -126,7 +128,7 @@ function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twi
   // Handle the placeholder
   showPlaceholder(textArea.value);
   editor.onDidBlurEditorWidget(() => {
-    showPlaceholder(instance.getValue());
+    showPlaceholder(editor.getValue());
   });
   editor.onDidFocusEditorWidget(() => {
     hidePlaceholder();

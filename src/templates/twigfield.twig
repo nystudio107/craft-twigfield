@@ -1,4 +1,4 @@
-{% macro includeJs(fieldId, fieldType = "Twigfield", wrapperClass = "", editorOptions = {}, twigfieldOptions = {}) %}
+{% macro includeJs(fieldId, fieldType = "Twigfield", wrapperClass = "", editorOptions = {}, twigfieldOptions = {}, placeholderText = '') %}
     {# @var \craft\web\AssetBundle bundle #}
     {% set bundle = view.registerAssetBundle("nystudio107\\twigfield\\assetbundles\\twigfield\\TwigfieldAsset") %}
     {% css %}
@@ -8,10 +8,10 @@
         }
     {% endcss %}
     {% js at head %}
-    window.twigfieldBaseAssetsUrl = "{{ bundle.baseUrl }}/";
+        window.twigfieldBaseAssetsUrl = "{{ bundle.baseUrl }}/";
     {% endjs %}
     {% js %}
-    makeMonacoEditor("{{ (fieldId)|namespaceInputId }}", "{{ fieldType }}", "{{ wrapperClass }}", '{{ editorOptions | json_encode | raw }}', '{{ twigfieldOptions | json_encode | raw }}', "{{ alias('@twigfieldEndpointUrl') }}");
+        makeMonacoEditor("{{ (fieldId)|namespaceInputId }}", "{{ fieldType }}", "{{ wrapperClass }}", '{{ editorOptions | json_encode | raw }}', '{{ twigfieldOptions | json_encode | raw }}', "{{ alias('@twigfieldEndpointUrl') }}", "{{ placeholderText }}");
     {% endjs %}
 {% endmacro %}
 
@@ -21,7 +21,7 @@
     {% set twigfieldOptions =  {
         singleLineEditor: false,
     } | merge(twigfieldOptions) %}
-    {{ _self.includeJs(config.id, fieldType, wrapperClass, editorOptions, twigfieldOptions) }}
+    {{ _self.includeJs(config.id, fieldType, wrapperClass, editorOptions, twigfieldOptions, config.placeholder ?? '') }}
 {% endmacro %}
 
 {% macro textarea(config, fieldType = "Twigfield", wrapperClass = "", editorOptions = {}, twigfieldOptions = {}) %}
@@ -30,7 +30,7 @@
     {% set twigfieldOptions =  {
         singleLineEditor: false,
     } | merge(twigfieldOptions) %}
-    {{ _self.includeJs(config.id, fieldType, wrapperClass, editorOptions, twigfieldOptions) }}
+    {{ _self.includeJs(config.id, fieldType, wrapperClass, editorOptions, twigfieldOptions, config.placeholder ?? '') }}
 {% endmacro %}
 
 {% macro textField(config, fieldType = "Twigfield", wrapperClass = "", editorOptions = {}, twigfieldOptions = {}) %}
@@ -39,7 +39,7 @@
     {% set twigfieldOptions =  {
         singleLineEditor: true,
     } | merge(twigfieldOptions) %}
-    {{ _self.includeJs(config.id, fieldType, wrapperClass, editorOptions, twigfieldOptions) }}
+    {{ _self.includeJs(config.id, fieldType, wrapperClass, editorOptions, twigfieldOptions, config.placeholder ?? '') }}
 {% endmacro %}
 
 {% macro text(config, fieldType = "Twigfield", wrapperClass = "", editorOptions = {}, twigfieldOptions = {}) %}
@@ -48,5 +48,5 @@
     {% set twigfieldOptions =  {
         singleLineEditor: true,
     } | merge(twigfieldOptions) %}
-    {{ _self.includeJs(config.id, fieldType, wrapperClass, editorOptions, twigfieldOptions) }}
+    {{ _self.includeJs(config.id, fieldType, wrapperClass, editorOptions, twigfieldOptions, config.placeholder ?? '') }}
 {% endmacro %}
