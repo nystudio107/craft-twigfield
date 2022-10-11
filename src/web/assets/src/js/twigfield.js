@@ -12,6 +12,8 @@
  * @package   Twigfield
  * @since     1.0.0
  */
+const EDITOR_PLACEHOLDER_SELECTOR = '.monaco-placeholder';
+
 // Set the __webpack_public_path__ dynamically so we can work inside of cpresources's hashed dir name
 // https://stackoverflow.com/questions/39879680/example-of-setting-webpack-public-path-at-runtime
 if (typeof __webpack_public_path__ !== 'string' || __webpack_public_path__ === '') {
@@ -53,14 +55,20 @@ const defaultOptions = {
 function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twigfieldOptions, endpointUrl) {
   const textArea = document.getElementById(elementId);
   let container = document.createElement('div');
+  let placeholder = document.createElement('div');
   let fieldOptions = JSON.parse(twigfieldOptions);
   // Make a sibling div for the Monaco editor to live in
   container.id = elementId + '-monaco-editor';
   container.classList.add('p-2', 'box-content', 'monaco-editor-twigfield-icon', 'h-full');
   if (wrapperClass !== '') {
-    container.classList.add(wrapperClass);
+    const cl = container.classList;
+    const classArray = wrapperClass.trim().split(/\s+/);
+    cl.add.apply(cl, classArray);
   }
   container.tabIndex = 0;
+  placeholder.innerHTML = 'Placeholder';
+  placeholder.classList.add('monaco-placeholder');
+  container.appendChild(placeholder);
   textArea.parentNode.insertBefore(container, textArea);
   textArea.style.display = 'none';
   // Create the Monaco editor
@@ -115,6 +123,24 @@ function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twi
   };
   editor.onDidContentSizeChange(updateHeight);
   updateHeight();
+  // Handle the placeholder
+  showPlaceholder(textArea.value);
+  editor.onDidBlurEditorWidget(() => {
+    showPlaceholder(instance.getValue());
+  });
+  editor.onDidFocusEditorWidget(() => {
+    hidePlaceholder();
+  });
+
+  function showPlaceholder(value) {
+    if (value === "") {
+      document.querySelector(EDITOR_PLACEHOLDER_SELECTOR).style.display = "initial";
+    }
+  }
+
+  function hidePlaceholder() {
+    document.querySelector(EDITOR_PLACEHOLDER_SELECTOR).style.display = "none";
+  }
 }
 
 window.makeMonacoEditor = makeMonacoEditor;
