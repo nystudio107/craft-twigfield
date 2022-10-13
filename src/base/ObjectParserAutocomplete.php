@@ -52,10 +52,6 @@ abstract class ObjectParserAutocomplete extends Autocomplete implements ObjectPa
     ];
     const RECURSION_DEPTH_LIMIT = 10;
 
-    const CUSTOM_PROPERTY_SORT_PREFIX = '~';
-    const PROPERTY_SORT_PREFIX = '~~';
-    const METHOD_SORT_PREFIX = '~~~';
-
     // Public Properties
     // =========================================================================
 
@@ -83,6 +79,21 @@ abstract class ObjectParserAutocomplete extends Autocomplete implements ObjectPa
      * @var bool If the class behaviors should be parsed for complete items
      */
     public $parseBehaviors = true;
+
+    /**
+     * @var string Prefix for custom (behavior) properties, for the complete items sort
+     */
+    public $customPropertySortPrefix = '~';
+
+    /**
+     * @var string Prefix for properties, for the complete items sort
+     */
+    public $propertySortPrefix = '~~';
+
+    /**
+     * @var string Prefix for methods, for the complete items sort
+     */
+    public $methodSortPrefix = '~~~';
 
     // Public Methods
     // =========================================================================
@@ -191,7 +202,7 @@ abstract class ObjectParserAutocomplete extends Autocomplete implements ObjectPa
         if ($object instanceof Behavior) {
             $customField = true;
         }
-        $sortPrefix = $customField ? self::CUSTOM_PROPERTY_SORT_PREFIX : self::PROPERTY_SORT_PREFIX;
+        $sortPrefix = $customField ? $this->customPropertySortPrefix : $this->propertySortPrefix;
         foreach ($reflectionProperties as $reflectionProperty) {
             $propertyName = $reflectionProperty->getName();
             // Exclude some properties
@@ -345,7 +356,7 @@ abstract class ObjectParserAutocomplete extends Autocomplete implements ObjectPa
                     ->kind(CompleteItemKind::MethodKind)
                     ->label((string)$label)
                     ->insertText((string)$label)
-                    ->sortText(self::METHOD_SORT_PREFIX . (string)$label)
+                    ->sortText($this->methodSortPrefix . (string)$label)
                     ->add($this, $thisPath);
             }
         }
