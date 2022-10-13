@@ -8,6 +8,7 @@ All notable changes to this project will be documented in this file.
 * Added `SectionShorthandFieldsAutocomplete` to provide shorthand autocomplete items for Craft sections
 * Added conditionals to the `ObjectParserAutocomplete` abstract class so that child classes can determine exactly what gets parsed by overriding properties
 * Added the ability to have placeholder text for the Twigfield editor
+* Allow the Twig environment to be passed down to the `TwigLanguageAutocomplete` Autocomplete via DI
 
 ## 1.0.12 - 2022.10.04
 ### Added
