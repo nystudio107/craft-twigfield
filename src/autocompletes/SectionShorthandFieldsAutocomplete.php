@@ -147,7 +147,7 @@ class SectionShorthandFieldsAutocomplete extends ObjectParserAutocomplete
     }
 
     /**
-     * Add in magic getter properties that are defined only in the `@property` docklock annotation
+     * Add in magic getter properties that are defined only in the `@property` docblock annotation
      *
      * @param ElementInterface $element
      * @return void
