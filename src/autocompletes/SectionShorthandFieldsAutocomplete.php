@@ -30,6 +30,19 @@ class SectionShorthandFieldsAutocomplete extends ObjectParserAutocomplete
 
     public const OPTIONS_DATA_KEY = 'SectionShorthandFields';
 
+    /**
+     * @array properties that are defined only using the `@property` docblock annotation
+     */
+    public const MAGIC_GETTER_PROPERTIES = [
+        Entry::class => [
+            'typeId' => "the entry type’s ID",
+            'authorId' => "the entry author’s ID",
+            'type' => "the entry type",
+            'section' => "the entry’s section",
+            'author' => "the entry’s author",
+        ]
+    ];
+
     // Public Properties
     // =========================================================================
 
@@ -96,6 +109,7 @@ class SectionShorthandFieldsAutocomplete extends ObjectParserAutocomplete
             if ($this->sectionId === 0) {
                 $element = new Entry();
                 $this->parseObject('', $element, 0);
+                $this->addMagicGetterProperties($element);
 
                 return;
             }
@@ -110,6 +124,7 @@ class SectionShorthandFieldsAutocomplete extends ObjectParserAutocomplete
                         $element = new $entryType->elementType;
                         /* @var ElementInterface $element */
                         $this->parseObject('', $element, 0);
+                        $this->addMagicGetterProperties($element);
                     }
                     // Add the custom fields in
                     $customFields = $entryType->getCustomFields();
@@ -126,6 +141,29 @@ class SectionShorthandFieldsAutocomplete extends ObjectParserAutocomplete
                                 ->add($this);
                         }
                     }
+                }
+            }
+        }
+    }
+
+    /**
+     * Add in magic getter properties that are defined only in the `@property` docklock annotation
+     *
+     * @param ElementInterface $element
+     * @return void
+     */
+    protected function addMagicGetterProperties(ElementInterface $element): void
+    {
+        foreach (self::MAGIC_GETTER_PROPERTIES as $key => $value) {
+            if ($key === $element::class) {
+                foreach ($value as $name => $docs) {
+                    CompleteItem::create()
+                        ->insertText($name)
+                        ->label($name)
+                        ->detail(Craft::t('twigfield', 'Custom Field Shorthand'))
+                        ->documentation($docs)
+                        ->kind(CompleteItemKind::FieldKind)
+                        ->add($this);
                 }
             }
         }
