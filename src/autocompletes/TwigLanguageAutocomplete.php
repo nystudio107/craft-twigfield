@@ -15,6 +15,7 @@ use nystudio107\twigfield\base\Autocomplete;
 use nystudio107\twigfield\models\CompleteItem;
 use nystudio107\twigfield\types\AutocompleteTypes;
 use nystudio107\twigfield\types\CompleteItemKind;
+use Twig\Environment;
 
 /**
  * @author    nystudio107
@@ -251,15 +252,30 @@ class TwigLanguageAutocomplete extends Autocomplete
      */
     public $hasSubProperties = false;
 
+    /**
+     * @var ?Environment The Twig environment to parse for functions/filters/tags
+     */
+    public $twig;
+
     // Public Methods
     // =========================================================================
 
     /**
      * @inerhitDoc
      */
+    public function init(): void
+    {
+        if (empty($this->twig)) {
+            $this->twig = Craft::$app->getView()->getTwig();
+        }
+    }
+
+    /**
+     * @inerhitDoc
+     */
     public function generateCompleteItems(): void
     {
-        $twig = Craft::$app->getView()->getTwig();
+        $twig = $this->twig;
         // Twig Filters
         $filters = array_keys($twig->getFilters());
         foreach ($filters as $filter) {
