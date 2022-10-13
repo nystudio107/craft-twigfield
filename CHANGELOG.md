@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## 1.0.13 - UNRELEASED
+## 1.0.13 - 2022.10.13
 ### Added 
 * Added `monaco-editor-inline-frame` built-in style for an inline editor in a table cell (or elsewhere that no chrome is desired)
 * Added `SectionShorthandFieldsAutocomplete` to provide shorthand autocomplete items for Craft sections
