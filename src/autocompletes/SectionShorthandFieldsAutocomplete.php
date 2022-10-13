@@ -12,6 +12,7 @@ namespace nystudio107\twigfield\autocompletes;
 
 use Craft;
 use craft\base\ElementInterface;
+use craft\elements\Entry;
 use nystudio107\twigfield\base\ObjectParserAutocomplete;
 use nystudio107\twigfield\models\CompleteItem;
 use nystudio107\twigfield\types\AutocompleteTypes;
@@ -73,7 +74,16 @@ class SectionShorthandFieldsAutocomplete extends ObjectParserAutocomplete
      */
     public function generateCompleteItems(): void
     {
-        if ($this->sectionId) {
+        if ($this->sectionId !== null) {
+            // A sectionId of 0 denotes we don't know what this section is, so use
+            // a `Entry`
+            if ($this->sectionId === 0) {
+                $element = new Entry();
+                $this->parseObject('', $element, 0);
+
+                return;
+            }
+            // Find the entry types used in the passed in sectionId
             $sections = Craft::$app->getSections();
             $section = $sections->getSectionById($this->sectionId);
             if ($section) {
