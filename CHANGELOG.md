@@ -2,6 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.13 - 2022.10.13
+### Added 
+* Added `monaco-editor-inline-frame` built-in style for an inline editor in a table cell (or elsewhere that no chrome is desired)
+* Added `SectionShorthandFieldsAutocomplete` to provide shorthand autocomplete items for Craft sections
+* Added conditionals to the `ObjectParserAutocomplete` abstract class so that child classes can determine exactly what gets parsed by overriding properties
+* Added the ability to have placeholder text for the Twigfield editor
+* Allow the Twig environment to be passed down to the `TwigLanguageAutocomplete` Autocomplete via DI
+* Change constants to properties for the sort prefixes in `ObjectParserAutocomplete`  to allow child classes to override the settings
+
+### Changed
+* Invalidate `SectionShorthandFieldsAutocomplete` caches whenever any field layout is edited
+* Add in magic getter properties that are defined only in the `@property` docblock annotation
+
 ## 1.0.12 - 2022.10.04
 ### Added
 * Add `ObjectAutocomplete` class to allow for easily adding all of the properties of an object as autocomplete items

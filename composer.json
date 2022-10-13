@@ -2,7 +2,7 @@
   "name": "nystudio107/craft-twigfield",
   "description": "Provides a twig editor field with Twig & Craft API autocomplete",
   "type": "yii2-extension",
-  "version": "1.0.12",
+  "version": "1.0.13",
   "keywords": [
     "craft",
     "cms",
@@ -26,7 +26,8 @@
     }
   ],
   "require": {
-    "craftcms/cms": "^3.0.0 || ^4.0.0"
+    "craftcms/cms": "^3.0.0 || ^4.0.0",
+    "phpdocumentor/reflection-docblock": "^5.0.0"
   },
   "config": {
     "allow-plugins": {

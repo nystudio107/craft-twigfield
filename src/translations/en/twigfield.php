@@ -16,4 +16,9 @@
 return [
     'Error rendering template string -> {error}' => 'Error rendering template string -> {error}',
     'Is not a string.' => 'Is not a string.',
+    'Twig Function' => 'Twig Function',
+    'Twig Filter' => 'Twig Filter',
+    'Twig Tag' => 'Twig Tag',
+    'Custom Field Shorthand' => 'Custom Field Shorthand',
+    'Field Shorthand' => 'Field Shorthand'
 ];

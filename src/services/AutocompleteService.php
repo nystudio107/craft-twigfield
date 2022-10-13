@@ -12,9 +12,14 @@ namespace nystudio107\twigfield\services;
 
 use Craft;
 use craft\base\Component;
+use craft\events\SectionEvent;
+use craft\services\Fields;
+use nystudio107\twigfield\autocompletes\SectionShorthandFieldsAutocomplete;
 use nystudio107\twigfield\base\Autocomplete as BaseAutoComplete;
+use nystudio107\twigfield\base\AutocompleteInterface;
 use nystudio107\twigfield\events\RegisterTwigfieldAutocompletesEvent;
 use nystudio107\twigfield\Twigfield;
+use yii\base\Event;
 use yii\caching\TagDependency;
 
 /**
@@ -87,11 +92,15 @@ class AutocompleteService extends Component
      */
     public function init(): void
     {
+        parent::init();
         // Short cacheDuration if we're in devMode
         if (Craft::$app->getConfig()->getGeneral()->devMode) {
             $this->cacheDuration = 1;
         }
-        parent::init();
+        // Invalidate any SectionShorthandFieldsAutocomplete caches whenever any field layout is edited
+        Event::on(Fields::class, Fields::EVENT_AFTER_SAVE_FIELD_LAYOUT, function (SectionEvent $e) {
+            $this->clearAutocompleteCache(SectionShorthandFieldsAutocomplete::class);
+        });
     }
 
     /**
@@ -123,11 +132,12 @@ class AutocompleteService extends Component
             $name = $autocomplete->name;
             // Set up the cache parameters
             $cache = Craft::$app->getCache();
-            $cacheKey = $this->cacheKeyPrefix . $name . md5(serialize($config));
+            $cacheKey = $this->getAutocompleteCacheKey($autocomplete, $config);
             $dependency = new TagDependency([
                 'tags' => [
                     self::AUTOCOMPLETE_CACHE_TAG,
                     self::AUTOCOMPLETE_CACHE_TAG . $name,
+                    self::AUTOCOMPLETE_CACHE_TAG . $autocomplete::class,
                 ],
             ]);
             // Get the autocompletes from the cache, or generate them if they aren't cached
@@ -157,6 +167,18 @@ class AutocompleteService extends Component
         $cache = Craft::$app->getCache();
         TagDependency::invalidate($cache, self::AUTOCOMPLETE_CACHE_TAG . $autocompleteName);
         Craft::info('Twigfield caches invalidated', __METHOD__);
+    }
+
+    /**
+     * Return the cache key to use for an Autocomplete's complete items
+     *
+     * @param AutocompleteInterface $autocomplete
+     * @param array $config
+     * @return string
+     */
+    public function getAutocompleteCacheKey(AutocompleteInterface $autocomplete, array $config): string
+    {
+        return $this->cacheKeyPrefix . $autocomplete->name . md5(serialize($config));
     }
 
     // Protected Methods

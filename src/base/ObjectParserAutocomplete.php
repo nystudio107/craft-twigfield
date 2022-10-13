@@ -52,9 +52,48 @@ abstract class ObjectParserAutocomplete extends Autocomplete implements ObjectPa
     ];
     const RECURSION_DEPTH_LIMIT = 10;
 
-    const CUSTOM_PROPERTY_SORT_PREFIX = '~';
-    const PROPERTY_SORT_PREFIX = '~~';
-    const METHOD_SORT_PREFIX = '~~~';
+    // Public Properties
+    // =========================================================================
+
+    /**
+     * @var bool If the class itself should be parsed for complete items
+     */
+    public $parseClass = true;
+
+    /**
+     * @var bool If any ServiceLocator components should be parsed for complete items
+     */
+    public $parseComponents = true;
+
+    /**
+     * @var bool If the class properties should be parsed for complete items
+     */
+    public $parseProperties = true;
+
+    /**
+     * @var bool If the class methods should be parsed for complete items
+     */
+    public $parseMethods = true;
+
+    /**
+     * @var bool If the class behaviors should be parsed for complete items
+     */
+    public $parseBehaviors = true;
+
+    /**
+     * @var string Prefix for custom (behavior) properties, for the complete items sort
+     */
+    public $customPropertySortPrefix = '~';
+
+    /**
+     * @var string Prefix for properties, for the complete items sort
+     */
+    public $propertySortPrefix = '~~';
+
+    /**
+     * @var string Prefix for methods, for the complete items sort
+     */
+    public $methodSortPrefix = '~~~';
 
     // Public Methods
     // =========================================================================
@@ -74,15 +113,25 @@ abstract class ObjectParserAutocomplete extends Autocomplete implements ObjectPa
 
         $path = trim(implode('.', [$path, $name]), '.');
         // The class itself
-        $this->getClassCompletion($object, $factory, $name, $path);
+        if ($this->parseClass) {
+            $this->getClassCompletion($object, $factory, $name, $path);
+        }
         // ServiceLocator Components
-        $this->getComponentCompletion($object, $recursionDepth, $path);
+        if ($this->parseComponents) {
+            $this->getComponentCompletion($object, $recursionDepth, $path);
+        }
         // Class properties
-        $this->getPropertyCompletion($object, $factory, $recursionDepth, $path);
+        if ($this->parseProperties) {
+            $this->getPropertyCompletion($object, $factory, $recursionDepth, $path);
+        }
         // Class methods
-        $this->getMethodCompletion($object, $factory, $path);
+        if ($this->parseMethods) {
+            $this->getMethodCompletion($object, $factory, $path);
+        }
         // Behavior properties
-        $this->getBehaviorCompletion($object, $factory, $recursionDepth, $path);
+        if ($this->parseBehaviors) {
+            $this->getBehaviorCompletion($object, $factory, $recursionDepth, $path);
+        }
     }
 
     // Protected Methods
@@ -153,7 +202,7 @@ abstract class ObjectParserAutocomplete extends Autocomplete implements ObjectPa
         if ($object instanceof Behavior) {
             $customField = true;
         }
-        $sortPrefix = $customField ? self::CUSTOM_PROPERTY_SORT_PREFIX : self::PROPERTY_SORT_PREFIX;
+        $sortPrefix = $customField ? $this->customPropertySortPrefix : $this->propertySortPrefix;
         foreach ($reflectionProperties as $reflectionProperty) {
             $propertyName = $reflectionProperty->getName();
             // Exclude some properties
@@ -307,7 +356,7 @@ abstract class ObjectParserAutocomplete extends Autocomplete implements ObjectPa
                     ->kind(CompleteItemKind::MethodKind)
                     ->label((string)$label)
                     ->insertText((string)$label)
-                    ->sortText(self::METHOD_SORT_PREFIX . (string)$label)
+                    ->sortText($this->methodSortPrefix . (string)$label)
                     ->add($this, $thisPath);
             }
         }

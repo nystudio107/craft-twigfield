@@ -13,6 +13,7 @@ namespace nystudio107\twigfield\models;
 use craft\base\Model;
 use craft\validators\ArrayValidator;
 use nystudio107\twigfield\autocompletes\CraftApiAutocomplete;
+use nystudio107\twigfield\autocompletes\SectionShorthandFieldsAutocomplete;
 use nystudio107\twigfield\autocompletes\TwigLanguageAutocomplete;
 
 /**
@@ -36,6 +37,7 @@ class Settings extends Model
     public $defaultTwigfieldAutocompletes = [
         CraftApiAutocomplete::class,
         TwigLanguageAutocomplete::class,
+        SectionShorthandFieldsAutocomplete::class,
     ];
 
     // Public Methods

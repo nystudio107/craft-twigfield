@@ -12,6 +12,7 @@
  * @package   Twigfield
  * @since     1.0.0
  */
+
 // Set the __webpack_public_path__ dynamically so we can work inside of cpresources's hashed dir name
 // https://stackoverflow.com/questions/39879680/example-of-setting-webpack-public-path-at-runtime
 if (typeof __webpack_public_path__ !== 'string' || __webpack_public_path__ === '') {
@@ -50,17 +51,27 @@ const defaultOptions = {
 };
 
 // Create the editor
-function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twigfieldOptions, endpointUrl) {
+function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twigfieldOptions, endpointUrl, placeholderText = '') {
   const textArea = document.getElementById(elementId);
   let container = document.createElement('div');
   let fieldOptions = JSON.parse(twigfieldOptions);
+  let placeholderId = elementId + '-monaco-editor-placeholder';
   // Make a sibling div for the Monaco editor to live in
   container.id = elementId + '-monaco-editor';
-  container.classList.add('p-2', 'box-content', 'monaco-editor-twigfield-icon', 'h-full');
+  container.classList.add('p-2', 'relative', 'box-content', 'monaco-editor-twigfield-icon', 'h-full');
   if (wrapperClass !== '') {
-    container.classList.add(wrapperClass);
+    const cl = container.classList;
+    const classArray = wrapperClass.trim().split(/\s+/);
+    cl.add.apply(cl, classArray);
   }
   container.tabIndex = 0;
+  if (placeholderText !== '') {
+    let placeholder = document.createElement('div');
+    placeholder.id = elementId + '-monaco-editor-placeholder';
+    placeholder.innerHTML = placeholderText;
+    placeholder.classList.add('monaco-placeholder', 'p-2');
+    container.appendChild(placeholder);
+  }
   textArea.parentNode.insertBefore(container, textArea);
   textArea.style.display = 'none';
   // Create the Monaco editor
@@ -115,6 +126,26 @@ function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twi
   };
   editor.onDidContentSizeChange(updateHeight);
   updateHeight();
+  // Handle the placeholder
+  if (placeholderText !== '') {
+    showPlaceholder('#' + placeholderId, editor.getValue());
+    editor.onDidBlurEditorWidget(() => {
+      showPlaceholder('#' + placeholderId, editor.getValue());
+    });
+    editor.onDidFocusEditorWidget(() => {
+      hidePlaceholder('#' + placeholderId);
+    });
+  }
+
+  function showPlaceholder(selector, value) {
+    if (value === "") {
+      document.querySelector(selector).style.display = "initial";
+    }
+  }
+
+  function hidePlaceholder(selector) {
+    document.querySelector(selector).style.display = "none";
+  }
 }
 
 window.makeMonacoEditor = makeMonacoEditor;
