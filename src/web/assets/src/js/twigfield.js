@@ -12,7 +12,6 @@
  * @package   Twigfield
  * @since     1.0.0
  */
-const EDITOR_PLACEHOLDER_SELECTOR = '.monaco-placeholder';
 
 // Set the __webpack_public_path__ dynamically so we can work inside of cpresources's hashed dir name
 // https://stackoverflow.com/questions/39879680/example-of-setting-webpack-public-path-at-runtime
@@ -56,6 +55,7 @@ function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twi
   const textArea = document.getElementById(elementId);
   let container = document.createElement('div');
   let fieldOptions = JSON.parse(twigfieldOptions);
+  let placeholderId = elementId + '-monaco-editor-placeholder';
   // Make a sibling div for the Monaco editor to live in
   container.id = elementId + '-monaco-editor';
   container.classList.add('p-2', 'relative', 'box-content', 'monaco-editor-twigfield-icon', 'h-full');
@@ -67,6 +67,7 @@ function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twi
   container.tabIndex = 0;
   if (placeholderText !== '') {
     let placeholder = document.createElement('div');
+    placeholder.id = elementId + '-monaco-editor-placeholder';
     placeholder.innerHTML = placeholderText;
     placeholder.classList.add('monaco-placeholder', 'p-2');
     container.appendChild(placeholder);
@@ -126,22 +127,24 @@ function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twi
   editor.onDidContentSizeChange(updateHeight);
   updateHeight();
   // Handle the placeholder
-  showPlaceholder(textArea.value);
-  editor.onDidBlurEditorWidget(() => {
-    showPlaceholder(editor.getValue());
-  });
-  editor.onDidFocusEditorWidget(() => {
-    hidePlaceholder();
-  });
+  if (placeholderText !== '') {
+    showPlaceholder('#' + placeholderId, editor.getValue());
+    editor.onDidBlurEditorWidget(() => {
+      showPlaceholder('#' + placeholderId, editor.getValue());
+    });
+    editor.onDidFocusEditorWidget(() => {
+      hidePlaceholder('#' + placeholderId);
+    });
+  }
 
-  function showPlaceholder(value) {
+  function showPlaceholder(selector, value) {
     if (value === "") {
-      document.querySelector(EDITOR_PLACEHOLDER_SELECTOR).style.display = "initial";
+      document.querySelector(selector).style.display = "initial";
     }
   }
 
-  function hidePlaceholder() {
-    document.querySelector(EDITOR_PLACEHOLDER_SELECTOR).style.display = "none";
+  function hidePlaceholder(selector) {
+    document.querySelector(selector).style.display = "none";
   }
 }
 
