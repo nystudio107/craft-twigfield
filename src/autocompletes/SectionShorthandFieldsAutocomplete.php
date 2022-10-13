@@ -54,6 +54,21 @@ class SectionShorthandFieldsAutocomplete extends ObjectParserAutocomplete
     public $parseBehaviors = false;
 
     /**
+     * @inheritdoc
+     */
+    public $customPropertySortPrefix = '';
+
+    /**
+     * @inheritdoc
+     */
+    public $propertySortPrefix = '';
+
+    /**
+     * @inheritdoc
+     */
+    public $methodSortPrefix = '';
+
+    /**
      * @var ?int The section id. A sectionId of 0 denotes we don't know what this section is, so use
      * a generic `Entry` and don't generate any complete items for custom fields
      */
