@@ -54,7 +54,8 @@ class SectionShorthandFieldsAutocomplete extends ObjectParserAutocomplete
     public $parseBehaviors = false;
 
     /**
-     * @var ?int The section id
+     * @var ?int The section id. A sectionId of 0 denotes we don't know what this section is, so use
+     * a generic `Entry` and don't generate any complete items for custom fields
      */
     public $sectionId = null;
 
@@ -76,7 +77,7 @@ class SectionShorthandFieldsAutocomplete extends ObjectParserAutocomplete
     {
         if ($this->sectionId !== null) {
             // A sectionId of 0 denotes we don't know what this section is, so use
-            // a `Entry`
+            // a generic `Entry` and don't generate any complete items for custom fields
             if ($this->sectionId === 0) {
                 $element = new Entry();
                 $this->parseObject('', $element, 0);
