@@ -11,6 +11,9 @@ All notable changes to this project will be documented in this file.
 * Allow the Twig environment to be passed down to the `TwigLanguageAutocomplete` Autocomplete via DI
 * Change constants to properties for the sort prefixes in `ObjectParserAutocomplete`  to allow child classes to override the settings
 
+### Changed
+* Invalidate `SectionShorthandFieldsAutocomplete` caches whenever any field layout is edited
+
 ## 1.0.12 - 2022.10.04
 ### Added
 * Add `ObjectAutocomplete` class to allow for easily adding all of the properties of an object as autocomplete items
