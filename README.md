@@ -427,6 +427,7 @@ Some things to do, and ideas for potential features:
 * Figure out why the suggestions details sub-window doesn't appear to size itself properly to fit the `documentation`. It's there, but you have to resize the window to see it, and it appears to be calculated incorrectly somehow
 * Smarter Twig expression detection
 * Hovers for `TwigExpressionAutocomplete`s should only be added if they are inside of a Twig expression
+* It would be nice if `SectionShorthandFieldsAutocomplete` completions presented sub-item completions, too
 * Perhaps a general code editor as an offshoot?
 
 Brought to you by [nystudio107](https://nystudio107.com/)
