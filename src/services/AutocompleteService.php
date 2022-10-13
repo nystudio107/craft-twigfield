@@ -13,7 +13,7 @@ namespace nystudio107\twigfield\services;
 use Craft;
 use craft\base\Component;
 use craft\events\SectionEvent;
-use craft\services\Sections;
+use craft\services\Fields;
 use nystudio107\twigfield\autocompletes\SectionShorthandFieldsAutocomplete;
 use nystudio107\twigfield\base\Autocomplete as BaseAutoComplete;
 use nystudio107\twigfield\base\AutocompleteInterface;
@@ -97,8 +97,8 @@ class AutocompleteService extends Component
         if (Craft::$app->getConfig()->getGeneral()->devMode) {
             $this->cacheDuration = 1;
         }
-        // Invalidate any SectionShorthandFieldsAutocomplete caches whenever any section is edited
-        Event::on(Sections::class, Sections::EVENT_AFTER_SAVE_SECTION, function (SectionEvent $e) {
+        // Invalidate any SectionShorthandFieldsAutocomplete caches whenever any field layout is edited
+        Event::on(Fields::class, Fields::EVENT_AFTER_SAVE_FIELD_LAYOUT, function (SectionEvent $e) {
             $this->clearAutocompleteCache(SectionShorthandFieldsAutocomplete::class);
         });
     }
