@@ -69,6 +69,11 @@ class SectionShorthandFieldsAutocomplete extends ObjectParserAutocomplete
     /**
      * @inheritdoc
      */
+    public $parseMethods = false;
+
+    /**
+     * @inheritdoc
+     */
     public $customPropertySortPrefix = '';
 
     /**
