@@ -132,7 +132,11 @@ class SectionShorthandFieldsAutocomplete extends ObjectParserAutocomplete
                         $this->addMagicGetterProperties($element);
                     }
                     // Add the custom fields in
-                    $customFields = $entryType->getCustomFields();
+                    if (method_exists($entryType, 'getCustomFields')) {
+                        $customFields = $entryType->getCustomFields();
+                    } else {
+                        $customFields = $entryType->getFields();
+                    }
                     foreach ($customFields as $customField) {
                         $name = $customField->handle;
                         $docs = $customField->instructions ?? '';
