@@ -13,6 +13,7 @@ All notable changes to this project will be documented in this file.
 
 ### Changed
 * Invalidate `SectionShorthandFieldsAutocomplete` caches whenever any field layout is edited
+* Add in magic getter properties that are defined only in the `@property` docblock annotation
 
 ## 1.0.12 - 2022.10.04
 ### Added
