@@ -137,7 +137,7 @@ class AutocompleteService extends Component
                 'tags' => [
                     self::AUTOCOMPLETE_CACHE_TAG,
                     self::AUTOCOMPLETE_CACHE_TAG . $name,
-                    self::AUTOCOMPLETE_CACHE_TAG . $autocomplete::class,
+                    self::AUTOCOMPLETE_CACHE_TAG . get_class($autocomplete),
                 ],
             ]);
             // Get the autocompletes from the cache, or generate them if they aren't cached
