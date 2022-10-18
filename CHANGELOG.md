@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.16 - 2022.10.18
+### Changed
+* Moved `craftcms/cms` to `require-dev`
+
 ## 1.0.15 - 2022.10.17
 ### Fixed
 * Fixed an issue that caused Twigfield to throw an exception if you were running < PHP 8 ([#1220](https://github.com/nystudio107/craft-seomatic/issues/1220))
