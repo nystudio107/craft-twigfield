@@ -60,7 +60,11 @@ function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twi
   let placeholderId = elementId + '-monaco-editor-placeholder';
   // Make a sibling div for the Monaco editor to live in
   container.id = elementId + '-monaco-editor';
-  container.classList.add('p-2', 'relative', 'box-content', 'monaco-editor-twigfield-icon', 'h-full');
+  container.classList.add('relative', 'box-content', 'monaco-editor-twigfield', 'h-full');
+  const icon = document.createElement('div');
+  icon.classList.add('monaco-editor-twigfield--icon');
+  icon.title = Craft.t('app', 'Twig code is supported.');
+  container.appendChild(icon);
   if (wrapperClass !== '') {
     const cl = container.classList;
     const classArray = wrapperClass.trim().split(/\s+/);
