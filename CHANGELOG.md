@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+## 1.0.17 - UNRELEASED
+### Changed
+* Set both `alwaysConsumeMouseWheel` & `handleMouseWheel` to `false` in the default Monaco Editor config to avoid it consuming mouse wheel events that prevent scrolling pages with Twigfield fields ref: ([#1853](https://github.com/microsoft/monaco-editor/issues/1853))
+
 ## 1.0.16 - 2022.10.18
 ### Changed
 * Moved `craftcms/cms` to `require-dev`
