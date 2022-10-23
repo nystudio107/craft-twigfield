@@ -1,4 +1,7 @@
 {% macro includeJs(fieldId, fieldType = "Twigfield", wrapperClass = "", editorOptions = {}, twigfieldOptions = {}, placeholderText = '') %}
+    {% set editorOptions = editorOptions|merge({
+        ariaLabel: (editorOptions.ariaLabel ?? '' ~ 'Twig code is supported.'|t('twigfield'))|trim,
+    }) %}
     {# @var \craft\web\AssetBundle bundle #}
     {% set bundle = view.registerAssetBundle("nystudio107\\twigfield\\assetbundles\\twigfield\\TwigfieldAsset") %}
     {% css %}

@@ -11,6 +11,7 @@
 namespace nystudio107\twigfield\assetbundles\twigfield;
 
 use craft\web\AssetBundle;
+use craft\web\View;
 
 /**
  * @author    nystudio107
@@ -41,5 +42,19 @@ class TwigfieldAsset extends AssetBundle
         ];
 
         parent::init();
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function registerAssetFiles($view): void
+    {
+        parent::registerAssetFiles($view);
+
+        if ($view instanceof View) {
+            $view->registerTranslations('twigfield', [
+                'Twig code is supported.'
+            ]);
+        }
     }
 }

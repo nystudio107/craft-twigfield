@@ -67,11 +67,11 @@ td.type-channel.type-structure.twigfield-cell {
 }
 
 body.ltr .monaco-editor-twigfield {
-    padding-right: 32px;
+    padding-right: 32px !important;
 }
 
 body.rtl .monaco-editor-twigfield {
-    padding-left: 32px;
+    padding-left: 32px !important;
 }
 
 table.editable tbody .monaco-editor-twigfield {
@@ -80,16 +80,16 @@ table.editable tbody .monaco-editor-twigfield {
 
 /* Twig icon */
 .monaco-editor-twigfield--icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: absolute;
     top: 7px;
     width: 18px;
     height: 18px;
-    border: 1px solid var(--yellow-500);
-    border-radius: var(--small-border-radius);
-    background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='utf-8'%3F%3E%3Csvg version='1.1' id='Layer_1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' x='0px' y='0px' viewBox='0 0 320 320' style='enable-background:new 0 0 320 320;' xml:space='preserve'%3E%3Cstyle type='text/css'%3E .st0%7Bfill:%23F0B429;%7D%0A%3C/style%3E%3Cg%3E%3Cpath class='st0' d='M128,35.6c-17.7,0-32,15.9-32,35.6v35.6c0,29.5-21.5,53.3-48,53.3c26.5,0,48,23.9,48,53.3v35.6 c0,19.6,14.3,35.6,32,35.6V320H96c-35.3,0-64-31.9-64-71.1v-35.6c0-19.6-14.3-35.6-32-35.6v-35.6c17.7,0,32-15.9,32-35.6V71.1 C32,31.9,60.7,0,96,0h32V35.6L128,35.6z'/%3E%3Cpath class='st0' d='M320,177.8c-17.7,0-32,15.9-32,35.6v35.6c0,39.2-28.7,71.1-64,71.1h-32v-35.6c17.7,0,32-15.9,32-35.6v-35.6 c0-29.5,21.5-53.3,48-53.3c-26.5,0-48-23.9-48-53.3V71.1c0-19.6-14.3-35.6-32-35.6V0h32c35.3,0,64,31.9,64,71.1v35.6 c0,19.6,14.3,35.6,32,35.6V177.8L320,177.8z'/%3E%3C/g%3E%3C/svg%3E%0A");
-    background-repeat: no-repeat;
-    background-position: 50% 50%;
-    background-size: 10px;
+    border: 1px solid var(--indicator-border-color, #cb6e17);
+    border-radius: var(--small-border-radius, 3px);
+    color: var(--indicator-icon-color, #bd5a14);
 }
 
 table.editable tbody .monaco-editor-twigfield--icon {
@@ -102,6 +102,11 @@ body.ltr .monaco-editor-twigfield--icon {
 
 body.rtl .monaco-editor-twigfield--icon {
     left: 7px;
+}
+
+.monaco-editor-twigfield--icon svg {
+    width: 8px;
+    height: 8px;
 }
 
 /* Make the suggestion-details a more reasonable default size */
