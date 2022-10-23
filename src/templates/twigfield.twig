@@ -17,6 +17,7 @@
 
 {% macro textareaField(config, fieldType = "Twigfield", wrapperClass = "", editorOptions = {}, twigfieldOptions = {}) %}
     {% import "_includes/forms" as forms %}
+    {% set config = config|merge({id: config.id ?? "twigfield#{random()}"}) %}
     {{ forms.textareaField(config) }}
     {% set twigfieldOptions =  {
         singleLineEditor: false,
@@ -26,6 +27,7 @@
 
 {% macro textarea(config, fieldType = "Twigfield", wrapperClass = "", editorOptions = {}, twigfieldOptions = {}) %}
     {% import "_includes/forms" as forms %}
+    {% set config = config|merge({id: config.id ?? "twigfield#{random()}"}) %}
     {{ forms.textarea(config) }}
     {% set twigfieldOptions =  {
         singleLineEditor: false,
@@ -35,6 +37,7 @@
 
 {% macro textField(config, fieldType = "Twigfield", wrapperClass = "", editorOptions = {}, twigfieldOptions = {}) %}
     {% import "_includes/forms" as forms %}
+    {% set config = config|merge({id: config.id ?? "twigfield#{random()}"}) %}
     {{ forms.textField(config) }}
     {% set twigfieldOptions =  {
         singleLineEditor: true,
@@ -44,6 +47,7 @@
 
 {% macro text(config, fieldType = "Twigfield", wrapperClass = "", editorOptions = {}, twigfieldOptions = {}) %}
     {% import "_includes/forms" as forms %}
+    {% set config = config|merge({id: config.id ?? "twigfield#{random()}"}) %}
     {{ forms.text(config) }}
     {% set twigfieldOptions =  {
         singleLineEditor: true,
