@@ -42,6 +42,8 @@ const defaultOptions = {
   scrollbar: {
     vertical: 'hidden',
     horizontal: 'auto',
+    alwaysConsumeMouseWheel: false,
+    handleMouseWheel: false,
   },
   fontSize: 14,
   fontFamily: 'SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace',
