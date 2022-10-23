@@ -2,7 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
-## 1.0.17 - UNRELEASED
+## 1.0.17 - 2022.10.23
+### Added
+* Added a better Twig indicator icon, along with a `title` attribute for a tooltip indicator, and #a11y improvements ([#5](https://github.com/nystudio107/craft-twigfield/pull/5))
+
 ### Changed
 * Set both `alwaysConsumeMouseWheel` & `handleMouseWheel` to `false` in the default Monaco Editor config to avoid it consuming mouse wheel events that prevent scrolling pages with Twigfield fields ref: ([#1853](https://github.com/microsoft/monaco-editor/issues/1853))
 
