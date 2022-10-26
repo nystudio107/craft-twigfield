@@ -163,19 +163,19 @@ function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twi
     });
   }
 
-  function focusNextElement () {
-      var focussable = getFocusableElements();
-      var index = focussable.indexOf(document.activeElement);
-      if(index > -1) {
-        var nextElement = focussable[index + 1] || focussable[0];
-        nextElement.focus();
-      }
-  }
-
-  function focusPrevElement () {
+  function focusNextElement() {
     var focussable = getFocusableElements();
     var index = focussable.indexOf(document.activeElement);
-    if(index > -1) {
+    if (index > -1) {
+      var nextElement = focussable[index + 1] || focussable[0];
+      nextElement.focus();
+    }
+  }
+
+  function focusPrevElement() {
+    var focussable = getFocusableElements();
+    var index = focussable.indexOf(document.activeElement);
+    if (index > -1) {
       var prevElement = focussable[index - 1] || focussable[focussable.length];
       prevElement.focus();
     }
@@ -210,3 +210,4 @@ function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twi
 window.makeMonacoEditor = makeMonacoEditor;
 
 export default makeMonacoEditor;
+
