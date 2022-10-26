@@ -28,6 +28,7 @@ const defaultOptions = {
   language: 'twig',
   theme: 'vs',
   automaticLayout: true,
+  tabIndex: 0,
   // Disable sidebar line numbers
   lineNumbers: 'off',
   glyphMargin: false,
@@ -82,7 +83,6 @@ function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twi
     const classArray = wrapperClass.trim().split(/\s+/);
     cl.add.apply(cl, classArray);
   }
-  container.tabIndex = 0;
   if (placeholderText !== '') {
     let placeholder = document.createElement('div');
     placeholder.id = elementId + '-monaco-editor-placeholder';
@@ -102,6 +102,7 @@ function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twi
   // ref: https://github.com/vikyd/vue-monaco-singleline/blob/master/src/monaco-singleline.vue#L150
   if ('singleLineEditor' in fieldOptions && fieldOptions.singleLineEditor) {
     const textModel = editor.getModel();
+    console.log(fieldOptions);
     // Remove multiple spaces & tabs
     const text = textModel.getValue();
     textModel.setValue(text.replace(/\s\s+/g, ' '));
