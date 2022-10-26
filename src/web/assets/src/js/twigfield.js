@@ -176,7 +176,7 @@ function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twi
     var focussable = getFocusableElements();
     var index = focussable.indexOf(document.activeElement);
     if(index > -1) {
-      var prevElement = focussable[index - 2] || focussable[focussable.length];
+      var prevElement = focussable[index - 1] || focussable[focussable.length];
       prevElement.focus();
     }
   }
