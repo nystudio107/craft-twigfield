@@ -28,6 +28,7 @@ const defaultOptions = {
   language: 'twig',
   theme: 'vs',
   automaticLayout: true,
+  tabIndex: 0,
   // Disable sidebar line numbers
   lineNumbers: 'off',
   glyphMargin: false,
@@ -82,7 +83,6 @@ function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twi
     const classArray = wrapperClass.trim().split(/\s+/);
     cl.add.apply(cl, classArray);
   }
-  container.tabIndex = 0;
   if (placeholderText !== '') {
     let placeholder = document.createElement('div');
     placeholder.id = elementId + '-monaco-editor-placeholder';
@@ -102,6 +102,7 @@ function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twi
   // ref: https://github.com/vikyd/vue-monaco-singleline/blob/master/src/monaco-singleline.vue#L150
   if ('singleLineEditor' in fieldOptions && fieldOptions.singleLineEditor) {
     const textModel = editor.getModel();
+    console.log(fieldOptions);
     // Remove multiple spaces & tabs
     const text = textModel.getValue();
     textModel.setValue(text.replace(/\s\s+/g, ' '));
@@ -111,6 +112,13 @@ function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twi
     // Handle typing the Enter key
     editor.addCommand(monaco.KeyCode.Enter, () => {
     }, '!suggestWidgetVisible');
+    // Handle typing the Tab key
+    editor.addCommand(monaco.KeyCode.Tab, () => {
+      focusNextElement();
+    });
+    editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Tab, () => {
+      focusPrevElement();
+    });
     // Handle Paste
     editor.onDidPaste((e) => {
       // multiple rows will be merged to single row
@@ -153,6 +161,39 @@ function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twi
     editor.onDidFocusEditorWidget(() => {
       hidePlaceholder('#' + placeholderId);
     });
+  }
+
+  function focusNextElement () {
+      var focussable = getFocusableElements();
+      var index = focussable.indexOf(document.activeElement);
+      if(index > -1) {
+        var nextElement = focussable[index + 1] || focussable[0];
+        nextElement.focus();
+      }
+  }
+
+  function focusPrevElement () {
+    var focussable = getFocusableElements();
+    var index = focussable.indexOf(document.activeElement);
+    if(index > -1) {
+      var prevElement = focussable[index - 1] || focussable[focussable.length];
+      prevElement.focus();
+    }
+  }
+
+  function getFocusableElements() {
+    var focussable = [];
+    //add all elements we want to include in our selection
+    var focussableElements = 'a:not([disabled]), button:not([disabled]), select:not([disabled]), input[type=text]:not([disabled]), [tabindex]:not([disabled]):not([tabindex="-1"])';
+    if (document.activeElement && document.activeElement.form) {
+      focussable = Array.prototype.filter.call(document.activeElement.form.querySelectorAll(focussableElements),
+        function (element) {
+          //check for visibility while always include the current activeElement
+          return element.offsetWidth > 0 || element.offsetHeight > 0 || element === document.activeElement
+        });
+    }
+
+    return focussable;
   }
 
   function showPlaceholder(selector, value) {
