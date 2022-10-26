@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+### 1.0.18 - 2022.10.25
+### Added
+* Manually handle Tab & Shift-Tab for single line Twigfields to allow tabbing to other fields in a form
+
 ## 1.0.17 - 2022.10.23
 ### Added
 * Added a better Twig indicator icon, along with a `title` attribute for a tooltip indicator, and #a11y improvements ([#5](https://github.com/nystudio107/craft-twigfield/pull/5))
