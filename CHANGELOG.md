@@ -2,7 +2,11 @@
 
 All notable changes to this project will be documented in this file.
 
-### 1.0.18 - 2022.10.25
+## 1.0.19 - 2022.10.26
+### Fixed
+* Fixed an issue that didn't properly encode `twigFieldOptions` for a JavaScript context, resulting in a broken field in some cases ([#1225](https://github.com/nystudio107/craft-seomatic/issues/1225))
+
+## 1.0.18 - 2022.10.25
 ### Added
 * Manually handle Tab & Shift-Tab for single line Twigfields to allow tabbing to other fields in a form
 
