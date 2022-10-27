@@ -12,7 +12,7 @@ module.exports = {
   copyright: '©2022 nystudio107.com',
   entry: {
     'javascript-editor': [
-      '@/js/twigfield.js',
+      '@/js/twigfield.ts',
       '@/css/twigfield.pcss',
       'monaco-editor/esm/vs/base/browser/ui/codicons/codicon/codicon.ttf'
     ],

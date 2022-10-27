@@ -2,7 +2,7 @@
 module.exports = {
   content: [
     '../src/templates/**/*.{twig,html}',
-    '../src/web/assets/src/**/*.{vue,html,js}',
+    '../src/web/assets/src/**/*.{vue,html,js,ts}',
   ],
   theme: {},
   plugins: [],
