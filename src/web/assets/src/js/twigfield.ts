@@ -13,6 +13,17 @@
  * @since     1.0.0
  */
 
+type MakeMonacoEditorFunction = (elementId: string, fieldType: string, wrapperClass: string, editorOptions: string, twigfieldOptions: string, endpointUrl: string, placeholderText: string) => void;
+
+declare global {
+  var __webpack_public_path__: string;
+  var Craft: any;
+  interface Window {
+    twigfieldBaseAssetsUrl: string;
+    makeMonacoEditor: MakeMonacoEditorFunction;
+  }
+}
+
 // Set the __webpack_public_path__ dynamically so we can work inside of cpresources's hashed dir name
 // https://stackoverflow.com/questions/39879680/example-of-setting-webpack-public-path-at-runtime
 if (typeof __webpack_public_path__ !== 'string' || __webpack_public_path__ === '') {
@@ -20,11 +31,12 @@ if (typeof __webpack_public_path__ !== 'string' || __webpack_public_path__ === '
 }
 
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
-import {getCompletionItemsFromEndpoint} from '@/js/autocomplete.js';
+import {getCompletionItemsFromEndpoint} from './autocomplete';
+import languageIcons from './language-icons'
 
 // The default EditorOptions for the Monaco editor instance
 // ref: https://microsoft.github.io/monaco-editor/api/enums/monaco.editor.EditorOption.html
-const defaultOptions = {
+const defaultOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
   language: 'twig',
   theme: 'vs',
   automaticLayout: true,
@@ -37,8 +49,8 @@ const defaultOptions = {
   lineDecorationsWidth: 0,
   lineNumbersMinChars: 0,
   // Disable the current line highlight
-  renderLineHighlight: false,
-  wordWrap: true,
+  renderLineHighlight: 'none',
+  wordWrap: 'on',
   scrollBeyondLastLine: false,
   scrollbar: {
     vertical: 'hidden',
@@ -54,35 +66,38 @@ const defaultOptions = {
 };
 
 // Create the editor
-function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twigfieldOptions, endpointUrl, placeholderText = '') {
-  const textArea = document.getElementById(elementId);
-  let container = document.createElement('div');
-  let fieldOptions = JSON.parse(twigfieldOptions);
-  let placeholderId = elementId + '-monaco-editor-placeholder';
+function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: string, editorOptions: string, twigfieldOptions: string, endpointUrl: string, placeholderText: string = '') {
+  const textArea = <HTMLInputElement>document.getElementById(elementId);
+  const container = document.createElement('div');
+  const fieldOptions = JSON.parse(twigfieldOptions);
+  const placeholderId = elementId + '-monaco-editor-placeholder';
+  // If we can't find the passed in text area or if there is no parent node, return
+  if (textArea === null || textArea.parentNode === null) {
+    return;
+  }
+  // Monaco editor defaults, coalesced together
+  const monacoEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions = JSON.parse(editorOptions);
+  let options: monaco.editor.IStandaloneEditorConstructionOptions = {...defaultOptions, ...monacoEditorOptions, ...{value: textArea.value}}
   // Make a sibling div for the Monaco editor to live in
   container.id = elementId + '-monaco-editor';
   container.classList.add('relative', 'box-content', 'monaco-editor-twigfield', 'h-full');
-  const icon = document.createElement('div');
-  icon.classList.add('monaco-editor-twigfield--icon');
-  icon.setAttribute('title', Craft.t('twigfield', 'Twig code is supported.'));
-  icon.setAttribute('aria-hidden', 'true');
-  icon.innerHTML = `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 320 320" style="enable-background:new 0 0 320 320;" xml:space="preserve">
-<style type="text/css">.st0{fill:currentcolor;}</style>
-<g>
-\t<path class="st0" d="M128,35.6c-17.7,0-32,15.9-32,35.6v35.6c0,29.5-21.5,53.3-48,53.3c26.5,0,48,23.9,48,53.3v35.6
-\t\tc0,19.6,14.3,35.6,32,35.6V320H96c-35.3,0-64-31.9-64-71.1v-35.6c0-19.6-14.3-35.6-32-35.6v-35.6c17.7,0,32-15.9,32-35.6V71.1
-\t\tC32,31.9,60.7,0,96,0h32V35.6L128,35.6z"/>
-\t<path class="st0" d="M320,177.8c-17.7,0-32,15.9-32,35.6v35.6c0,39.2-28.7,71.1-64,71.1h-32v-35.6c17.7,0,32-15.9,32-35.6v-35.6
-\t\tc0-29.5,21.5-53.3,48-53.3c-26.5,0-48-23.9-48-53.3V71.1c0-19.6-14.3-35.6-32-35.6V0h32c35.3,0,64,31.9,64,71.1v35.6
-\t\tc0,19.6,14.3,35.6,32,35.6V177.8L320,177.8z"/>
-</g>
-</svg>`;
-  container.appendChild(icon);
+  // Add the icon in, if there is one
+  const iconHtml = typeof options.language === "undefined" ? null : languageIcons[options.language];
+  if (iconHtml) {
+    const icon = document.createElement('div');
+    icon.classList.add('monaco-editor-twigfield--icon');
+    icon.setAttribute('title', Craft.t('twigfield', 'Twig code is supported.'));
+    icon.setAttribute('aria-hidden', 'true');
+    icon.innerHTML = iconHtml;
+    container.appendChild(icon);
+  }
+  // Apply any passed in classes to the wrapper div
   if (wrapperClass !== '') {
     const cl = container.classList;
     const classArray = wrapperClass.trim().split(/\s+/);
     cl.add.apply(cl, classArray);
   }
+  // Handle the placeholder text (if any)
   if (placeholderText !== '') {
     let placeholder = document.createElement('div');
     placeholder.id = elementId + '-monaco-editor-placeholder';
@@ -93,7 +108,6 @@ function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twi
   textArea.parentNode.insertBefore(container, textArea);
   textArea.style.display = 'none';
   // Create the Monaco editor
-  let options = {...defaultOptions, ...JSON.parse(editorOptions), ...{value: textArea.value}}
   let editor = monaco.editor.create(container, options);
   // When the text is changed in the editor, sync it to the underlying TextArea input
   editor.onDidChangeModelContent((event) => {
@@ -102,37 +116,38 @@ function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twi
   // ref: https://github.com/vikyd/vue-monaco-singleline/blob/master/src/monaco-singleline.vue#L150
   if ('singleLineEditor' in fieldOptions && fieldOptions.singleLineEditor) {
     const textModel = editor.getModel();
-    console.log(fieldOptions);
-    // Remove multiple spaces & tabs
-    const text = textModel.getValue();
-    textModel.setValue(text.replace(/\s\s+/g, ' '));
-    // Handle the Find command
-    editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyF, () => {
-    });
-    // Handle typing the Enter key
-    editor.addCommand(monaco.KeyCode.Enter, () => {
-    }, '!suggestWidgetVisible');
-    // Handle typing the Tab key
-    editor.addCommand(monaco.KeyCode.Tab, () => {
-      focusNextElement();
-    });
-    editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Tab, () => {
-      focusPrevElement();
-    });
-    // Handle Paste
-    editor.onDidPaste((e) => {
-      // multiple rows will be merged to single row
-      let newContent = '';
-      const lineCount = textModel.getLineCount();
-      // remove all line breaks
-      for (let i = 0; i < lineCount; i += 1) {
-        newContent += textModel.getLineContent(i + 1);
-      }
+    if (textModel !== null) {
       // Remove multiple spaces & tabs
-      newContent = newContent.replace(/\s\s+/g, ' ');
-      textModel.setValue(newContent);
-      editor.setPosition({column: newContent.length + 1, lineNumber: 1});
-    })
+      const text = textModel.getValue();
+      textModel.setValue(text.replace(/\s\s+/g, ' '));
+      // Handle the Find command
+      editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyF, () => {
+      });
+      // Handle typing the Enter key
+      editor.addCommand(monaco.KeyCode.Enter, () => {
+      }, '!suggestWidgetVisible');
+      // Handle typing the Tab key
+      editor.addCommand(monaco.KeyCode.Tab, () => {
+        focusNextElement();
+      });
+      editor.addCommand(monaco.KeyMod.Shift | monaco.KeyCode.Tab, () => {
+        focusPrevElement();
+      });
+      // Handle Paste
+      editor.onDidPaste((e) => {
+        // multiple rows will be merged to single row
+        let newContent = '';
+        const lineCount = textModel.getLineCount();
+        // remove all line breaks
+        for (let i = 0; i < lineCount; i += 1) {
+          newContent += textModel.getLineContent(i + 1);
+        }
+        // Remove multiple spaces & tabs
+        newContent = newContent.replace(/\s\s+/g, ' ');
+        textModel.setValue(newContent);
+        editor.setPosition({column: newContent.length + 1, lineNumber: 1});
+      })
+    }
   }
   // Get the autocompletion items
   getCompletionItemsFromEndpoint(fieldType, twigfieldOptions, endpointUrl);
@@ -183,10 +198,11 @@ function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twi
 
   function getFocusableElements() {
     var focussable = [];
-    //add all elements we want to include in our selection
-    var focussableElements = 'a:not([disabled]), button:not([disabled]), select:not([disabled]), input[type=text]:not([disabled]), [tabindex]:not([disabled]):not([tabindex="-1"])';
-    if (document.activeElement && document.activeElement.form) {
-      focussable = Array.prototype.filter.call(document.activeElement.form.querySelectorAll(focussableElements),
+    // add all elements we want to include in our selection
+    const focussableElements = 'a:not([disabled]), button:not([disabled]), select:not([disabled]), input[type=text]:not([disabled]), [tabindex]:not([disabled]):not([tabindex="-1"])';
+    const activeElement: HTMLFormElement = <HTMLFormElement>document.activeElement;
+    if (activeElement && activeElement.form) {
+      focussable = Array.prototype.filter.call(activeElement.form.querySelectorAll(focussableElements),
         function (element) {
           //check for visibility while always include the current activeElement
           return element.offsetWidth > 0 || element.offsetHeight > 0 || element === document.activeElement
@@ -196,14 +212,20 @@ function makeMonacoEditor(elementId, fieldType, wrapperClass, editorOptions, twi
     return focussable;
   }
 
-  function showPlaceholder(selector, value) {
+  function showPlaceholder(selector: string, value: string) {
     if (value === "") {
-      document.querySelector(selector).style.display = "initial";
+      const elem = <HTMLElement>document.querySelector(selector);
+      if (elem !== null) {
+        elem.style.display = "initial";
+      }
     }
   }
 
-  function hidePlaceholder(selector) {
-    document.querySelector(selector).style.display = "none";
+  function hidePlaceholder(selector: string) {
+    const elem = <HTMLElement>document.querySelector(selector);
+    if (elem !== null) {
+      elem.style.display = "none";
+    }
   }
 }
 
