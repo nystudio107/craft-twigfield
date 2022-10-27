@@ -1,0 +1,40 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "buildchain/node_modules",
+    "declaration": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "module": "esnext",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "noImplicitAny": true,
+    "outDir": "./src/web/assets/dist/",
+    "paths": {
+      "@/*": [
+        "./src/web/assets/src/*"
+      ]
+    },
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strict": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "target": "esnext",
+    "types": ["vite/client"],
+    "typeRoots": [
+      "buildchain/node_modules/@types"
+    ]
+  },
+  "include": [
+    "./src/web/assets/src/**/*.ts",
+    "./src/web/assets/src/**/*.vue"
+  ],
+  "exclude": [
+    "./node_modules"
+  ]
+}
