@@ -89,7 +89,7 @@ function addCompletionItemsToMonaco(completionItems, autocompleteType, hasSubPro
             currentItems = completionItems[parents[0]];
             // Loop through all the parents to traverse the completion items and find the current one
             for (let i = 1; i < parents.length; i++) {
-              if (currentItems.hasOwnProperty(parents[i])) {
+              if (Object.prototype.hasOwnProperty.call(currentItems, parents[i])) {
                 currentItems = currentItems[parents[i]];
               } else {
                 return result;
@@ -101,7 +101,7 @@ function addCompletionItemsToMonaco(completionItems, autocompleteType, hasSubPro
       // Get all the child properties
       if (typeof currentItems !== 'undefined') {
         for (let item in currentItems) {
-          if (currentItems.hasOwnProperty(item) && !item.startsWith("__")) {
+          if (Object.prototype.hasOwnProperty.call(currentItems, item) && !item.startsWith("__")) {
             const completionItem = currentItems[item][COMPLETION_KEY];
             if (typeof completionItem !== 'undefined') {
               // Monaco adds a 'range' to the object, to denote where the autocomplete is triggered from,
@@ -168,7 +168,7 @@ function addHoverHandlerToMonaco(completionItems, autocompleteType, hasSubProper
         // Loop through all the parents to traverse the completion items and find the current one
         for (let i = 0; i < parents.length - 1; i++) {
           const thisParent = parents[i].replace(/[{(<]/, '');
-          if (currentItems.hasOwnProperty(thisParent)) {
+          if (Object.prototype.hasOwnProperty.call(currentItems, thisParent)) {
             currentItems = currentItems[thisParent];
           } else {
             return result;

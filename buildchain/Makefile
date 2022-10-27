@@ -4,32 +4,37 @@ DOCKERRUN=docker container run \
 	--name ${CONTAINER} \
 	--rm \
 	-t \
-	-e CPPFLAGS="-DPNG_ARM_NEON_OPT=0" \
+	--network plugindev_default \
+	-p 3001:3001 \
 	-v "${CURDIR}"/../:/app \
 	${CONTAINER}:${TAG}
 
-.PHONY: build docker install clean npm
+.PHONY: build dev docker install clean npm
 
-# Build the Twigfield asset bundle resources into web/assets/dist
+# Build the production assets
 build: docker install
 	${DOCKERRUN} \
 		run build
-# Remove node_modules/ and package-lock.json to start clean
-clean:
-	rm -rf node_modules/
-	rm -f package-lock.json
-# Build the Docker image from the Dockerfile
+# Start up the dev server
+dev: docker install
+	${DOCKERRUN} \
+		run dev
+# Start the Docker container
 docker:
 	docker build \
 		. \
 		-t ${CONTAINER}:${TAG} \
 		--build-arg TAG=${TAG} \
 		--no-cache
-# Run npm install inside of the Docker container
+# Run an npm install
 install: docker
 	${DOCKERRUN} \
 		install
-# Run the passed in npm command inside of the Docker container
+# Remove node_modules/* & package-lock.json
+clean:
+	rm -rf node_modules/
+	rm -f package-lock.json
+# Run the passed in npm command
 npm: docker
 	${DOCKERRUN} \
 		$(filter-out $@,$(MAKECMDGOALS))

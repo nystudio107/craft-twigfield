@@ -32,13 +32,10 @@ class TwigfieldAsset extends AssetBundle
         $this->depends = [
         ];
         $this->css = [
-            'css/vendors.css',
-            'css/styles.css',
+            'assets/twigfield.css',
         ];
         $this->js = [
-            'js/runtime.js',
-            'js/vendors.js',
-            'js/javascript-editor.js'
+            'assets/codefield.js',
         ];
 
         parent::init();

@@ -16,23 +16,21 @@
 type MakeMonacoEditorFunction = (elementId: string, fieldType: string, wrapperClass: string, editorOptions: string, twigfieldOptions: string, endpointUrl: string, placeholderText: string) => void;
 
 declare global {
-  var __webpack_public_path__: string;
-  var Craft: any;
+  let Craft: any;
+
   interface Window {
+    monaco: any;
+    MonacoEnvironment: monaco.Environment;
     twigfieldBaseAssetsUrl: string;
     makeMonacoEditor: MakeMonacoEditorFunction;
   }
 }
 
-// Set the __webpack_public_path__ dynamically so we can work inside of cpresources's hashed dir name
-// https://stackoverflow.com/questions/39879680/example-of-setting-webpack-public-path-at-runtime
-if (typeof __webpack_public_path__ !== 'string' || __webpack_public_path__ === '') {
-  __webpack_public_path__ = window.twigfieldBaseAssetsUrl;
-}
-
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import {getCompletionItemsFromEndpoint} from './autocomplete';
 import languageIcons from './language-icons'
+import '@/css/codefield.pcss';
+import 'monaco-editor/esm/vs/base/browser/ui/codicons/codicon/codicon.ttf';
 
 // The default EditorOptions for the Monaco editor instance
 // ref: https://microsoft.github.io/monaco-editor/api/enums/monaco.editor.EditorOption.html
@@ -65,8 +63,38 @@ const defaultOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
   },
 };
 
+self.MonacoEnvironment = {
+  globalAPI: true,
+  getWorker: function (workerId: string, label: string) {
+    const getWorkerModule = (moduleUrl: string, label: string) => {
+      return new Worker(self.MonacoEnvironment.getWorkerUrl(moduleUrl, label)!, {
+        name: label,
+        type: 'module'
+      });
+    };
+
+    switch (label) {
+      case 'json':
+        return getWorkerModule('/monaco-editor/esm/vs/language/json/json.worker?worker', label);
+      case 'css':
+      case 'scss':
+      case 'less':
+        return getWorkerModule('/monaco-editor/esm/vs/language/css/css.worker?worker', label);
+      case 'html':
+      case 'handlebars':
+      case 'razor':
+        return getWorkerModule('/monaco-editor/esm/vs/language/html/html.worker?worker', label);
+      case 'typescript':
+      case 'javascript':
+        return getWorkerModule('/monaco-editor/esm/vs/language/typescript/ts.worker?worker', label);
+      default:
+        return getWorkerModule('/monaco-editor/esm/vs/editor/editor.worker?worker', label);
+    }
+  }
+};
+
 // Create the editor
-function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: string, editorOptions: string, twigfieldOptions: string, endpointUrl: string, placeholderText: string = '') {
+function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: string, editorOptions: string, twigfieldOptions: string, endpointUrl: string, placeholderText = '') {
   const textArea = <HTMLInputElement>document.getElementById(elementId);
   const container = document.createElement('div');
   const fieldOptions = JSON.parse(twigfieldOptions);
@@ -77,7 +105,7 @@ function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: st
   }
   // Monaco editor defaults, coalesced together
   const monacoEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions = JSON.parse(editorOptions);
-  let options: monaco.editor.IStandaloneEditorConstructionOptions = {...defaultOptions, ...monacoEditorOptions, ...{value: textArea.value}}
+  const options: monaco.editor.IStandaloneEditorConstructionOptions = {...defaultOptions, ...monacoEditorOptions, ...{value: textArea.value}}
   // Make a sibling div for the Monaco editor to live in
   container.id = elementId + '-monaco-editor';
   container.classList.add('relative', 'box-content', 'monaco-editor-twigfield', 'h-full');
@@ -95,11 +123,11 @@ function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: st
   if (wrapperClass !== '') {
     const cl = container.classList;
     const classArray = wrapperClass.trim().split(/\s+/);
-    cl.add.apply(cl, classArray);
+    cl.add(...classArray);
   }
   // Handle the placeholder text (if any)
   if (placeholderText !== '') {
-    let placeholder = document.createElement('div');
+    const placeholder = document.createElement('div');
     placeholder.id = elementId + '-monaco-editor-placeholder';
     placeholder.innerHTML = placeholderText;
     placeholder.classList.add('monaco-placeholder', 'p-2');
@@ -108,9 +136,10 @@ function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: st
   textArea.parentNode.insertBefore(container, textArea);
   textArea.style.display = 'none';
   // Create the Monaco editor
-  let editor = monaco.editor.create(container, options);
+  const editor = monaco.editor.create(container, options);
+  console.log(options);
   // When the text is changed in the editor, sync it to the underlying TextArea input
-  editor.onDidChangeModelContent((event) => {
+  editor.onDidChangeModelContent(() => {
     textArea.value = editor.getValue();
   });
   // ref: https://github.com/vikyd/vue-monaco-singleline/blob/master/src/monaco-singleline.vue#L150
@@ -122,9 +151,11 @@ function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: st
       textModel.setValue(text.replace(/\s\s+/g, ' '));
       // Handle the Find command
       editor.addCommand(monaco.KeyMod.CtrlCmd | monaco.KeyCode.KeyF, () => {
+        /* tslint:disable:no-empty */
       });
       // Handle typing the Enter key
       editor.addCommand(monaco.KeyCode.Enter, () => {
+        /* tslint:disable:no-empty */
       }, '!suggestWidgetVisible');
       // Handle typing the Tab key
       editor.addCommand(monaco.KeyCode.Tab, () => {
@@ -134,7 +165,7 @@ function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: st
         focusPrevElement();
       });
       // Handle Paste
-      editor.onDidPaste((e) => {
+      editor.onDidPaste(() => {
         // multiple rows will be merged to single row
         let newContent = '';
         const lineCount = textModel.getLineCount();
@@ -179,25 +210,25 @@ function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: st
   }
 
   function focusNextElement() {
-    var focussable = getFocusableElements();
-    var index = focussable.indexOf(document.activeElement);
+    const focusable = getFocusableElements();
+    const index = focusable.indexOf(document.activeElement);
     if (index > -1) {
-      var nextElement = focussable[index + 1] || focussable[0];
+      const nextElement = focusable[index + 1] || focusable[0];
       nextElement.focus();
     }
   }
 
   function focusPrevElement() {
-    var focussable = getFocusableElements();
-    var index = focussable.indexOf(document.activeElement);
+    const focussable = getFocusableElements();
+    const index = focussable.indexOf(document.activeElement);
     if (index > -1) {
-      var prevElement = focussable[index - 1] || focussable[focussable.length];
+      const prevElement = focussable[index - 1] || focussable[focussable.length];
       prevElement.focus();
     }
   }
 
   function getFocusableElements() {
-    var focussable = [];
+    let focussable = [];
     // add all elements we want to include in our selection
     const focussableElements = 'a:not([disabled]), button:not([disabled]), select:not([disabled]), input[type=text]:not([disabled]), [tabindex]:not([disabled]):not([tabindex="-1"])';
     const activeElement: HTMLFormElement = <HTMLFormElement>document.activeElement;
@@ -228,6 +259,9 @@ function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: st
     }
   }
 }
+
+window.monaco = monaco;
+console.log(window.monaco);
 
 window.makeMonacoEditor = makeMonacoEditor;
 
