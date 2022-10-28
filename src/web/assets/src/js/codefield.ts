@@ -15,7 +15,7 @@
 
 declare global {
   let __webpack_public_path__: string;
-  let Craft: any;
+  const Craft: Craft;
 
   interface Window {
     twigfieldBaseAssetsUrl: string;
