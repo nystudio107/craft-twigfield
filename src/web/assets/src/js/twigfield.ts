@@ -20,13 +20,49 @@ declare global {
 
   interface Window {
     monaco: any;
-    MonacoEnvironment: monaco.Environment;
+    MonacoEnvironment?: monaco.Environment;
     twigfieldBaseAssetsUrl: string;
     makeMonacoEditor: MakeMonacoEditorFunction;
   }
 }
 
+self.MonacoEnvironment = {
+  globalAPI: true,
+  getWorker: function (workerId: string, label: string) {
+    console.log("worker: " + workerId);
+    switch (label) {
+      case 'json':
+        return new jsonWorker();
+      case 'css':
+      case 'scss':
+      case 'less':
+        return new cssWorker();
+      case 'html':
+      case 'handlebars':
+      case 'razor':
+        return new htmlWorker();
+      case 'typescript':
+      case 'javascript':
+        return new tsWorker();
+      default:
+        return new editorWorker();
+    }
+  }
+};
+
+// @ts-ignore
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+// @ts-ignore
+import editorWorker from "monaco-editor/esm/vs/editor/editor.worker?worker";
+// @ts-ignore
+import jsonWorker from "monaco-editor/esm/vs/language/json/json.worker?worker";
+// @ts-ignore
+import cssWorker from "monaco-editor/esm/vs/language/css/css.worker?worker";
+// @ts-ignore
+import htmlWorker from "monaco-editor/esm/vs/language/html/html.worker?worker";
+// @ts-ignore
+import tsWorker from "monaco-editor/esm/vs/language/typescript/ts.worker?worker";
+
 import {getCompletionItemsFromEndpoint} from './autocomplete';
 import languageIcons from './language-icons'
 import '@/css/codefield.pcss';
@@ -61,36 +97,6 @@ const defaultOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
   minimap: {
     enabled: false
   },
-};
-
-self.MonacoEnvironment = {
-  globalAPI: true,
-  getWorker: function (workerId: string, label: string) {
-    const getWorkerModule = (moduleUrl: string, label: string) => {
-      return new Worker(self.MonacoEnvironment.getWorkerUrl(moduleUrl, label)!, {
-        name: label,
-        type: 'module'
-      });
-    };
-
-    switch (label) {
-      case 'json':
-        return getWorkerModule('/monaco-editor/esm/vs/language/json/json.worker?worker', label);
-      case 'css':
-      case 'scss':
-      case 'less':
-        return getWorkerModule('/monaco-editor/esm/vs/language/css/css.worker?worker', label);
-      case 'html':
-      case 'handlebars':
-      case 'razor':
-        return getWorkerModule('/monaco-editor/esm/vs/language/html/html.worker?worker', label);
-      case 'typescript':
-      case 'javascript':
-        return getWorkerModule('/monaco-editor/esm/vs/language/typescript/ts.worker?worker', label);
-      default:
-        return getWorkerModule('/monaco-editor/esm/vs/editor/editor.worker?worker', label);
-    }
-  }
 };
 
 // Create the editor
@@ -261,7 +267,6 @@ function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: st
 }
 
 window.monaco = monaco;
-console.log(window.monaco);
 
 window.makeMonacoEditor = makeMonacoEditor;
 

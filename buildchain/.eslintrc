@@ -6,7 +6,8 @@
     "sourceType": "module"
   },
   "rules": {
-    "no-undef": "off"
+    "no-undef": "off",
+    "@typescript-eslint/ban-ts-comment": "warn",
   },
   "env": {
     "browser": true,
