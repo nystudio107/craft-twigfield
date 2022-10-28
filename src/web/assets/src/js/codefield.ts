@@ -31,38 +31,8 @@ if (typeof __webpack_public_path__ === 'undefined' || __webpack_public_path__ ==
 
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import {getCompletionItemsFromEndpoint} from './autocomplete';
-import languageIcons from './language-icons'
-
-// The default EditorOptions for the Monaco editor instance
-// ref: https://microsoft.github.io/monaco-editor/api/enums/monaco.editor.EditorOption.html
-const defaultOptions: monaco.editor.IStandaloneEditorConstructionOptions = {
-  language: 'twig',
-  theme: 'vs',
-  automaticLayout: true,
-  tabIndex: 0,
-  // Disable sidebar line numbers
-  lineNumbers: 'off',
-  glyphMargin: false,
-  folding: false,
-  // Undocumented see https://github.com/Microsoft/vscode/issues/30795#issuecomment-410998882
-  lineDecorationsWidth: 0,
-  lineNumbersMinChars: 0,
-  // Disable the current line highlight
-  renderLineHighlight: 'none',
-  wordWrap: 'on',
-  scrollBeyondLastLine: false,
-  scrollbar: {
-    vertical: 'hidden',
-    horizontal: 'auto',
-    alwaysConsumeMouseWheel: false,
-    handleMouseWheel: false,
-  },
-  fontSize: 14,
-  fontFamily: 'SFMono-Regular, Consolas, "Liberation Mono", Menlo, Courier, monospace',
-  minimap: {
-    enabled: false
-  },
-};
+import {languageIcons} from './language-icons'
+import {defaultMonacoEditorOptions} from './default-monaco-editor-options'
 
 /**
  * Create a Monaco Editor instance
@@ -86,7 +56,7 @@ function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: st
   }
   // Monaco editor defaults, coalesced together
   const monacoEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions = JSON.parse(editorOptions);
-  let options: monaco.editor.IStandaloneEditorConstructionOptions = {...defaultOptions, ...monacoEditorOptions, ...{value: textArea.value}}
+  let options: monaco.editor.IStandaloneEditorConstructionOptions = {...defaultMonacoEditorOptions, ...monacoEditorOptions, ...{value: textArea.value}}
   // Make a sibling div for the Monaco editor to live in
   container.id = elementId + '-monaco-editor';
   container.classList.add('relative', 'box-content', 'monaco-editor-twigfield', 'h-full');
