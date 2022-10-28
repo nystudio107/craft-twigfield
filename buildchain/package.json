@@ -106,7 +106,13 @@
   },
   "homepage": "https://nystudio107.com",
   "keywords": [
-    "twigfield",
+    "codefield",
+    "twig",
+    "javascript",
+    "css",
+    "markdown",
+    "monaco",
+    "editor",
     "craftcms",
     "craft",
     "cms"

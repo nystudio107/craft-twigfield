@@ -18,7 +18,7 @@ module.exports = {
     ],
   },
   extensions: ['.ts', '.js', '.vue', '.json'],
-  name: 'twigfield',
+  name: 'codefield',
   paths: {
     dist: path.resolve('../src/web/assets/dist/'),
   },
