@@ -3,6 +3,9 @@
 All notable changes to this project will be documented in this file.
 
 ## 1.0.20 - UNRELEASED
+### Added
+* Added all language workers to the build / bundle process
+
 ### Changed
 * Refactored `twigfield.js` to TypeScript
 * Move the language icons to a separate `language-icons.ts` file
