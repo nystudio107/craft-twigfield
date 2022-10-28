@@ -38,7 +38,7 @@ class TwigfieldAsset extends AssetBundle
         $this->js = [
             'js/runtime.js',
             'js/vendors.js',
-            'js/javascript-editor.js'
+            'js/codefield-editor.js'
         ];
 
         parent::init();

@@ -11,9 +11,9 @@ module.exports = {
   },
   copyright: '©2022 nystudio107.com',
   entry: {
-    'javascript-editor': [
-      '@/js/twigfield.ts',
-      '@/css/twigfield.pcss',
+    'codefield-editor': [
+      '@/js/codefield.ts',
+      '@/css/codefield.pcss',
       'monaco-editor/esm/vs/base/browser/ui/codicons/codicon/codicon.ttf'
     ],
   },
