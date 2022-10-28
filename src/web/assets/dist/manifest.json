@@ -1,12 +1,16 @@
 {
-  "javascript-editor.js": "js/javascript-editor.js",
+  "codefield-editor.js": "js/codefield-editor.js",
   "runtime.js": "js/runtime.js",
   "vendors.css": "css/vendors.css",
   "vendors.js": "js/vendors.js",
   "styles.css": "css/styles.css",
+  "ts.worker.js": "ts.worker.js",
+  "css.worker.js": "css.worker.js",
+  "html.worker.js": "html.worker.js",
+  "json.worker.js": "json.worker.js",
   "editor.worker.js": "editor.worker.js",
   "fonts/codicon.ttf": "fonts/codicon.ttf",
-  "javascript-editor.js.map": "js/javascript-editor.js.map",
+  "codefield-editor.js.map": "js/codefield-editor.js.map",
   "runtime.js.map": "js/runtime.js.map",
   "vendors.js.map": "js/vendors.js.map"
 }
