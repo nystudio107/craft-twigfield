@@ -40,12 +40,12 @@ import {defaultMonacoEditorOptions} from './default-monaco-editor-options'
  * @param {string} elementId - The id of the TextArea or Input element to replace with a Monaco editor
  * @param {string} fieldType - The field's passed in type, used for autocomplete caching
  * @param {string} wrapperClass - Classes that should be added to the field's wrapper <div>
- * @param {IStandaloneEditorConstructionOptions} editorOptions - Monaco editor options ref: https://microsoft.github.io/monaco-editor/api/interfaces/monaco.editor.IStandaloneEditorConstructionOptions.html
+ * @param {IStandaloneEditorConstructionOptions} editorOptions - Monaco editor options
  * @param {string} codefieldOptions - JSON encoded string of arbitrary CodefieldOptions for the field
  * @param {string} endpointUrl - The controller action endpoint for generating autocomplete items
  * @param {string} placeholderText - Placeholder text to use for the field
  */
-function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: string, editorOptions: string, codefieldOptions: string, endpointUrl: string, placeholderText: string = '') {
+function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: string, editorOptions: string, codefieldOptions: string, endpointUrl: string, placeholderText: string = ''): void {
   const textArea = <HTMLInputElement>document.getElementById(elementId);
   const container = document.createElement('div');
   const fieldOptions: CodefieldOptions = JSON.parse(codefieldOptions);
@@ -160,7 +160,7 @@ function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: st
   /**
    * Move the focus to the next element
    */
-  function focusNextElement() {
+  function focusNextElement(): void {
     const focusable = getFocusableElements();
     if (document.activeElement instanceof HTMLFormElement) {
       const index = focusable.indexOf(document.activeElement);
@@ -174,7 +174,7 @@ function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: st
   /**
    * Move the focus to the previous element
    */
-  function focusPrevElement() {
+  function focusPrevElement(): void {
     const focusable = getFocusableElements();
     if (document.activeElement instanceof HTMLFormElement) {
       const index = focusable.indexOf(document.activeElement);
@@ -217,7 +217,7 @@ function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: st
    * @param {string} selector - The selector for the placeholder element
    * @param {string} value - The editor field's value (the text)
    */
-  function showPlaceholder(selector: string, value: string) {
+  function showPlaceholder(selector: string, value: string): void {
     if (value === "") {
       const elem = <HTMLElement>document.querySelector(selector);
       if (elem !== null) {
@@ -231,7 +231,7 @@ function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: st
    *
    * @param {string} selector - The selector for the placeholder element
    */
-  function hidePlaceholder(selector: string) {
+  function hidePlaceholder(selector: string): void {
     const elem = <HTMLElement>document.querySelector(selector);
     if (elem !== null) {
       elem.style.display = "none";
@@ -239,6 +239,7 @@ function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: st
   }
 }
 
+// Make the function globally available
 window.makeMonacoEditor = makeMonacoEditor;
 
 export default makeMonacoEditor;

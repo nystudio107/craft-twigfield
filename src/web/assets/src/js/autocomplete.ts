@@ -38,11 +38,11 @@ function getLastItem<T>(arr: Array<T>): T {
 /**
  * Register completion items with the Monaco editor, for the Twig language
  *
- * @param completionItems array of completion items, with sub-properties in `COMPLETION_KEY`
- * @param autocompleteType the type of autocomplete, either `TwigExpressionAutocomplete` or `GeneralAutocomplete`
- * @param hasSubProperties where the autocomplete has sub-properties, and should be parsed as such
+ * @param {AutocompleteItem} completionItems - completion items, with sub-properties in `COMPLETION_KEY`
+ * @param {AutocompleteTypes} autocompleteType - the type of autocomplete
+ * @param {boolean} hasSubProperties - whether the autocomplete has sub-properties, and should be parsed as such
  */
-function addCompletionItemsToMonaco(completionItems: AutocompleteItem, autocompleteType: AutocompleteTypes, hasSubProperties: boolean) {
+function addCompletionItemsToMonaco(completionItems: AutocompleteItem, autocompleteType: AutocompleteTypes, hasSubProperties: boolean): void {
   monaco.languages.registerCompletionItemProvider('twig', {
     triggerCharacters: ['.', '('],
     provideCompletionItems: function (model, position, token) {
@@ -147,10 +147,10 @@ function addCompletionItemsToMonaco(completionItems: AutocompleteItem, autocompl
 /**
  * Register hover items with the Monaco editor, for the Twig language
  *
- * @param completionItems array of completion items, with sub-properties in `COMPLETION_KEY`
- * @param autocompleteType the type of autocomplete, either `TwigExpressionAutocomplete` or `GeneralAutocomplete`
+ * @param {AutocompleteItem} completionItems - completion items, with sub-properties in `COMPLETION_KEY`
+ * @param {AutocompleteTypes} autocompleteType the type of autocomplete
  */
-function addHoverHandlerToMonaco(completionItems: AutocompleteItem, autocompleteType: AutocompleteTypes) {
+function addHoverHandlerToMonaco(completionItems: AutocompleteItem, autocompleteType: AutocompleteTypes): void {
   monaco.languages.registerHoverProvider('twig', {
     provideHover: function (model, position) {
       let result: monaco.languages.Hover;
@@ -214,15 +214,19 @@ function addHoverHandlerToMonaco(completionItems: AutocompleteItem, autocomplete
 }
 
 /**
- * Fetch the autocompletion items from local storage, or from the endpoint if they aren't cached in local storage
+ * Fetch the autocompletion items frin the endpoint
+ *
+ * @param {string} fieldType - The field's passed in type, used for autocomplete caching
+ * @param {string} codefieldOptions - JSON encoded string of arbitrary CodefieldOptions for the field
+ * @param {string} endpointUrl - The controller action endpoint for generating autocomplete items
  */
-function getCompletionItemsFromEndpoint(fieldType: string = 'Twigfield', twigfieldOptions: string = '', endpointUrl: string) {
+function getCompletionItemsFromEndpoint(fieldType: string = 'Twigfield', codefieldOptions: string = '', endpointUrl: string): void {
   const searchParams = new URLSearchParams();
   if (typeof fieldType !== 'undefined') {
     searchParams.set('fieldType', fieldType);
   }
-  if (typeof twigfieldOptions !== 'undefined') {
-    searchParams.set('twigfieldOptions', twigfieldOptions);
+  if (typeof codefieldOptions !== 'undefined') {
+    searchParams.set('twigfieldOptions', codefieldOptions);
   }
   const glueChar = endpointUrl.includes('?') ? '&' : '?';
   // Only issue the XHR if we haven't loaded the autocompletes for this fieldType already
