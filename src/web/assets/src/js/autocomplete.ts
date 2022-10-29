@@ -12,7 +12,17 @@
  * @package   Twigfield
  * @since     1.0.0
  */
-const COMPLETION_KEY = '__completions';
+
+declare global {
+  interface Window {
+    monaco: string;
+    monacoAutocompleteItems: Array<string>,
+    twigfieldFieldTypes: Array<string>,
+  }
+}
+
+import {AutocompleteResponse, AutocompleteTypes, COMPLETION_KEY} from './@types/autocomplete'
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 
 /**
  * Get the last item from the array
@@ -20,7 +30,7 @@ const COMPLETION_KEY = '__completions';
  * @param arr
  * @returns {*}
  */
-function getLastItem(arr) {
+function getLastItem<T>(arr: Array<T>) {
   return arr[arr.length - 1];
 }
 
@@ -31,11 +41,11 @@ function getLastItem(arr) {
  * @param autocompleteType the type of autocomplete, either `TwigExpressionAutocomplete` or `GeneralAutocomplete`
  * @param hasSubProperties where the autocomplete has sub-properties, and should be parsed as such
  */
-function addCompletionItemsToMonaco(completionItems, autocompleteType, hasSubProperties) {
+function addCompletionItemsToMonaco(completionItems: AutocompleteResponse, autocompleteType: AutocompleteTypes, hasSubProperties: boolean) {
   monaco.languages.registerCompletionItemProvider('twig', {
     triggerCharacters: ['.', '('],
     provideCompletionItems: function (model, position, token) {
-      let result = [];
+      let result: monaco.languages.CompletionItem[] = [];
       let currentItems = completionItems;
       // Get the last word the user has typed
       const currentLine = model.getValueInRange({
@@ -92,7 +102,10 @@ function addCompletionItemsToMonaco(completionItems, autocompleteType, hasSubPro
               if (currentItems.hasOwnProperty(parents[i])) {
                 currentItems = currentItems[parents[i]];
               } else {
-                return result;
+                const finalItems: monaco.languages.ProviderResult<monaco.languages.CompletionList> = {
+                  suggestions: result
+                }
+                return finalItems;
               }
             }
           }
@@ -122,9 +135,10 @@ function addCompletionItemsToMonaco(completionItems, autocompleteType, hasSubPro
         }
       }
 
-      return {
+      const finalItems: monaco.languages.ProviderResult<monaco.languages.CompletionList> = {
         suggestions: result
-      };
+      }
+      return finalItems;
     }
   });
 }
@@ -136,7 +150,7 @@ function addCompletionItemsToMonaco(completionItems, autocompleteType, hasSubPro
  * @param autocompleteType the type of autocomplete, either `TwigExpressionAutocomplete` or `GeneralAutocomplete`
  * @param hasSubProperties where the autocomplete has sub-properties, and should be parsed as such
  */
-function addHoverHandlerToMonaco(completionItems, autocompleteType, hasSubProperties) {
+function addHoverHandlerToMonaco(completionItems: AutocompleteResponse, autocompleteType: AutocompleteTypes, hasSubProperties: boolean) {
   monaco.languages.registerHoverProvider('twig', {
     provideHover: function (model, position) {
       let result = {};
