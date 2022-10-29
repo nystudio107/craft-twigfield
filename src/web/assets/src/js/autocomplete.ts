@@ -16,21 +16,22 @@
 declare global {
   interface Window {
     monaco: string;
-    monacoAutocompleteItems: Array<string>,
-    twigfieldFieldTypes: Array<string>,
+    monacoAutocompleteItems: {[key: string]: string},
+    twigfieldFieldTypes: {[key: string]: string},
   }
 }
 
-import {AutocompleteResponse, AutocompleteTypes, COMPLETION_KEY} from './@types/autocomplete'
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+
+const COMPLETION_KEY = '__completions';
 
 /**
  * Get the last item from the array
  *
- * @param arr
- * @returns {*}
+ * @param {Array<T>} arr
+ * @returns {T}
  */
-function getLastItem<T>(arr: Array<T>) {
+function getLastItem<T>(arr: Array<T>): T {
   return arr[arr.length - 1];
 }
 
@@ -41,7 +42,7 @@ function getLastItem<T>(arr: Array<T>) {
  * @param autocompleteType the type of autocomplete, either `TwigExpressionAutocomplete` or `GeneralAutocomplete`
  * @param hasSubProperties where the autocomplete has sub-properties, and should be parsed as such
  */
-function addCompletionItemsToMonaco(completionItems: AutocompleteResponse, autocompleteType: AutocompleteTypes, hasSubProperties: boolean) {
+function addCompletionItemsToMonaco(completionItems: AutocompleteItem, autocompleteType: AutocompleteTypes, hasSubProperties: boolean) {
   monaco.languages.registerCompletionItemProvider('twig', {
     triggerCharacters: ['.', '('],
     provideCompletionItems: function (model, position, token) {
@@ -148,12 +149,11 @@ function addCompletionItemsToMonaco(completionItems: AutocompleteResponse, autoc
  *
  * @param completionItems array of completion items, with sub-properties in `COMPLETION_KEY`
  * @param autocompleteType the type of autocomplete, either `TwigExpressionAutocomplete` or `GeneralAutocomplete`
- * @param hasSubProperties where the autocomplete has sub-properties, and should be parsed as such
  */
-function addHoverHandlerToMonaco(completionItems: AutocompleteResponse, autocompleteType: AutocompleteTypes, hasSubProperties: boolean) {
+function addHoverHandlerToMonaco(completionItems: AutocompleteItem, autocompleteType: AutocompleteTypes) {
   monaco.languages.registerHoverProvider('twig', {
     provideHover: function (model, position) {
-      let result = {};
+      let result: monaco.languages.Hover;
       const currentLine = model.getValueInRange({
         startLineNumber: position.lineNumber,
         startColumn: 0,
@@ -185,7 +185,7 @@ function addHoverHandlerToMonaco(completionItems: AutocompleteResponse, autocomp
           if (currentItems.hasOwnProperty(thisParent)) {
             currentItems = currentItems[thisParent];
           } else {
-            return result;
+            return;
           }
         }
       }
@@ -196,17 +196,19 @@ function addHoverHandlerToMonaco(completionItems: AutocompleteResponse, autocomp
           if (typeof completionItem.documentation === 'object') {
             docs = completionItem.documentation.value;
           }
-          return {
-            range: new monaco.Range(position.lineNumber, currentWord.startColumn, position.lineNumber, currentWord.endColum),
+
+          const finalHover: monaco.languages.ProviderResult<monaco.languages.Hover> = {
+            range: new monaco.Range(position.lineNumber, currentWord.startColumn, position.lineNumber, currentWord.endColumn),
             contents: [
               {value: '**' + completionItem.detail + '**'},
               {value: docs},
             ]
           }
+          return  finalHover
         }
       }
 
-      return result;
+      return;
     }
   });
 }
@@ -214,7 +216,7 @@ function addHoverHandlerToMonaco(completionItems: AutocompleteResponse, autocomp
 /**
  * Fetch the autocompletion items from local storage, or from the endpoint if they aren't cached in local storage
  */
-function getCompletionItemsFromEndpoint(fieldType = 'Twigfield', twigfieldOptions = '', endpointUrl) {
+function getCompletionItemsFromEndpoint(fieldType: string = 'Twigfield', twigfieldOptions: string = '', endpointUrl: string) {
   const searchParams = new URLSearchParams();
   if (typeof fieldType !== 'undefined') {
     searchParams.set('fieldType', fieldType);
@@ -236,7 +238,7 @@ function getCompletionItemsFromEndpoint(fieldType = 'Twigfield', twigfieldOption
   request.open('GET', endpointUrl + glueChar + searchParams.toString(), true);
   request.onload = function () {
     if (request.status >= 200 && request.status < 400) {
-      const completionItems = JSON.parse(request.responseText);
+      const completionItems: AutocompleteResponse = JSON.parse(request.responseText);
       if (typeof window.monacoAutocompleteItems === 'undefined') {
         window.monacoAutocompleteItems = {};
       }
