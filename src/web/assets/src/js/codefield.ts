@@ -45,7 +45,7 @@ import {defaultMonacoEditorOptions} from './default-monaco-editor-options'
  * @param {string} endpointUrl - The controller action endpoint for generating autocomplete items
  * @param {string} placeholderText - Placeholder text to use for the field
  */
-function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: string, editorOptions: string, codefieldOptions: string, endpointUrl: string, placeholderText: string = ''): void {
+function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: string, editorOptions: string, codefieldOptions: string, endpointUrl: string, placeholderText: string = ''): monaco.editor.IStandaloneCodeEditor | undefined {
   const textArea = <HTMLInputElement>document.getElementById(elementId);
   const container = document.createElement('div');
   const fieldOptions: CodefieldOptions = JSON.parse(codefieldOptions);
@@ -237,6 +237,7 @@ function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: st
       elem.style.display = "none";
     }
   }
+  return editor;
 }
 
 // Make the function globally available
