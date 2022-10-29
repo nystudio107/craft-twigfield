@@ -43,8 +43,8 @@
     box-shadow: 0 0 0 1px #127fbf, 0 0 0 3px rgb(18 127 191 / 50%);
 }
 
-/* Remove padding from twigfield cells in table fields, so the a11y focus is the entire cell */
-td.type-channel.type-structure.twigfield-cell {
+/* Remove padding from codefield cells in table fields, so the a11y focus is the entire cell */
+td.type-channel.type-structure.codefield-cell {
     padding: 0;
 }
 
@@ -63,24 +63,24 @@ td.type-channel.type-structure.twigfield-cell {
     box-shadow: 0 0 0 1px #127fbf, 0 0 0 3px rgb(18 127 191 / 50%);
 }
 
-.monaco-editor-twigfield {
+.monaco-editor-codefield {
     padding: 6px 9px;
 }
 
-body.ltr .monaco-editor-twigfield {
+body.ltr .monaco-editor-codefield {
     padding-right: 32px !important;
 }
 
-body.rtl .monaco-editor-twigfield {
+body.rtl .monaco-editor-codefield {
     padding-left: 32px !important;
 }
 
-table.editable tbody .monaco-editor-twigfield {
+table.editable tbody .monaco-editor-codefield {
     padding: 7px 10px;
 }
 
 /* Twig icon */
-.monaco-editor-twigfield--icon {
+.monaco-editor-codefield--icon {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -93,19 +93,19 @@ table.editable tbody .monaco-editor-twigfield {
     color: var(--indicator-icon-color, #bd5a14);
 }
 
-table.editable tbody .monaco-editor-twigfield--icon {
+table.editable tbody .monaco-editor-codefield--icon {
     top: 9px;
 }
 
-body.ltr .monaco-editor-twigfield--icon {
+body.ltr .monaco-editor-codefield--icon {
     right: 7px;
 }
 
-body.rtl .monaco-editor-twigfield--icon {
+body.rtl .monaco-editor-codefield--icon {
     left: 7px;
 }
 
-.monaco-editor-twigfield--icon svg {
+.monaco-editor-codefield--icon svg {
     width: 8px;
     height: 8px;
 }

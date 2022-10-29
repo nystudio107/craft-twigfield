@@ -18,7 +18,7 @@ declare global {
   const Craft: Craft;
 
   interface Window {
-    twigfieldBaseAssetsUrl: string;
+    codefieldBaseAssetsUrl: string;
     makeMonacoEditor: MakeMonacoEditorFunction;
   }
 }
@@ -26,7 +26,7 @@ declare global {
 // Set the __webpack_public_path__ dynamically so we can work inside of cpresources's hashed dir name
 // https://stackoverflow.com/questions/39879680/example-of-setting-webpack-public-path-at-runtime
 if (typeof __webpack_public_path__ === 'undefined' || __webpack_public_path__ === '') {
-  __webpack_public_path__ = window.twigfieldBaseAssetsUrl;
+  __webpack_public_path__ = window.codefieldBaseAssetsUrl;
 }
 
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
@@ -45,7 +45,7 @@ import {defaultMonacoEditorOptions} from './default-monaco-editor-options'
  * @param {string} endpointUrl - The controller action endpoint for generating autocomplete items
  * @param {string} placeholderText - Placeholder text to use for the field
  */
-function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: string, editorOptions: string, codefieldOptions: string, endpointUrl: string, placeholderText: string = ''): monaco.editor.IStandaloneCodeEditor | undefined {
+function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: string, editorOptions: string, codefieldOptions: string, endpointUrl: string, placeholderText = ''): monaco.editor.IStandaloneCodeEditor | undefined {
   const textArea = <HTMLInputElement>document.getElementById(elementId);
   const container = document.createElement('div');
   const fieldOptions: CodefieldOptions = JSON.parse(codefieldOptions);
@@ -56,15 +56,15 @@ function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: st
   }
   // Monaco editor defaults, coalesced together
   const monacoEditorOptions: monaco.editor.IStandaloneEditorConstructionOptions = JSON.parse(editorOptions);
-  let options: monaco.editor.IStandaloneEditorConstructionOptions = {...defaultMonacoEditorOptions, ...monacoEditorOptions, ...{value: textArea.value}}
+  const options: monaco.editor.IStandaloneEditorConstructionOptions = {...defaultMonacoEditorOptions, ...monacoEditorOptions, ...{value: textArea.value}}
   // Make a sibling div for the Monaco editor to live in
   container.id = elementId + '-monaco-editor';
-  container.classList.add('relative', 'box-content', 'monaco-editor-twigfield', 'h-full');
+  container.classList.add('relative', 'box-content', 'monaco-editor-codefield', 'h-full');
   // Add the icon in, if there is one
   const iconHtml = typeof options.language === "undefined" ? null : languageIcons[options.language];
   if (iconHtml) {
     const icon = document.createElement('div');
-    icon.classList.add('monaco-editor-twigfield--icon');
+    icon.classList.add('monaco-editor-codefield--icon');
     icon.setAttribute('title', Craft.t('twigfield', 'Twig code is supported.'));
     icon.setAttribute('aria-hidden', 'true');
     icon.innerHTML = iconHtml;
@@ -78,7 +78,7 @@ function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: st
   }
   // Handle the placeholder text (if any)
   if (placeholderText !== '') {
-    let placeholder = document.createElement('div');
+    const placeholder = document.createElement('div');
     placeholder.id = elementId + '-monaco-editor-placeholder';
     placeholder.innerHTML = placeholderText;
     placeholder.classList.add('monaco-placeholder', 'p-2');
@@ -87,7 +87,7 @@ function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: st
   textArea.parentNode.insertBefore(container, textArea);
   textArea.style.display = 'none';
   // Create the Monaco editor
-  let editor = monaco.editor.create(container, options);
+  const editor = monaco.editor.create(container, options);
   // When the text is changed in the editor, sync it to the underlying TextArea input
   editor.onDidChangeModelContent(() => {
     textArea.value = editor.getValue();
@@ -237,6 +237,7 @@ function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: st
       elem.style.display = "none";
     }
   }
+
   return editor;
 }
 
