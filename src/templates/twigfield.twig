@@ -14,7 +14,7 @@
         window.codeEditorBaseAssetsUrl = "{{ bundle.baseUrl }}/";
     {% endjs %}
     {% js %}
-        makeMonacoEditor("{{ (fieldId)|namespaceInputId }}", "{{ fieldType }}", "{{ wrapperClass }}", '{{ editorOptions | json_encode | e('js') }}', '{{ twigfieldOptions | json_encode | e('js') }}', "{{ alias('@codefieldEndpointUrl') }}", "{{ placeholderText }}");
+        makeMonacoEditor("{{ (fieldId)|namespaceInputId }}", "{{ fieldType }}", "{{ wrapperClass }}", '{{ editorOptions | json_encode | e('js') }}', '{{ twigfieldOptions | json_encode | e('js') }}', "{{ alias('@codeEditorEndpointUrl') }}", "{{ placeholderText }}");
     {% endjs %}
 {% endmacro %}
 
