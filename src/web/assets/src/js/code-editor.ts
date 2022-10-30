@@ -31,7 +31,7 @@ if (typeof __webpack_public_path__ === 'undefined' || __webpack_public_path__ ==
 
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
 import {getCompletionItemsFromEndpoint} from './autocomplete';
-import {languageIcons} from './language-icons'
+import {languageIcons, languageIconTitles} from './language-icons'
 import {defaultMonacoEditorOptions} from './default-monaco-editor-options'
 
 /**
@@ -41,14 +41,14 @@ import {defaultMonacoEditorOptions} from './default-monaco-editor-options'
  * @param {string} fieldType - The field's passed in type, used for autocomplete caching
  * @param {string} wrapperClass - Classes that should be added to the field's wrapper <div>
  * @param {IStandaloneEditorConstructionOptions} editorOptions - Monaco editor options
- * @param {string} codefieldOptions - JSON encoded string of arbitrary CodefieldOptions for the field
+ * @param {string} codefieldOptions - JSON encoded string of arbitrary CodeEditorOptions for the field
  * @param {string} endpointUrl - The controller action endpoint for generating autocomplete items
  * @param {string} placeholderText - Placeholder text to use for the field
  */
 function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: string, editorOptions: string, codefieldOptions: string, endpointUrl: string, placeholderText = ''): monaco.editor.IStandaloneCodeEditor | undefined {
   const textArea = <HTMLInputElement>document.getElementById(elementId);
   const container = document.createElement('div');
-  const fieldOptions: CodefieldOptions = JSON.parse(codefieldOptions);
+  const fieldOptions: CodeEditorOptions = JSON.parse(codefieldOptions);
   const placeholderId = elementId + '-monaco-editor-placeholder';
   // If we can't find the passed in text area or if there is no parent node, return
   if (textArea === null || textArea.parentNode === null) {
@@ -61,13 +61,12 @@ function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: st
   container.id = elementId + '-monaco-editor';
   container.classList.add('relative', 'box-content', 'monaco-editor-codefield', 'h-full');
   // Add the icon in, if there is one
-  const iconHtml = typeof options.language === "undefined" ? null : languageIcons[options.language];
-  if (iconHtml) {
+  if (typeof options.language !== "undefined") {
     const icon = document.createElement('div');
     icon.classList.add('monaco-editor-codefield--icon');
-    icon.setAttribute('title', Craft.t('twigfield', 'Twig code is supported.'));
+    icon.setAttribute('title', Craft.t('twigfield', languageIconTitles[options.language]));
     icon.setAttribute('aria-hidden', 'true');
-    icon.innerHTML = iconHtml;
+    icon.innerHTML = languageIcons[options.language];
     container.appendChild(icon);
   }
   // Apply any passed in classes to the wrapper div

@@ -2,7 +2,13 @@ interface StringMap {
   [key: string]: string;
 }
 
+export const languageIconTitles: StringMap = {
+  'twig': 'Twig code is supported',
+  'javascript': 'JavaScript code is supported',
+}
+
 export const languageIcons: StringMap = {
+  // Twig
   'twig': `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 320 320" style="enable-background:new 0 0 320 320;" xml:space="preserve">
 <style type="text/css">.st0{fill:currentcolor;}</style>
 <g>
@@ -14,6 +20,7 @@ export const languageIcons: StringMap = {
 \t\tc0,19.6,14.3,35.6,32,35.6V177.8L320,177.8z"/>
 </g>
 </svg>`,
+  // JavaScript
   'javascript': `
  <svg width="256px" height="289px" viewBox="0 0 256 289" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" preserveAspectRatio="xMidYMid">
  <style type="text/css">.st0{fill:currentcolor;}</style>
