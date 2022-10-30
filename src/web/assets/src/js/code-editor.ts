@@ -18,7 +18,7 @@ declare global {
   const Craft: Craft;
 
   interface Window {
-    codefieldBaseAssetsUrl: string;
+    codeEditorBaseAssetsUrl: string;
     makeMonacoEditor: MakeMonacoEditorFunction;
   }
 }
@@ -26,7 +26,7 @@ declare global {
 // Set the __webpack_public_path__ dynamically so we can work inside of cpresources's hashed dir name
 // https://stackoverflow.com/questions/39879680/example-of-setting-webpack-public-path-at-runtime
 if (typeof __webpack_public_path__ === 'undefined' || __webpack_public_path__ === '') {
-  __webpack_public_path__ = window.codefieldBaseAssetsUrl;
+  __webpack_public_path__ = window.codeEditorBaseAssetsUrl;
 }
 
 import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';

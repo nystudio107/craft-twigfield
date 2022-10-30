@@ -11,14 +11,14 @@ module.exports = {
   },
   copyright: '©2022 nystudio107.com',
   entry: {
-    'codefield-editor': [
-      '@/js/codefield.ts',
-      '@/css/codefield.pcss',
+    'code-editor': [
+      '@/js/code-editor.ts',
+      '@/css/code-editor.pcss',
       'monaco-editor/esm/vs/base/browser/ui/codicons/codicon/codicon.ttf'
     ],
   },
   extensions: ['.ts', '.js', '.vue', '.json'],
-  name: 'codefield',
+  name: 'code-editor',
   paths: {
     dist: path.resolve('../src/web/assets/dist/'),
   },
