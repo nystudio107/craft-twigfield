@@ -217,7 +217,7 @@ function addHoverHandlerToMonaco(completionItems: AutocompleteItem, autocomplete
  * Fetch the autocompletion items frin the endpoint
  *
  * @param {string} fieldType - The field's passed in type, used for autocomplete caching
- * @param {string} codefieldOptions - JSON encoded string of arbitrary CodefieldOptions for the field
+ * @param {string} codefieldOptions - JSON encoded string of arbitrary CodeEditorOptions for the field
  * @param {string} endpointUrl - The controller action endpoint for generating autocomplete items
  */
 function getCompletionItemsFromEndpoint(fieldType: string = 'Twigfield', codefieldOptions: string = '', endpointUrl: string): void {
