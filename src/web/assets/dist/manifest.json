@@ -1,5 +1,5 @@
 {
-  "codefield-editor.js": "js/codefield-editor.js",
+  "code-editor.js": "js/code-editor.js",
   "runtime.js": "js/runtime.js",
   "vendors.css": "css/vendors.css",
   "vendors.js": "js/vendors.js",
@@ -10,7 +10,7 @@
   "json.worker.js": "json.worker.js",
   "editor.worker.js": "editor.worker.js",
   "fonts/codicon.ttf": "fonts/codicon.ttf",
-  "codefield-editor.js.map": "js/codefield-editor.js.map",
+  "code-editor.js.map": "js/code-editor.js.map",
   "runtime.js.map": "js/runtime.js.map",
   "vendors.js.map": "js/vendors.js.map"
 }
