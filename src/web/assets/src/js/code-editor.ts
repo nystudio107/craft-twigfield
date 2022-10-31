@@ -7,6 +7,8 @@
  * @copyright Copyright (c) 2022 nystudio107
  */
 
+import {MakeMonacoEditorFn, SetMonacoEditorLanguageFn, SetMonacoEditorThemeFn} from "./@types/code-editor";
+
 /**
  * @author    nystudio107
  * @package   Twigfield
@@ -19,7 +21,9 @@ declare global {
 
   interface Window {
     codeEditorBaseAssetsUrl: string;
-    makeMonacoEditor: MakeMonacoEditorFunction;
+    makeMonacoEditor: MakeMonacoEditorFn;
+    setMonacoEditorLanguage: SetMonacoEditorLanguageFn;
+    setMonacoEditorTheme: SetMonacoEditorThemeFn;
   }
 }
 
@@ -59,16 +63,7 @@ function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: st
   const options: monaco.editor.IStandaloneEditorConstructionOptions = {...defaultMonacoEditorOptions, ...monacoEditorOptions, ...{value: textArea.value}}
   // Make a sibling div for the Monaco editor to live in
   container.id = elementId + '-monaco-editor';
-  container.classList.add('relative', 'box-content', 'monaco-editor-codefield', 'h-full');
-  // Add the icon in, if there is one
-  if (typeof options.language !== "undefined") {
-    const icon = document.createElement('div');
-    icon.classList.add('monaco-editor-codefield--icon');
-    icon.setAttribute('title', Craft.t('twigfield', languageIconTitles[options.language]));
-    icon.setAttribute('aria-hidden', 'true');
-    icon.innerHTML = languageIcons[options.language];
-    container.appendChild(icon);
-  }
+  container.classList.add('monaco-editor','relative', 'box-content', 'monaco-editor-codefield', 'h-full');
   // Apply any passed in classes to the wrapper div
   if (wrapperClass !== '') {
     const cl = container.classList;
@@ -91,6 +86,10 @@ function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: st
   editor.onDidChangeModelContent(() => {
     textArea.value = editor.getValue();
   });
+  // Add the language icon (if any)
+  setMonacoEditorLanguage(editor, options.language, elementId);
+  // Set the editor theme
+  setMonacoEditorTheme(editor, options.theme);
   // ref: https://github.com/vikyd/vue-monaco-singleline/blob/master/src/monaco-singleline.vue#L150
   if ('singleLineEditor' in fieldOptions && fieldOptions.singleLineEditor) {
     const textModel: monaco.editor.ITextModel | null = editor.getModel();
@@ -240,8 +239,57 @@ function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: st
   return editor;
 }
 
-// Make the function globally available
-window.makeMonacoEditor = makeMonacoEditor;
+/**
+ * Set the language for the Monaco editor instance
+ *
+ * @param {monaco.editor.IStandaloneCodeEditor} editor - the Monaco editor instance
+ * @param {string | undefined} language - the editor language
+ * @param {string} elementId - the element id used to create the monaco editor from
+ */
+function setMonacoEditorLanguage(editor: monaco.editor.IStandaloneCodeEditor, language: string | undefined, elementId: string): void {
+  const containerId = elementId + '-monaco-editor';
+  const iconId = elementId + '-monaco-language-icon';
+  const container = document.querySelector('#' + containerId);
+  if (container !== null) {
+    if (typeof language !== "undefined") {
+      const languageIcon = languageIcons[language] ?? '';
+      const languageTitle = languageIconTitles[language] ?? '';
+      const icon = document.createElement('div');
+      monaco.editor.setModelLanguage(editor.getModel()!, language);
+      icon.id = iconId;
+      // Only add in the icon if one is available
+      if (languageIcon !== '') {
+        icon.classList.add('monaco-editor-codefield--icon');
+        icon.setAttribute('title', Craft.t('twigfield', languageTitle));
+        icon.setAttribute('aria-hidden', 'true');
+        icon.innerHTML = languageIcon;
+      }
+      // Replace the icon if it exists, otherwise create a new element
+      const currentIcon = container.querySelector('#' + iconId);
+      if (currentIcon) {
+        container.replaceChild(icon, currentIcon);
+      } else {
+        container.appendChild(icon);
+      }
+    }
+  }
+}
 
-export default makeMonacoEditor;
+/**
+ * Set the theme for the Monaco editor instance
+ *
+ * @param {monaco.editor.IStandaloneCodeEditor} editor - the Monaco editor instance
+ * @param {string | undefined} language - the editor theme
+ */
+function setMonacoEditorTheme(editor: monaco.editor.IStandaloneCodeEditor, theme: string | undefined): void {
+  const editorTheme = theme ?? 'vs';
+  editor.updateOptions({theme: editorTheme});
+}
+
+// Make the functions globally available
+window.makeMonacoEditor = makeMonacoEditor;
+window.setMonacoEditorLanguage = setMonacoEditorLanguage;
+window.setMonacoEditorTheme = setMonacoEditorTheme;
+
+export {makeMonacoEditor, setMonacoEditorLanguage, setMonacoEditorTheme};
 
