@@ -22,6 +22,7 @@ declare global {
     makeMonacoEditor: MakeMonacoEditorFn;
     setMonacoEditorLanguage: SetMonacoEditorLanguageFn;
     setMonacoEditorTheme: SetMonacoEditorThemeFn;
+    monacoEditorInstances: {[key: string]: monaco.editor.IStandaloneCodeEditor};
   }
 }
 
@@ -80,6 +81,11 @@ function makeMonacoEditor(elementId: string, fieldType: string, wrapperClass: st
   textArea.style.display = 'none';
   // Create the Monaco editor
   const editor = monaco.editor.create(container, options);
+  // Make the monaco editor instances available via the monacoEditorInstances global, since Twig macros can't return a value
+  if (typeof window.monacoEditorInstances === 'undefined') {
+    window.monacoEditorInstances = {};
+  }
+  window.monacoEditorInstances[elementId] = editor;
   // When the text is changed in the editor, sync it to the underlying TextArea input
   editor.onDidChangeModelContent(() => {
     textArea.value = editor.getValue();
