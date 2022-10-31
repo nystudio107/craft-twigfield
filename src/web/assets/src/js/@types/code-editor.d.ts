@@ -1,5 +1,3 @@
-import * as monaco from "monaco-editor";
-
 type MakeMonacoEditorFn = (elementId: string, fieldType: string, wrapperClass: string, editorOptions: string, twigfieldOptions: string, endpointUrl: string, placeholderText: string) => monaco.editor.IStandaloneCodeEditor | undefined;
 
 type SetMonacoEditorLanguageFn = (editor: monaco.editor.IStandaloneCodeEditor, language: string | undefined, elementId: string) => void;

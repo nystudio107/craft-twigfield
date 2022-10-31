@@ -7,8 +7,6 @@
  * @copyright Copyright (c) 2022 nystudio107
  */
 
-import {MakeMonacoEditorFn, SetMonacoEditorLanguageFn, SetMonacoEditorThemeFn} from "./@types/code-editor";
-
 /**
  * @author    nystudio107
  * @package   Twigfield
