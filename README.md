@@ -1,5 +1,9 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/nystudio107/craft-twigfield/badges/quality-score.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-twigfield/?branch=develop) [![Code Coverage](https://scrutinizer-ci.com/g/nystudio107/craft-twigfield/badges/coverage.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-twigfield/?branch=develop) [![Build Status](https://scrutinizer-ci.com/g/nystudio107/craft-twigfield/badges/build.png?b=v1)](https://scrutinizer-ci.com/g/nystudio107/craft-twigfield/build-status/develop) [![Code Intelligence Status](https://scrutinizer-ci.com/g/nystudio107/craft-twigfield/badges/code-intelligence.svg?b=v1)](https://scrutinizer-ci.com/code-intelligence)
 
+# DEPRECATED
+
+Twigfield is now deprecated; please use [nystudio107/craft-code-editor](https://github.com/nystudio107/craft-code-editor) instead, which is a general purpose code editor that also does Twig & autocompletes.
+
 # Twigfield for Craft CMS 3.x & 4.x
 
 Provides a twig editor field with Twig & Craft API autocomplete

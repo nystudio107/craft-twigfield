@@ -2,6 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
+<<<<<<< Updated upstream
 ## 1.0.20 - UNRELEASED
 ### Added
 * Added all language workers to the build / bundle process
@@ -10,6 +11,11 @@ All notable changes to this project will be documented in this file.
 * Refactored `twigfield.js` to TypeScript
 * Move the language icons to a separate `language-icons.ts` file
 * Remove the transparent background CSS style to allow for theming
+=======
+# DEPRECATED
+
+Twigfield is now deprecated; please use [nystudio107/craft-code-editor](https://github.com/nystudio107/craft-code-editor) instead, which is a general purpose code editor that also does Twig & autocompletes.
+>>>>>>> Stashed changes
 
 ## 1.0.19 - 2022.10.26
 ### Fixed
